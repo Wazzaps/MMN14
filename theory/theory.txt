@@ -1,0 +1,8 @@
+Compilation stages:
+    * Newline standardizer
+    * Lexer
+    * Preprocessor
+    * Structurizer
+    * Float to int converter and warner (floats are not allowed)
+    * Compiler (to assembly)
+    * Assembler (to "machine code")
