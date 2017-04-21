@@ -26,6 +26,9 @@ UTESTS_BIN := $(UTESTS:$(UTESTS_DIR)/%.c=$(UTESTS_BIN_DIR)/%)
 .PHONY: all
 all: compile compiletests test
 
+.PHONY: remake
+remake: clean all
+
 .PHONY: compile
 compile: $(BIN_DIR)/$(EXEC_NAME)
 
@@ -47,7 +50,7 @@ test:
 	fi; \
 	echo "\033[1;33mExecuting integration tests\033[0m"; \
 	DID_FAIL_INTEG=0; \
-	for f in $(ITESTS_DIR)/*; do \
+	for f in $(ITESTS_DIR)/*.sh; do \
 		echo "\033[1;33mTesting $$f\033[0m"; \
 		./"$$f"; \
 		if [ $$? -ne 0 ]; then \
@@ -89,7 +92,7 @@ $(UTESTS_BIN_DIR)/%: $(UTESTS_OBJ_DIR)/%.o $(TESTABLES)
 .PHONY: clean
 clean:
 	@echo "\033[1;32mRemoving all but source files\033[0m"; \
-	rm -f -v $(BIN_DIR)/* $(OBJ_DIR)/* $(UTESTS_BIN_DIR)/* $(UTESTS_OBJ_DIR)/*
+	rm -f -v $(BIN_DIR)/* $(OBJ_DIR)/* $(UTESTS_BIN_DIR)/* $(UTESTS_OBJ_DIR)/* $(ITESTS_DIR)/temp/*.ob $(ITESTS_DIR)/temp/*.ent $(ITESTS_DIR)/temp/*.ext \
 
 .PHONY: setup-precommit
 setup-precommit:
