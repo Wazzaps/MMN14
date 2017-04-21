@@ -3,7 +3,7 @@ Compilation stages:
 	* File loading
     * Newline standardizer and whitespace stripper
     * Comment stripper
-    * Assembler directive parser
+    * Assembler directive parser + Symbol table maker
 	* Extern and Entry maker
 	* Data section maker
 	* Instruction assembler
