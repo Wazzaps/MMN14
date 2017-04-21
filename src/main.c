@@ -1,7 +1,12 @@
 #include <stdio.h>
-#include "testable.h"
+#include "argmanager.h"
 
-int main() {
-	printf("This should output the number six: %d\n", abc());
+
+int main(int argc, char *argv[]) {
+	/* Handle arguments */
+	program_arguments output = argmanager_process(argc, argv);
+	if (output.error) {
+		return output.error;
+	}
 	return 0;
 }
