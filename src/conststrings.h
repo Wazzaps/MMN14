@@ -15,5 +15,6 @@ Flags:\n\
 #define STR_ERR_MISSING_ARGUMENTS "Missing arguments.\n"
 #define STR_ERR_MISSING_FLAG_ARGUMENTS "Missing arguments after flag %s.\n"
 #define STR_ERR_ERROR_OPENING_FILE_FOR_WRITING "Error opening file `%s%s` for writing!\n"
+#define STR_ERR_ERROR_OPENING_FILE_FOR_READING "Error opening file `%s%s` for reading!\n"
 
 #endif

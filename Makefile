@@ -92,7 +92,7 @@ $(UTESTS_BIN_DIR)/%: $(UTESTS_OBJ_DIR)/%.o $(TESTABLES)
 .PHONY: clean
 clean:
 	@echo "\033[1;32mRemoving all but source files\033[0m"; \
-	rm -f -v $(BIN_DIR)/* $(OBJ_DIR)/* $(UTESTS_BIN_DIR)/* $(UTESTS_OBJ_DIR)/* $(ITESTS_DIR)/temp/*.ob $(ITESTS_DIR)/temp/*.ent $(ITESTS_DIR)/temp/*.ext \
+	rm -f -v $(BIN_DIR)/* $(OBJ_DIR)/* $(UTESTS_BIN_DIR)/* $(UTESTS_OBJ_DIR)/* $(ITESTS_DIR)/temp/*.ob $(ITESTS_DIR)/temp/*.ent $(ITESTS_DIR)/temp/*.ext $(ITESTS_DIR)/temp/*.as \
 
 .PHONY: setup-precommit
 setup-precommit:
