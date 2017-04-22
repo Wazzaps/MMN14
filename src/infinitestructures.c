@@ -12,12 +12,12 @@ char* string_expand_to (char* string, unsigned int length) {
 }
 
 char* string_concat (char* a, char* b) {
-	unsigned int aLength = strlen(a);
-	unsigned int bLength = strlen(b);
-	char* output = malloc(aLength + bLength + 1);
+	unsigned int a_length = strlen(a);
+	unsigned int b_length = strlen(b);
+	char* output = malloc(a_length + b_length + 1);
 
-	memcpy(output, a, aLength);
-	memcpy(output + aLength, b, bLength + 1);
+	memcpy(output, a, a_length);
+	memcpy(output + a_length, b, b_length + 1);
 
 	return output;
 }

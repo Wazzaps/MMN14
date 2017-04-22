@@ -15,9 +15,9 @@ There is a custom makefile with the following commands:
 * Tabs for indentation, spaces for alignment. Tab width does not matter. I use 4.
 * Function declarations and defenitions: spaces after name, pointer star adjacent to type. Curly brace one space after argument list, not on new line.
 ```c
-int abc (int a, char* b);
+int my_abc (int first_param, char* second_param);
 
-int abc (int a, char* b) {
+int my_abc (int first_param, char* second_param) {
     ...
 }
 ```

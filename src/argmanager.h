@@ -10,15 +10,15 @@
 
 typedef struct program_arguments_struct {
 	/* Files */
-	int filesCount;
+	int files_count;
 	char** files;
 
 	/* Flags */
-	unsigned int outputFolder : 1;
-	unsigned int shouldCompile : 1;
+	unsigned int output_folder : 1;
+	unsigned int should_compile : 1;
 	
 	/* Flag arguments */
-	char* outputFolderName;
+	char* output_folder_name;
 
 	/* Error */
 	errorcode error;

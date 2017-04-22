@@ -9,11 +9,11 @@
 
 program_arguments argmanager_process (int argc, char *argv[]) {
 	int i;
-	unsigned int fileCount = 0;
+	unsigned int file_count = 0;
 	program_arguments output;
 	
 	output.error = NO_ERROR;
-	output.shouldCompile = 1;
+	output.should_compile = 1;
 
 	if (argc == 1) {
 		printf(STR_ERR_MISSING_ARGUMENTS STR_INF_PROG_USAGE);
@@ -40,11 +40,11 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 			}
 		} else {
 			printf("File: %s\n", argv[i]);
-			fileCount++;
+			file_count++;
 		}
 	}
 
-	if (fileCount == 0 && output.shouldCompile) {
+	if (file_count == 0 && output.should_compile) {
 		printf(STR_ERR_MISSING_ARGUMENTS STR_INF_PROG_USAGE);
 		STOP_FOR_ERROR(MISSING_INPUT_FILES);
 	}
