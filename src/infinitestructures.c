@@ -22,6 +22,13 @@ char* string_concat (char* a, char* b) {
 	return output;
 }
 
+char* string_copy (char* string) {
+	unsigned int length = strlen(string);
+	char* output = malloc(length + 1);
+	memcpy(output, string, length);
+	return output;
+}
+
 void string_append_char (char** string, char char_to_append) {
 	string_expand_by(*string, 1);
 	(*string)[strlen(*string)] = char_to_append;

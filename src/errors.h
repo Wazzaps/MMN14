@@ -5,7 +5,8 @@ typedef enum {
 	NO_ERROR = 0,
 	MISSING_INPUT_FILES,
 	MISSING_FLAG_ARGUMENT,
-	UNKNOWN_FLAG
+	UNKNOWN_FLAG,
+	ERROR_FILEWRITE
 } errorcode;
 
 #endif
