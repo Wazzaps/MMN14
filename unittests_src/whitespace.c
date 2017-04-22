@@ -4,9 +4,15 @@
 #include <string.h>
 
 int main () {
-	char* mystring = "Hello\r\nworld!";
-	
+	char* mystring = "\t\tHello\r\n   world!\r\nYep!";
+
 	/** _whitespace_firstpass **/
-	assert(!strcmp(_whitespace_firstpass(mystring), "Hello\nworld!"));
+	mystring = _whitespace_firstpass(mystring);
+	assert(!strcmp(mystring, "\t\tHello\n   world!\nYep!"));
+
+	/** _whitespace_secondpass **/
+	mystring = _whitespace_secondpass(mystring);
+	assert(!strcmp(mystring, "Hello\nworld!\nYep!"));
+	
     return 0;
 }
