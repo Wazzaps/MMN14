@@ -6,7 +6,7 @@
 #include "errors.h"
 #include "conststrings.h"
 
-int write_file (char* _folder_name, char* file_name, char* extension, char* contents) {
+void write_file (char* _folder_name, char* file_name, char* extension, char* contents) {
 	char* folder_name = string_copy(_folder_name);
 	char* path = string_concat(file_name, extension);
 	FILE* f;
@@ -28,6 +28,4 @@ int write_file (char* _folder_name, char* file_name, char* extension, char* cont
 	}
 	fprintf(f, "%s", contents);
 	fclose(f);
-
-	return 0;
 }

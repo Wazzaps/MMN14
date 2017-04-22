@@ -5,6 +5,6 @@
 #define ENT_EXTENSION ".ent"
 #define EXT_EXTENSION ".ext"
 
-int write_file (char* folder_name, char* file_name, char* extension, char* contents);
+void write_file (char* folder_name, char* file_name, char* extension, char* contents);
 
 #endif
