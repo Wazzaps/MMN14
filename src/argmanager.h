@@ -19,9 +19,7 @@ typedef struct program_arguments_struct {
 	
 	/* Flag arguments */
 	char* output_folder_name;
-
-	/* Error */
-	errorcode error;
+	
 } program_arguments;
 
 program_arguments argmanager_process (int argc, char *argv[]);

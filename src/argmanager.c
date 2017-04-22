@@ -5,19 +5,16 @@
 #include "conststrings.h"
 #include "errors.h"
 
-#define STOP_FOR_ERROR(X) output.error = (X); return output
-
 program_arguments argmanager_process (int argc, char *argv[]) {
 	int i;
 	unsigned int file_count = 0;
 	program_arguments output;
 	
-	output.error = NO_ERROR;
 	output.should_compile = 1;
 
 	if (argc == 1) {
 		printf(STR_ERR_MISSING_ARGUMENTS STR_INF_PROG_USAGE);
-		STOP_FOR_ERROR(MISSING_INPUT_FILES);
+		exit(MISSING_INPUT_FILES);
 	}
 
 	for (i = 1; i < argc; i++) {
@@ -27,7 +24,7 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 				/* Output folder */
 				if (i == argc - 1 || argv[i+1][0] == '-') {
 					printf(STR_ERR_MISSING_FLAG_ARGUMENTS, argv[i]);
-					STOP_FOR_ERROR(MISSING_FLAG_ARGUMENT);
+					exit(MISSING_FLAG_ARGUMENT);
 				}
 				printf(STR_INF_SELECTED_OUTPUT_FOLDER, argv[++i]);
 			} else if (!strcmp(argv[i], FLAG_HELP) || !strcmp(argv[i], FLAG_HELP_SHORT)) {
@@ -36,7 +33,7 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 				return output;
 			} else {
 				printf("Unknown flag: %s\n", argv[i]);
-				STOP_FOR_ERROR(UNKNOWN_FLAG);
+				exit(UNKNOWN_FLAG);
 			}
 		} else {
 			printf("File: %s\n", argv[i]);
@@ -46,7 +43,7 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 
 	if (file_count == 0 && output.should_compile) {
 		printf(STR_ERR_MISSING_ARGUMENTS STR_INF_PROG_USAGE);
-		STOP_FOR_ERROR(MISSING_INPUT_FILES);
+		exit(MISSING_INPUT_FILES);
 	}
 
 	putchar('\n');
