@@ -4,5 +4,6 @@
 char* whitespace_process (char* code);
 char* _whitespace_firstpass (char* code);
 char* _whitespace_secondpass (char* code);
+char* _whitespace_thirdpass (char* code);
 
 #endif

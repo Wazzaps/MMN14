@@ -21,7 +21,7 @@ int main () {
 	assert(strlen(result) == 13);
 
 	/* Append char */
-	string_append_char(&result, '!');
+	result = string_append_char(result, '!');
 	
 	assert(!strcmp(result, "hello world!!!"));
 	assert(strlen(result) == 14);

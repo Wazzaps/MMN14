@@ -20,7 +20,7 @@ void write_file (char* _folder_name, char* file_name, char* extension, char* con
 
 	/* If folder name does not end with a slash add one */
 	if (string_get_last_char(folder_name) != '/' && string_get_last_char(folder_name) != '\\') {
-		string_append_char(&folder_name, '/');
+		folder_name = string_append_char(folder_name, '/');
 	}
 
 	/* Write the data */

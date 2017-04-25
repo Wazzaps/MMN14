@@ -29,7 +29,10 @@ char* string_copy (char* string) {
 	return output;
 }
 
-void string_append_char (char** string, char char_to_append) {
-	string_expand_by(*string, 1);
-	(*string)[strlen(*string)] = char_to_append;
+char* string_append_char (char* string, char char_to_append) {
+	unsigned int length = strlen(string);
+	char* output = string_expand_to(string, length + 2);
+	output[length] = char_to_append;
+	output[length+1] = '\0';
+	return output;
 }

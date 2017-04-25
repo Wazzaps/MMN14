@@ -21,7 +21,7 @@ char* _whitespace_firstpass (char* code) {
 	/* Loop over every char */
 	for (i = 0; i < codelen; i++) {
 		if (code[i] != '\r') {
-			string_append_char(&output, code[i]);
+			output = string_append_char(output, code[i]);
 		}
 	}
 
@@ -38,11 +38,40 @@ char* _whitespace_secondpass (char* code) {
 	/* Loop over every char */
 	for (i = 0; i < codelen; i++) {
 		if (!is_at_start || (code[i] != ' ' && code[i] != '\t' && code[i] != '\n')) {
-			string_append_char(&output, code[i]);
+			output = string_append_char(output, code[i]);
 			is_at_start = 0;
 		}
 		if (code[i] == '\n') {
 			is_at_start = 1;
+		}
+	}
+
+	return output;
+}
+
+/* Third pass: Remove all comments */
+char* _whitespace_thirdpass (char* code) {
+	char* output = malloc(1);
+	int codelen = strlen(code);
+	int i;
+	int is_in_comment = 0;
+	int is_in_string = 0;
+	
+	/* Loop over every char */
+	for (i = 0; i < codelen; i++) {
+		if (code[i] == '\"' && !is_in_comment) {
+			is_in_string = !is_in_string;
+		}
+		if (code[i] == ';' && !is_in_string) {
+			is_in_comment = 1;
+		}
+		if (code[i] == '\n') {
+			is_in_comment = 0;
+			is_in_string = 0;
+		}
+
+		if (!is_in_comment) {
+			output = string_append_char(output, code[i]);
 		}
 	}
 

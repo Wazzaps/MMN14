@@ -23,7 +23,7 @@ char* load_file (char* _folder_name, char* file_name) {
 
 	/* If folder name does not end with a slash add one */
 	if (string_get_last_char(folder_name) != '/' && string_get_last_char(folder_name) != '\\') {
-		string_append_char(&folder_name, '/');
+		folder_name = string_append_char(folder_name, '/');
 	}
 
 	/* Open the file */
