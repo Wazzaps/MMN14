@@ -39,7 +39,7 @@
 			"name": "C Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceRoot}/unittests_bin/whitespace",
+			"program": "${workspaceRoot}/bin/mycompiler",
 			"args": ["file1"],
 			"stopAtEntry": true,
 			"cwd": "${workspaceRoot}",

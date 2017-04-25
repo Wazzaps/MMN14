@@ -36,3 +36,7 @@ char* string_append_char (char* string, char char_to_append) {
 	output[length+1] = '\0';
 	return output;
 }
+
+void* array_expand_to (void* array, unsigned int length, unsigned int size) {
+	return realloc(array, length * size);
+}

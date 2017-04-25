@@ -7,6 +7,6 @@ char* string_concat (char* a, char* b);
 char* string_copy (char* string);
 char* string_append_char (char* string, char char_to_append);
 
-void* array_expand_by (void* array, unsigned int length);
+void* array_expand_to (void* array, unsigned int length, unsigned int size);
 
 #endif

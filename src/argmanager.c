@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "infinitestructures.h"
 #include "argmanager.h"
 #include "conststrings.h"
 #include "errors.h"
@@ -9,6 +10,7 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 	int i;
 	unsigned int file_count = 0;
 	program_arguments output;
+	char** files = malloc(sizeof(char*));
 	
 	output.should_compile = 1;
 
@@ -36,7 +38,8 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 				exit(UNKNOWN_FLAG);
 			}
 		} else {
-			printf("File: %s\n", argv[i]);
+			files = array_expand_to(files, (file_count + 2), sizeof(char*));
+			files[file_count] = argv[i];
 			file_count++;
 		}
 	}
@@ -46,6 +49,8 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 		exit(MISSING_INPUT_FILES);
 	}
 
-	putchar('\n');
+	output.files_count = file_count;
+	output.files = files;
+
 	return output;
 }
