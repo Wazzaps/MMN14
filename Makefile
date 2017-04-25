@@ -11,7 +11,8 @@ UTESTS_BIN_DIR = unittests_bin
 ITESTS_DIR = integrationtests
 
 CC = gcc
-CC_FLAGS = -ansi -pedantic -Wall
+# Remove the `-g` when finished debugging 
+CC_FLAGS = -ansi -pedantic -Wall -g
 
 # -------------
 
@@ -34,29 +35,33 @@ compile: $(BIN_DIR)/$(EXEC_NAME)
 
 .PHONY: test
 test:
-	@echo "\033[1;33mExecuting unit tests\033[0m"; \
-	DID_FAIL_UNIT=0; \
+	@DID_FAIL_UNIT=0; \
 	for f in $(UTESTS_BIN_DIR)/*; do \
-		echo "\033[1;33mTesting $$f\033[0m"; \
+		echo -n "\033[1;33mTesting $$f\033[0m"; \
+		atime=$$(date +%s%N); \
 		./"$$f"; \
 		if [ $$? -ne 0 ]; then \
-			echo "\033[1;31mFailed!\033[0m"; \
+			echo " \033[1;31mFailed!\033[0m"; \
 			DID_FAIL_UNIT=1; \
 		fi; \
+		btime=$$(($$(date +%s%N) - $$atime)); \
+		printf " \033[1;37m[%.2f ms]\033[0m\n" "$$(echo "scale = 10; $$btime / 1000000" | bc)"; \
 	done; \
 	if [ $$DID_FAIL_UNIT -eq 1 ]; then \
 		echo "\033[1;31mFailed unit test(s)!\033[0m"; \
 		exit 1; \
 	fi; \
-	echo "\033[1;33mExecuting integration tests\033[0m"; \
 	DID_FAIL_INTEG=0; \
 	for f in $(ITESTS_DIR)/*.sh; do \
-		echo "\033[1;33mTesting $$f\033[0m"; \
+		echo -n "\033[1;33mTesting $$f\033[0m"; \
+		atime=$$(date +%s%N); \
 		./"$$f"; \
 		if [ $$? -ne 0 ]; then \
-			echo "\033[1;31mFailed!\033[0m"; \
+			echo " \033[1;31mFailed!\033[0m"; \
 			DID_FAIL_INTEG=1; \
 		fi; \
+		btime=$$(($$(date +%s%N) - $$atime)); \
+		printf " \033[1;37m[%.2f ms]\033[0m\n" "$$(echo "scale = 10; $$btime / 1000000" | bc)"; \
 	done; \
 	if [ $$DID_FAIL_INTEG -eq 1 ]; then \
 		echo "\033[1;31mFailed integration test(s)!\033[0m"; \
