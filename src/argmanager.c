@@ -27,12 +27,23 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 				if (i == argc - 1 || argv[i+1][0] == '-') {
 					printf(STR_ERR_MISSING_FLAG_ARGUMENTS, argv[i]);
 					exit(MISSING_FLAG_ARGUMENT);
+				} else {
+					output.output_folder_name = argv[++i];
+					output.output_folder = 1;
 				}
-				printf(STR_INF_SELECTED_OUTPUT_FOLDER, argv[++i]);
+			} else if (!strcmp(argv[i], FLAG_INPUT_FOLDER) || !strcmp(argv[i], FLAG_INPUT_FOLDER_SHORT)) {
+				/* Output folder */
+				if (i == argc - 1 || argv[i+1][0] == '-') {
+					printf(STR_ERR_MISSING_FLAG_ARGUMENTS, argv[i]);
+					exit(MISSING_FLAG_ARGUMENT);
+				} else {
+					output.input_folder_name = argv[++i];
+					output.input_folder = 1;
+				}
 			} else if (!strcmp(argv[i], FLAG_HELP) || !strcmp(argv[i], FLAG_HELP_SHORT)) {
 				/* Help */
 				printf(STR_INF_PROG_USAGE);
-				return output;
+				exit(NO_ERROR);
 			} else {
 				printf("Unknown flag: %s\n", argv[i]);
 				exit(UNKNOWN_FLAG);

@@ -7,11 +7,12 @@
 #include "conststrings.h"
 #include "fileloader.h"
 
-char* load_file (char* _folder_name, char* file_name) {
+single_file load_file (char* _folder_name, char* file_name) {
 	char* folder_name = string_copy(_folder_name);
 	char* path = string_concat(file_name, ASM_EXTENSION);
 	FILE* f;
 	char* contents;
+	single_file output;
 	long int file_size;
 	long int i = 0;
 
@@ -48,5 +49,8 @@ char* load_file (char* _folder_name, char* file_name) {
 
 	fclose(f);
 
-	return contents;
+	output.file_name = file_name;
+	output.contents = contents;
+
+	return output;
 }

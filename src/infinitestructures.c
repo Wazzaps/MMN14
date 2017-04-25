@@ -31,7 +31,7 @@ char* string_copy (char* string) {
 
 char* string_append_char (char* string, char char_to_append) {
 	unsigned int length = strlen(string);
-	char* output = string_expand_to(string, length + 2);
+	char* output = string_expand_to(string, length + 1);
 	output[length] = char_to_append;
 	output[length+1] = '\0';
 	return output;

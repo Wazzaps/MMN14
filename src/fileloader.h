@@ -3,6 +3,11 @@
 
 #define ASM_EXTENSION ".as"
 
-char* load_file (char* _folder_name, char* file_name);
+typedef struct single_file_struct {
+	char* file_name;
+	char* contents;
+} single_file;
+
+single_file load_file (char* _folder_name, char* file_name);
 
 #endif

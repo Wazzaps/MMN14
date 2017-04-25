@@ -8,6 +8,7 @@ char* whitespace_process (char* code) {
 	char* output;
 	output = _whitespace_firstpass(code);
 	output = _whitespace_secondpass(output);
+	output = _whitespace_thirdpass(output);/**/
 
 	return output;
 }
@@ -15,6 +16,7 @@ char* whitespace_process (char* code) {
 /* First pass: Switch all \r\n to just \n by removing \r */
 char* _whitespace_firstpass (char* code) {
 	char* output = malloc(1);
+	output[0] = 0;
 	int codelen = strlen(code);
 	int i;
 	
@@ -31,6 +33,7 @@ char* _whitespace_firstpass (char* code) {
 /* Second pass: Remove all whitespace from starts of lines */
 char* _whitespace_secondpass (char* code) {
 	char* output = malloc(1);
+	output[0] = 0;
 	int codelen = strlen(code);
 	int i;
 	int is_at_start = 1;
@@ -52,6 +55,7 @@ char* _whitespace_secondpass (char* code) {
 /* Third pass: Remove all comments */
 char* _whitespace_thirdpass (char* code) {
 	char* output = malloc(1);
+	output[0] = 0;
 	int codelen = strlen(code);
 	int i;
 	int is_in_comment = 0;
