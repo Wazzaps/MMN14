@@ -8,17 +8,21 @@
 
 program_arguments argmanager_process (int argc, char *argv[]) {
 	int i;
-	unsigned int file_count = 0;
 	program_arguments output;
-	char** files = malloc(sizeof(char*));
 	
-	output.should_compile = 1;
+	/* 128 (MAX_FILE_COUNT) files should be enough */
+	output.files = calloc(MAX_FILE_COUNT, sizeof(single_file)); 
 
-	if (argc == 1) {
-		printf(STR_ERR_MISSING_ARGUMENTS STR_INF_PROG_USAGE);
-		exit(MISSING_INPUT_FILES);
-	}
-
+	/*if (i == argc - 1 || argv[i+1][0] == '-') {
+					printf(STR_ERR_MISSING_FLAG_ARGUMENTS, argv[i]);
+					exit(MISSING_FLAG_ARGUMENT);
+				} else {
+					output.input_folder_name = argv[++i];
+					output.input_folder = 1;
+				}
+	  Loop over arguments, skipping over index 0 because
+	  it's the exexutable name and that's not important
+	*/
 	for (i = 1; i < argc; i++) {
 		/* If the argument word starts with a dash it's a flag */
 		if (argv[i][0] == '-') {
@@ -32,7 +36,7 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 					output.output_folder = 1;
 				}
 			} else if (!strcmp(argv[i], FLAG_INPUT_FOLDER) || !strcmp(argv[i], FLAG_INPUT_FOLDER_SHORT)) {
-				/* Output folder */
+				/* Input folder */
 				if (i == argc - 1 || argv[i+1][0] == '-') {
 					printf(STR_ERR_MISSING_FLAG_ARGUMENTS, argv[i]);
 					exit(MISSING_FLAG_ARGUMENT);
@@ -40,6 +44,9 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 					output.input_folder_name = argv[++i];
 					output.input_folder = 1;
 				}
+			} else if (!strcmp(argv[i], FLAG_VERBOSE) || !strcmp(argv[i], FLAG_VERBOSE_SHORT)) {
+				/* Verbose messages (debugging) */
+				output.verbose = 1;
 			} else if (!strcmp(argv[i], FLAG_HELP) || !strcmp(argv[i], FLAG_HELP_SHORT)) {
 				/* Help */
 				printf(STR_INF_PROG_USAGE);
@@ -49,19 +56,21 @@ program_arguments argmanager_process (int argc, char *argv[]) {
 				exit(UNKNOWN_FLAG);
 			}
 		} else {
-			files = array_expand_to(files, (file_count + 2), sizeof(char*));
-			files[file_count] = argv[i];
-			file_count++;
+			/* Add file to file list */
+			if (output.file_count < MAX_FILE_COUNT) {
+				output.files[output.file_count].file_name = argv[i];
+				output.file_count++;
+			} else {
+				printf(STR_ERR_MAX_FILES_REACHED, MAX_FILE_COUNT);
+			}
 		}
 	}
 
-	if (file_count == 0 && output.should_compile) {
+	/* Check if there are any files have been passed */
+	if (output.file_count == 0) {
 		printf(STR_ERR_MISSING_ARGUMENTS STR_INF_PROG_USAGE);
 		exit(MISSING_INPUT_FILES);
 	}
-
-	output.files_count = file_count;
-	output.files = files;
 
 	return output;
 }

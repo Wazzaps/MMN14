@@ -3,27 +3,31 @@
 #include "whitespace.h"
 #include "infinitestructures.h"
 
+#define NEXT_CHAR(x) string_get_next_char(&x, &x##_counter)
 
-char* whitespace_process (char* code) {
-	char* output;
+
+infstring* whitespace_process (infstring* code) {
+	infstring* output;
 	output = _whitespace_firstpass(code);
 	output = _whitespace_secondpass(output);
-	output = _whitespace_thirdpass(output);/**/
+	output = _whitespace_thirdpass(output);
 
 	return output;
 }
 
 /* First pass: Switch all \r\n to just \n by removing \r */
-char* _whitespace_firstpass (char* code) {
-	char* output = malloc(1);
-	output[0] = 0;
-	int codelen = strlen(code);
+infstring* _whitespace_firstpass (infstring* code) {
+	infstring* output = string_new();
+	infstring* current = output;
+	int code_counter = 0;
+	unsigned int codelen = string_length(code);
 	int i;
-	
+
 	/* Loop over every char */
 	for (i = 0; i < codelen; i++) {
-		if (code[i] != '\r') {
-			output = string_append_char(output, code[i]);
+		char the_char = NEXT_CHAR(code);
+		if (the_char != '\r') {
+			current = string_append_to_last(current, the_char);
 		}
 	}
 
@@ -31,20 +35,24 @@ char* _whitespace_firstpass (char* code) {
 }
 
 /* Second pass: Remove all whitespace from starts of lines */
-char* _whitespace_secondpass (char* code) {
-	char* output = malloc(1);
-	output[0] = 0;
-	int codelen = strlen(code);
+infstring* _whitespace_secondpass (infstring* code) {
+	infstring* output = string_new();
+	infstring* current = output;
+	unsigned int codelen = string_length(code);
+	int code_counter = 0;
 	int i;
 	int is_at_start = 1;
-	
+
 	/* Loop over every char */
 	for (i = 0; i < codelen; i++) {
-		if (!is_at_start || (code[i] != ' ' && code[i] != '\t' && code[i] != '\n')) {
-			output = string_append_char(output, code[i]);
+		char the_char = NEXT_CHAR(code);
+		if (!is_at_start || (the_char != ' ' &&
+		                     the_char != '\t' &&
+                             the_char != '\n')) {
+			current = string_append_to_last(current, the_char);
 			is_at_start = 0;
 		}
-		if (code[i] == '\n') {
+		if (the_char == '\n') {
 			is_at_start = 1;
 		}
 	}
@@ -53,29 +61,31 @@ char* _whitespace_secondpass (char* code) {
 }
 
 /* Third pass: Remove all comments */
-char* _whitespace_thirdpass (char* code) {
-	char* output = malloc(1);
-	output[0] = 0;
-	int codelen = strlen(code);
+infstring* _whitespace_thirdpass (infstring* code) {
+	infstring* output = string_new();
+	infstring* current = output;
+	unsigned int codelen = string_length(code);
+	int code_counter = 0;
 	int i;
 	int is_in_comment = 0;
 	int is_in_string = 0;
-	
+
 	/* Loop over every char */
 	for (i = 0; i < codelen; i++) {
-		if (code[i] == '\"' && !is_in_comment) {
+		char the_char = NEXT_CHAR(code);
+		if (the_char == '\"' && !is_in_comment) {
 			is_in_string = !is_in_string;
 		}
-		if (code[i] == ';' && !is_in_string) {
+		if (the_char == ';' && !is_in_string) {
 			is_in_comment = 1;
 		}
-		if (code[i] == '\n') {
+		if (the_char == '\n') {
 			is_in_comment = 0;
 			is_in_string = 0;
 		}
 
 		if (!is_in_comment) {
-			output = string_append_char(output, code[i]);
+			current = string_append_to_last(current, the_char);
 		}
 	}
 

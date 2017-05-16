@@ -7,50 +7,45 @@
 #include "conststrings.h"
 #include "fileloader.h"
 
-single_file load_file (char* _folder_name, char* file_name) {
-	char* folder_name = string_copy(_folder_name);
-	char* path = string_concat(file_name, ASM_EXTENSION);
+infstring* load_file (char* _folder_name, char* _file_name) {
+	infstring* path = from_cstring(_folder_name);
+	infstring* file_name = from_cstring(_file_name);
 	FILE* f;
-	char* contents;
-	single_file output;
-	long int file_size;
-	long int i = 0;
+
+	infstring* contents = calloc(1, sizeof(infstring));
+	infstring* current = contents;
+
+	string_concat(file_name, from_cstring(ASM_EXTENSION));
 
 	/* If folder name empty then select current directory */
-	if (strlen(folder_name) == 0) {
-		free(folder_name);
-		folder_name = "./";
+	if (path->length == 0) {
+		string_concat(path, from_cstring("./"));
 	}
 
 	/* If folder name does not end with a slash add one */
-	if (string_get_last_char(folder_name) != '/' && string_get_last_char(folder_name) != '\\') {
-		folder_name = string_append_char(folder_name, '/');
+	if (INF_LAST_CHAR(path) != '/' && INF_LAST_CHAR(path) != '\\') {
+		string_append_char(path, '/');
 	}
 
 	/* Open the file */
-	path = string_concat(folder_name, path);
+	string_concat(path, file_name);
 
-	f = fopen(path, "r");
+	f = fopen(to_cstring(path), "r");
 	if (f == NULL) {
-    	printf(STR_ERR_ERROR_OPENING_FILE_FOR_READING, file_name, ASM_EXTENSION);
+    	printf(STR_ERR_ERROR_OPENING_FILE_FOR_READING, _file_name, ASM_EXTENSION);
     	exit(ERROR_FILEREAD);
 	}
 
-	/* Get the file's size */
-	fseek(f, 0L, SEEK_END);
-	file_size = ftell(f);
-	rewind(f);
-	contents = malloc(file_size);
-
 	/* Copy char by char the file to the string */
-	for (i = 0; i < file_size; i++) {
-		contents[i] = fgetc(f);
+	while (1) {
+		char last_char = fgetc(f);
+		if (last_char == EOF) {
+			break;
+		}
+		current = string_append_to_last(current, last_char);
 	}
 
 	fclose(f);
 
-	output.file_name = file_name;
-	output.contents = contents;
-
-	return output;
+	return contents;
 }

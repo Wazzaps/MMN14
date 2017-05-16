@@ -1,9 +1,11 @@
 #ifndef WHITESPACE_H 
 #define WHITESPACE_H 
 
-char* whitespace_process (char* code);
-char* _whitespace_firstpass (char* code);
-char* _whitespace_secondpass (char* code);
-char* _whitespace_thirdpass (char* code);
+#include "infinitestructures.h"
+
+infstring* whitespace_process (infstring* code);
+infstring* _whitespace_firstpass (infstring* code);
+infstring* _whitespace_secondpass (infstring* code);
+infstring* _whitespace_thirdpass (infstring* code);
 
 #endif

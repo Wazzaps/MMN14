@@ -63,7 +63,7 @@ There are 4 statement types:
 | ----------- | ------------------------------------------------------------------------- |
 | Whitespace  | Line containing only spaces and tabs                                      |
 | Comment     | Line begins with a `';'`, ignored                                         |
-| Guidance    | Memory allocation, and other compile-time things for the asssembler to do |
+| Directive   | Memory allocation, and other compile-time things for the asssembler to do |
 | Instruction | Literal instruction to be decoded                                         |
 
 There are 5 guidance types:
