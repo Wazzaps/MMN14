@@ -2,7 +2,9 @@
 Assembler for university course 
 
 # Building and testing
-There is a custom makefile with the following commands:
+##Right now use CLion!
+
+**There will be** a custom makefile with the following commands:
 * `make` - `compile`, `compiletests`, and `test`
 * `make compile` - Only compiles everything from `src/` to `obj/` and links to `bin/mycompiler`
 * `make compiletests` - Compiles all unit tests from `unittests_src` to `unittests_obj` and links each one individually with everything from `obj` except `main.o` into executables at `unittests_bin`

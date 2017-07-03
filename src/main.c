@@ -1,74 +1,56 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include "argmanager.h"
-#include "fileloader.h"
-#include "infinitestructures.h"
-#include "filewriter.h"
-#include "conststrings.h"
-#include "whitespace.h"
+#include <string.h>
+#include "structures.h"
+#include "errors.h"
+#include "directive_parser.h"
 
+int main (int argc, char* argv[]) {
+    int iterator;
+    int failed_file_check = 0;
 
-int main(int argc, char *argv[]) {
-	/* Handle arguments */
-	int i;
-	program_arguments args = argmanager_process(argc, argv);
+    /* Check that file arguments are valid */
+    if (argc == 1) {
+        fprintf(stderr, ERROR_NO_INPUT_FILES);
+        return 1;
+    }
 
-	char* input_folder = args.input_folder ? args.input_folder_name : "";
-	/*char* output_folder = args.output_folder ? args.output_folder_name : "";*/
+    for (iterator = 1; iterator < argc; iterator++) {
+        string file_name = {};
+        strcpy(file_name, argv[iterator]);
+        strcat(file_name, ".as");
+        FILE* file = fopen(file_name, "r");
+        if (file == NULL) {
+            fprintf(stderr, ERROR_CANNOT_READ, argv[iterator]);
+            failed_file_check = 1;
+        }
+        fclose(file);
+    }
 
-	/* Print selected input and output folders */
-	if (args.input_folder && args.verbose) {
-		printf(STR_INF_SELECTED_INPUT_FOLDER, args.input_folder_name);
-	}
+    if (failed_file_check)
+        return 1;
 
-	if (args.output_folder && args.verbose) {
-		printf(STR_INF_SELECTED_OUTPUT_FOLDER, args.output_folder_name);
-	}
+    /* Open files */
+    for (iterator = 1; iterator < argc; iterator++) {
+        string file_name = {};
+        strcpy(file_name, argv[iterator]);
+        strcat(file_name, ".as");
+        FILE* file = fopen(file_name, "r");
+        if (DEBUG_MODE) {
+            printf("Opening file: %s\n", file_name);
+        }
 
-	/* Load all files provided by arguments */
-	for (i = 0; i < args.file_count; i++) {
-		if (args.verbose) {
-			printf("Loading file: %s\n", args.files[i].file_name);
-		}
-		args.files[i].contents = load_file(input_folder, args.files[i].file_name);
-		
-	}
+        /* Create relevant tables */
+        entry_list entry_table;
+        extern_list extern_table;
+        label_list* label_table;
+        data_table the_data_table;
+        code_table the_code_table;
 
-	/* TODO: Process whitespace */
-	for (i = 0; i < args.file_count; i++) {
-		
-	}
+        parse_directives(file, argv[iterator], &entry_table, &extern_table, label_table);
 
-	/* TODO: Split each file into a line array */
+        /* Close file */
+        fclose(file);
+    }
 
-	/* TODO: Group each file's lines by type (assembler directive / assembly instruction) */
-
-	/* TODO: Check validity of each assembler directive */
-
-	/* TODO: Tokenize assembly instructions */
-
-	/* TODO: Check validity of each instruction */
-
-	/* TODO: Replace token representation with a representation
-	   more resembling of the machine code */
-
-	/* TODO: Create a symbol table from assembler directives */
-
-	/* TODO: Replace each symbol token with it's address */
-
-	/* TODO: Create array of machine code in normal base */
-	
-	/* TODO: Convert bases and output as strings */
-
-	/* TODO: Write the object file */
-
-	/* TODO: Create a list of all extern assembler directives */
-
-	/* TODO: Write extern file */
-
-	/* TODO: Create a list of all entry assembler directives */
-
-	/* TODO: Write entry file */
-
-	return 0;
+    return 0;
 }
