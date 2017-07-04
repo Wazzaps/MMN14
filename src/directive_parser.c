@@ -11,40 +11,38 @@
 #include "general_parsing.h"
 
 parser_definition custom_types[] = {
-    {"reg", "r%{int}"},
-    {"const", "#%{int}"},
-    {"matdef", "[%{int}][%{int}]"},
-    {"mataccess", "%a{alphanum}[%{int}][%{int}]"},
-    {"label", "%a{alphanum}"},
-    {"arg", "%{reg|const|mataccess|label}"},
-    {"arg_noconst", "%{reg|mataccess|label}"},
-};
+        {"reg",         "r%{int}"},
+        {"const",       "#%{int}"},
+        {"matdef",      "[%{int}][%{int}]"},
+        {"mataccess",   "%{word}[%{int}][%{int}]"},
+        {"label",       "%{word}"},
+        {"arg",         "%{reg|const|mataccess|label}"},
+        {"arg_noconst", "%{reg|mataccess|label}"},
 
-parser_definition directives[] = {
-    {"data", "%a{%d}"},
-    {"string", "\"%{alphanum}\""},
-    {"mat", "%{matdef} %a{%d}"},
-    {"entry", "%{alphanum}"},
-    {"extern", "%{alphanum"}
-};
+        /* Assembly directives */
+        {"data",        "%a{int}"},
+        {"string",      "\"%{word}\""},
+        {"mat",         "%{matdef} %ac{int}"},
+        {"entry",       "%{word}"},
+        {"extern",      "%{word}"},
 
-parser_definition operations[] = {
-    {"mov", "%{arg}, %{arg_noconst}"},
-    {"cmp", "%{arg}, %{arg}"},
-    {"add", "%{arg}, %{arg_noconst}"},
-    {"sub", "%{arg}, %{arg_noconst}"},
-    {"not", "%{arg_noconst}"},
-    {"clr", "%{arg_noconst}"},
-    {"lea", "%{mataccess|label}, %{arg_noconst}"},
-    {"inc", "%{arg_noconst}"},
-    {"dec", "%{arg_noconst}"},
-    {"jmp", "%{arg_noconst}"},
-    {"bne", "%{arg_noconst}"},
-    {"red", "%{arg_noconst}"},
-    {"prn", "%{arg}"},
-    {"jsr", "%{arg_noconst}"},
-    {"rts", ""},
-    {"stop", ""}
+        /* Ops */
+        {"mov",         "%{arg},%{arg_noconst}"},
+        {"cmp",         "%{arg},%{arg}"},
+        {"add",         "%{arg},%{arg_noconst}"},
+        {"sub",         "%{arg},%{arg_noconst}"},
+        {"not",         "%{arg_noconst}"},
+        {"clr",         "%{arg_noconst}"},
+        {"lea",         "%{mataccess|label},%{arg_noconst}"},
+        {"inc",         "%{arg_noconst}"},
+        {"dec",         "%{arg_noconst}"},
+        {"jmp",         "%{arg_noconst}"},
+        {"bne",         "%{arg_noconst}"},
+        {"red",         "%{arg_noconst}"},
+        {"prn",         "%{arg}"},
+        {"jsr",         "%{arg_noconst}"},
+        {"rts",         ""},
+        {"stop",        ""}
 };
 
 /* Reads assembly directives */
