@@ -4,12 +4,13 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/david/CLionProjects/mmn14/src/directive_parser.c" "/home/david/CLionProjects/mmn14/cmake-build-debug/CMakeFiles/mmn14.dir/src/directive_parser.c.o"
-  "/home/david/CLionProjects/mmn14/src/general_parsing.c" "/home/david/CLionProjects/mmn14/cmake-build-debug/CMakeFiles/mmn14.dir/src/general_parsing.c.o"
-  "/home/david/CLionProjects/mmn14/src/main.c" "/home/david/CLionProjects/mmn14/cmake-build-debug/CMakeFiles/mmn14.dir/src/main.c.o"
-  "/home/david/CLionProjects/mmn14/src/string_parser.c" "/home/david/CLionProjects/mmn14/cmake-build-debug/CMakeFiles/mmn14.dir/src/string_parser.c.o"
-  "/home/david/CLionProjects/mmn14/src/structures.c" "/home/david/CLionProjects/mmn14/cmake-build-debug/CMakeFiles/mmn14.dir/src/structures.c.o"
-  "/home/david/CLionProjects/mmn14/src/util_functions.c" "/home/david/CLionProjects/mmn14/cmake-build-debug/CMakeFiles/mmn14.dir/src/util_functions.c.o"
+  "/home/david/Repos/MMN14/src/directive_parser.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/directive_parser.c.o"
+  "/home/david/Repos/MMN14/src/general_parsing.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/general_parsing.c.o"
+  "/home/david/Repos/MMN14/src/individual_directives.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/individual_directives.c.o"
+  "/home/david/Repos/MMN14/src/main.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/main.c.o"
+  "/home/david/Repos/MMN14/src/string_parser.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/string_parser.c.o"
+  "/home/david/Repos/MMN14/src/structures.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/structures.c.o"
+  "/home/david/Repos/MMN14/src/util_functions.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/util_functions.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

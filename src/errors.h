@@ -1,4 +1,4 @@
-#ifndef ERRORS_H 
+#ifndef ERRORS_H
 #define ERRORS_H
 
 /* Files */
@@ -24,6 +24,9 @@
 #define ERROR_EXPECTED_WORD "ERROR: Expected a word in column %d" /* Line num is inserted here */
 #define ERROR_UNEXPECTED_FMT_END "ERROR: !!!! Unexpected format string to end, missing closing '}' !!!!\n"
 #define ERROR_NO_CURBRACE_AFTER_FORMAT "ERROR: !!!! No curly brace or type after format character !!!!\n"
+
+/* General errors */
+#define ERROR_OUT_OF_MEMORY "FATAL: OUT OF MEMORY!\n"
 
 /* Turn on to get info on all lines */
 #define DEBUG_MODE 1

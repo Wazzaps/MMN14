@@ -48,10 +48,10 @@ RM = /home/david/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/171.4694.31/bin/
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/david/CLionProjects/mmn14
+CMAKE_SOURCE_DIR = /home/david/Repos/MMN14
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/david/CLionProjects/mmn14/cmake-build-debug
+CMAKE_BINARY_DIR = /home/david/Repos/MMN14/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/david/CLionProjects/mmn14/cmake-build-debug/CMakeFiles /home/david/CLionProjects/mmn14/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/david/Repos/MMN14/cmake-build-debug/CMakeFiles /home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/david/CLionProjects/mmn14/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/david/Repos/MMN14/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -176,6 +176,33 @@ src/general_parsing.s: src/general_parsing.c.s
 src/general_parsing.c.s:
 	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/general_parsing.c.s
 .PHONY : src/general_parsing.c.s
+
+src/individual_directives.o: src/individual_directives.c.o
+
+.PHONY : src/individual_directives.o
+
+# target to build an object file
+src/individual_directives.c.o:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives.c.o
+.PHONY : src/individual_directives.c.o
+
+src/individual_directives.i: src/individual_directives.c.i
+
+.PHONY : src/individual_directives.i
+
+# target to preprocess a source file
+src/individual_directives.c.i:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives.c.i
+.PHONY : src/individual_directives.c.i
+
+src/individual_directives.s: src/individual_directives.c.s
+
+.PHONY : src/individual_directives.s
+
+# target to generate assembly for a file
+src/individual_directives.c.s:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives.c.s
+.PHONY : src/individual_directives.c.s
 
 src/main.o: src/main.c.o
 
@@ -300,6 +327,9 @@ help:
 	@echo "... src/general_parsing.o"
 	@echo "... src/general_parsing.i"
 	@echo "... src/general_parsing.s"
+	@echo "... src/individual_directives.o"
+	@echo "... src/individual_directives.i"
+	@echo "... src/individual_directives.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

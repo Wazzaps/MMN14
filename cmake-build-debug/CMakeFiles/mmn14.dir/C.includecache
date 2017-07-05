@@ -6,33 +6,31 @@
 
 #IncludeRegexTransform: 
 
-/home/david/CLionProjects/mmn14/src/directive_parser.c
+/home/david/Repos/MMN14/src/directive_parser.c
 string.h
 -
 ctype.h
 -
 structures.h
-/home/david/CLionProjects/mmn14/src/structures.h
+/home/david/Repos/MMN14/src/structures.h
 util_functions.h
-/home/david/CLionProjects/mmn14/src/util_functions.h
+/home/david/Repos/MMN14/src/util_functions.h
 errors.h
-/home/david/CLionProjects/mmn14/src/errors.h
-directive_parser.h
-/home/david/CLionProjects/mmn14/src/directive_parser.h
+/home/david/Repos/MMN14/src/errors.h
+string_parser.h
+/home/david/Repos/MMN14/src/string_parser.h
 general_parsing.h
-/home/david/CLionProjects/mmn14/src/general_parsing.h
+/home/david/Repos/MMN14/src/general_parsing.h
 
-/home/david/CLionProjects/mmn14/src/directive_parser.h
+/home/david/Repos/MMN14/src/directive_parser.h
 
-/home/david/CLionProjects/mmn14/src/errors.h
+/home/david/Repos/MMN14/src/errors.h
 
-/home/david/CLionProjects/mmn14/src/general_parsing.c
+/home/david/Repos/MMN14/src/general_parsing.c
 general_parsing.h
-/home/david/CLionProjects/mmn14/src/general_parsing.h
-structures.h
-/home/david/CLionProjects/mmn14/src/structures.h
+/home/david/Repos/MMN14/src/general_parsing.h
 errors.h
-/home/david/CLionProjects/mmn14/src/errors.h
+/home/david/Repos/MMN14/src/errors.h
 string.h
 -
 stdio.h
@@ -40,35 +38,55 @@ stdio.h
 ctype.h
 -
 
-/home/david/CLionProjects/mmn14/src/general_parsing.h
+/home/david/Repos/MMN14/src/general_parsing.h
+string_parser.h
+/home/david/Repos/MMN14/src/string_parser.h
 
-/home/david/CLionProjects/mmn14/src/main.c
+/home/david/Repos/MMN14/src/main.c
 stdio.h
 -
 string.h
 -
 structures.h
-/home/david/CLionProjects/mmn14/src/structures.h
+/home/david/Repos/MMN14/src/structures.h
 errors.h
-/home/david/CLionProjects/mmn14/src/errors.h
+/home/david/Repos/MMN14/src/errors.h
 directive_parser.h
-/home/david/CLionProjects/mmn14/src/directive_parser.h
+/home/david/Repos/MMN14/src/directive_parser.h
 
-/home/david/CLionProjects/mmn14/src/structures.c
+/home/david/Repos/MMN14/src/string_parser.c
 stdlib.h
 -
+string.h
+-
+ctype.h
+-
+stdio.h
+-
+string_parser.h
+/home/david/Repos/MMN14/src/string_parser.h
+general_parsing.h
+/home/david/Repos/MMN14/src/general_parsing.h
+errors.h
+/home/david/Repos/MMN14/src/errors.h
+
+/home/david/Repos/MMN14/src/string_parser.h
 structures.h
-/home/david/CLionProjects/mmn14/src/structures.h
+/home/david/Repos/MMN14/src/structures.h
+stdarg.h
+-
 
-/home/david/CLionProjects/mmn14/src/structures.h
+/home/david/Repos/MMN14/src/structures.c
 
-/home/david/CLionProjects/mmn14/src/util_functions.c
+/home/david/Repos/MMN14/src/structures.h
+
+/home/david/Repos/MMN14/src/util_functions.c
 util_functions.h
-/home/david/CLionProjects/mmn14/src/util_functions.h
+/home/david/Repos/MMN14/src/util_functions.h
 
-/home/david/CLionProjects/mmn14/src/util_functions.h
+/home/david/Repos/MMN14/src/util_functions.h
 stdio.h
 -
 structures.h
-/home/david/CLionProjects/mmn14/src/structures.h
+/home/david/Repos/MMN14/src/structures.h
 
