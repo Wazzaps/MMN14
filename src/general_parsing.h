@@ -48,7 +48,9 @@ void clean_and_preprocess_line (char* line, char** _label_name, char** _code_con
         {"jsr",         "%{arg_noconst}"},\
         {"rts",         ""},\
         {"stop",        ""}\
-};\
+};
+
+#define PARSER_CUSTOM_TYPES_LENGTH 28
 
 
 #endif //GENERAL_PARSING_H

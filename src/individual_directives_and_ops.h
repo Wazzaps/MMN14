@@ -7,17 +7,20 @@
 
 #include "structures.h"
 
-#define ASSEMBLER_DIRECTIVE_LIST_LENGTH 2
+#define ASSEMBLER_DIRECTIVE_LIST_LENGTH 5
 #define ASSEMBLER_OP_LIST_LENGTH 2
+
+#define OP_SIGNATURE void* parse_struct, list** entry_list, list** extern_list, list** label_list,\
+    dataptr* data, codeptr* code, unsigned int line_num
 
 typedef struct {
 	char* name;
-	void (*func)();
+
+	void (* func) (OP_SIGNATURE);
 } op;
 
 #define OP(OP_NAME) {#OP_NAME, &op_ ## OP_NAME}
-#define OP_DECLARATION(OP_NAME) void op_ ## OP_NAME(void* parse_struct, entry_list*, extern_list*, label_list*,\
-	int data[], int code[])
+#define OP_DECLARATION(OP_NAME) void op_ ## OP_NAME(OP_SIGNATURE)
 
 OP_DECLARATION(data);
 OP_DECLARATION(string);

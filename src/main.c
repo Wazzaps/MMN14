@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "structures.h"
 #include "errors.h"
 #include "directive_parser.h"
@@ -7,9 +8,6 @@
 int main (int argc, char* argv[]) {
 	int iterator;
 	int failed_file_check = 0;
-	void* ptr;
-	int len;
-	int i;
 
 	/* Check that file arguments are valid */
 	if (argc == 1) {
@@ -34,6 +32,14 @@ int main (int argc, char* argv[]) {
 
 	/* Open files */
 	for (iterator = 1; iterator < argc; iterator++) {
+		/* Create relevant tables */
+		list* entry_table = NULL;
+		list* extern_table = NULL;
+		list* label_table = NULL;
+		dataptr data = malloc(1);
+		codeptr code = malloc(1);
+
+		/* Create file name */
 		string file_name = {};
 		strcpy(file_name, argv[iterator]);
 		strcat(file_name, ".as");
@@ -42,26 +48,24 @@ int main (int argc, char* argv[]) {
 			printf("Opening file: %s\n", file_name);
 		}
 
-		/* Create relevant tables */
-		entry_list* entry_table;
-		extern_list* extern_table;
-		label_list* label_table;
+		/* Parse */
+		parse_directives(file, argv[iterator], &entry_table, &extern_table, &label_table, &data, &code);
 
-		parse_directives(file, argv[iterator], *&entry_table, *&extern_table, *&label_table);
+		/* FIXME: Print all entries as an example */
+		{
+			list* ptr = entry_table;
+			while (ptr != NULL) {
+				printf("%s : %d\n", ptr->name, ptr->line_num);
+				ptr = ptr->next;
+			}
+		}
+
+		free(data);
+		free(code);
 
 		/* Close file */
 		fclose(file);
 	}
-
-	/*ptr = mysscanf("%{string}", 26, custom_types, "\"Hello\"", 1);
-	if (!ptr) {
-		printf("Parser failed gracefully!\n");
-	} else {
-		len = PARSER_GET_INT(ptr); // Mat init length
-		for (i = 0; i < len; i++) {
-			printf("%c", PARSER_GET_CHAR(ptr)); // Mat init value(s)
-		}
-	}*/
 
 	return 0;
 }

@@ -5,21 +5,17 @@
 
 typedef char string[MAX_STRING_LENGTH + 1];
 
-typedef struct entry_list {
+typedef struct list {
 	string name;
 	unsigned int line_num;
-	struct entry_list* next;
-} entry_list;
+	struct list* next;
+} list;
 
-typedef struct extern_list {
-	string name;
-	unsigned int line_num;
-	struct extern_list* next;
-} extern_list;
+typedef char* dataptr;
 
-typedef struct label_list {
-	string name;
-	struct label_list* next;
-} label_list;
+typedef char* codeptr;
+
+/* Declarations */
+void list_add_element (list** the_list, string name, unsigned int line_num);
 
 #endif

@@ -12,15 +12,14 @@
 #include "individual_directives_and_ops.h"
 
 /* Reads assembly directives */
-void parse_directives (FILE* fp, string file_name, entry_list* entry_table,
-                       extern_list* extern_table, label_list* label_table) {
-	string line;
-	int line_num = 1;
+void parse_directives (FILE* fp, string file_name, list** entry_list, list** extern_list,
+                       list** label_list, dataptr* data, codeptr* code) {
+	string line = "";
+	unsigned int line_num = 1;
 	int line_length = 0;
 
 	parser_definition custom_types[] = PARSER_CUSTOM_TYPES;
-	int assembler_directives_length = ASSEMBLER_DIRECTIVE_LIST_LENGTH;
-	op assembler_directives[assembler_directives_length] = {
+	op assembler_directives[ASSEMBLER_DIRECTIVE_LIST_LENGTH] = {
 			OP(data),
 			OP(string),
 			OP(mat),
@@ -29,7 +28,7 @@ void parse_directives (FILE* fp, string file_name, entry_list* entry_table,
 	};
 
 	/* Read each line for pass 1 (assembly directives) */
-	while ((line_length = get_line(*&line, MAX_STRING_LENGTH + 1, fp)) != -1) {
+	while ((line_length = get_line(line, MAX_STRING_LENGTH + 1, fp)) != -1) {
 		char* code_contents;
 		char* label_name;
 		char* directive_name;
@@ -69,27 +68,26 @@ void parse_directives (FILE* fp, string file_name, entry_list* entry_table,
 		{
 			directive_name = code_contents;
 
-			while (*code_contents != ' ' && *code_contents != '\t') code_contents++;
+			while (*code_contents != ' ' && *code_contents != '\t' && *code_contents != '\0') code_contents++;
 			*code_contents = '\0';
-			code_contents = advance_whitespace(code_contents);
+			code_contents = advance_whitespace(code_contents + 1);
 		}
 
 		// Check that the directive is valid
-		for (i = 0; i < assembler_directives_length; i++) {
-			if (!strcmp(assembler_directives[i], directive_name)) {
+		for (i = 0; i < ASSEMBLER_DIRECTIVE_LIST_LENGTH; i++) {
+			if (!strcmp(assembler_directives[i].name, directive_name)) {
 				directive_exists = 1;
 
 				// Construct format string
 				strcat(fmt, directive_name);
 				strcat(fmt, "}");
 
-				parse_struct = mysscanf(fmt, 25, custom_types, code_contents, 1);
+				parse_struct = mysscanf(fmt, PARSER_CUSTOM_TYPES_LENGTH, custom_types, code_contents, 1);
 
-				/*if (DEBUG_MODE && code_contents[0] != '\0') {
-					printf("[%3d]  %c  %s: %s\n", line_num,
-					       code_contents[0] == '.' ? 'D' : 'C',
-					       label_name, code_contents);
-				}*/
+				if (parse_struct) {
+					assembler_directives[i].func(parse_struct, entry_list, extern_list,
+					                             label_list, data, code, line_num);
+				}
 
 				break;
 			}
