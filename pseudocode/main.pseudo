@@ -1,68 +1,9 @@
-// name = alphanumeric word that doesn't start with a number
-
-for file in files // fopen
-	- create entry table
-	- create extern table
-	- create label table
-	- create data table
-	- create code table
-
-	// pass 1 - assembly directives
-	for line in lines // readline
-		+ check that line length isn't above max, else, warn
-		+ replace ';' with '\0' (filter comments)
-		+ search for a colon not inside a string or char (label)
-		if colon found
-			+ is the only thing before it is a single name? else error
-			+ remember label
-		is the next character after colon and whitespace not '.'?
-			- increase size of label table
-			- put line number, and label name in label table
-			- skip current line
-		- is there a word immediately adjacent to the dot? else, error
-		- is the word known? else, error
-		- advance pointer to after directive name and whitespace
-		- read directive table to look for argument types
-		- replace first character of last whitespace with '\0' (remove whitespace - end)
-		- scan them and report for errors
-		if data, string, or mat
-			- increase size of data table
-			- increase size of label table
-			- put initial value in data table
-			- put offset of data table entry in label table, with the label name
-		if entry
-			- check for exactly one name argument, else error
-			- increase size of entry table
-			- put entry name, and line number in entry table
-			- if label exists, warn
-		if extern
-			- check for exactly one name argument, else error
-			- increase size of extern table
-			- put extern name, and line number in entry table
-			- if label exists, warn
-
-	// pass 1.5 - label table checking
-	for entry label in entry table
-		- if entry not in label table, error
-	for extern in extern table
-		- if extern not in label table, error
-		
-	// pass 2 - ops
-	for line in lines // readline
-		- replace ';' with '\0' (filter comments)
-		- advance pointer to skip prefix whitespace (remove whitespace - beginning)
-		- replace first character of last whitespace with '\0' (remove whitespace - end)
-		- read first name at beginning of line (get op name)
-		- advance pointer to skip prefix whitespace
-		- read op table to look for argument types
-		- scan them and report for errors
-		if no errors in this line
-			- replace each label with it's address (data and code)
-			- increase size of code table
-			- add result to code table
-	
-	// output
-	- write data to <name>.ob
-	- write code to <name>.ob
-	- write entry table to <name>.ent
-	- write extern table to <name>.ext
+1 - for file in file:
+    2 - open
+    3 - for pass in passes:
+        4 - for line in file
+            5 - parse
+            6 - save data or code
+            7 - save label in data or code if exists
+            8 - save extern/entry in seperate tables
+    9 - save output files
