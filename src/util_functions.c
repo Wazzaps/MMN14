@@ -1,3 +1,5 @@
+#include <string.h>
+#include <stdlib.h>
 #include "util_functions.h"
 
 /* Gets a line from a file stream, until a length is
@@ -27,4 +29,27 @@ int get_line (char* buffer, int length, FILE* stream) {
 	}
 
 	return last_char == EOF && input_length == 0 ? -1 : input_length;
+}
+
+/* Converts a positive int to "Weird" base 4 */
+char* to_base4 (unsigned int input) {
+	char* output = calloc(20, 1);
+	char* output_reversed = calloc(20, 1);
+	char* out_ptr = output_reversed;
+	int i;
+	int len;
+
+	while (input != 0) {
+		*out_ptr = (char) ((input % 4) + 'a');
+		input /= 4;
+		out_ptr++;
+	}
+
+	len = (int) strlen(output_reversed);
+
+	for (i = 0; i < len; i++) {
+		output[i] = output_reversed[len - i - 1];
+	}
+
+	return output;
 }

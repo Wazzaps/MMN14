@@ -6,4 +6,6 @@
 
 int get_line (char* buffer, int length, FILE* stream);
 
+char* to_base4 (unsigned int input);
+
 #endif

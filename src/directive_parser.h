@@ -1,7 +1,6 @@
 #ifndef DIRECTIVE_PARSER_H
 #define DIRECTIVE_PARSER_H
 
-void parse_directives (FILE* fp, string file_name, list** entry_list, list** extern_list,
-                       list** label_list, dataptr* data, codeptr* code);
+int parse_directives_and_labels (FILE* fp, string file_name, struct assembler_state_tables*);
 
 #endif //DIRECTIVE_PARSER_H

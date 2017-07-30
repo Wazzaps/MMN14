@@ -9,7 +9,7 @@
 
 /* Labels */
 #define ERROR_EMPTY_LABEL "WARN: Empty label on line %d\n"
-#define ERROR_USELESS_LABEL "WARN: Useless label, no directive or operation on line %d\n"
+#define ERROR_USELESS_LABEL "WARN: Useless label, no directive or operation on line %d. Ignored\n"
 #define ERROR_LABEL_TOO_LONG "WARN: Labels must have a maximum of %d characters, Violation on line %d\n"
 #define ERROR_LABEL_NOT_ON_START_OF_LINE "WARN: Labels must be at the start of the line, no whitespace, Violation on line %d\n"
 #define ERROR_WHITESPACE_AFTER_LABEL "WARN: Whitespace between label name and colon on line %d\n"

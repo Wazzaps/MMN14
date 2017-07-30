@@ -55,6 +55,7 @@ int _general_parse (string format, char** input, void** output_struct, int* stru
 				continue;
 			} else {
 				// TODO: ERROR: Expected character
+				puts("ERROR: Expected character");
 				return 0;
 			}
 		}
@@ -91,6 +92,7 @@ int _general_parse (string format, char** input, void** output_struct, int* stru
 				format++;
 				end_of_format_name = strchr(format, '}');
 				inner_format_name = calloc(end_of_format_name - format + 1, sizeof(char));
+
 				// Loop over array elements
 				do {
 					// Create a fresh copy of the format
@@ -122,19 +124,21 @@ int _general_parse (string format, char** input, void** output_struct, int* stru
 									(*input)++;
 									*input = advance_whitespace(*input);
 								} else {
-									// TODO: ERROR: Expected stuff after comma
 									break;
 								}
 							}
 						}
 					} else {
-						if (is_multi_option) {
-							// TODO: ERROR: Did not match any type
-							_adjust_struct_size(output_struct, struct_size, *struct_pos -= sizeof(int));
-						} else {
-							// TODO: ERROR: Did not match the type
-						}
 						if (!is_array || is_comma_delimited) {
+							if (is_multi_option) {
+								// TODO: ERROR: Did not match any type
+								puts("ERROR: Did not match any type");
+								_adjust_struct_size(output_struct, struct_size, *struct_pos -= sizeof(int));
+							} else {
+								// TODO: ERROR: Did not match the type
+								puts("ERROR: Did not match the type");
+							}
+
 							// Free format name
 							free(inner_format_name);
 							return 0;
@@ -159,6 +163,7 @@ int _general_parse (string format, char** input, void** output_struct, int* stru
 				}
 			} else {
 				// TODO: ERROR: Unexpected '%'
+				puts("ERROR: Unexpected '%'");
 				return 0;
 			}
 
@@ -168,6 +173,7 @@ int _general_parse (string format, char** input, void** output_struct, int* stru
 				(*input)++;
 			} else {
 				// TODO: ERROR: Expected character
+				puts("ERROR: Expected character");
 				return 0;
 			}
 		}

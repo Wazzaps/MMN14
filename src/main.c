@@ -15,10 +15,14 @@ int main (int argc, char* argv[]) {
 		return 1;
 	}
 
+	/* Open files */
 	for (iterator = 1; iterator < argc; iterator++) {
+		/* Add .as extension */
 		string file_name = {};
 		strcpy(file_name, argv[iterator]);
 		strcat(file_name, ".as");
+
+		/* Check that all files can be read */
 		FILE* file = fopen(file_name, "r");
 		if (file == NULL) {
 			fprintf(stderr, ERROR_CANNOT_READ, argv[iterator]);
@@ -32,12 +36,12 @@ int main (int argc, char* argv[]) {
 
 	/* Open files */
 	for (iterator = 1; iterator < argc; iterator++) {
+		int success = 1;
+
 		/* Create relevant tables */
-		list* entry_table = NULL;
-		list* extern_table = NULL;
-		list* label_table = NULL;
-		dataptr data = malloc(1);
-		codeptr code = malloc(1);
+		struct assembler_state_tables tables;
+		tables.data = malloc(1);
+		tables.code = malloc(1);
 
 		/* Create file name */
 		string file_name = {};
@@ -45,26 +49,53 @@ int main (int argc, char* argv[]) {
 		strcat(file_name, ".as");
 		FILE* file = fopen(file_name, "r");
 		if (DEBUG_MODE) {
-			printf("Opening file: %s\n", file_name);
+			printf("Processing file: %s\n", file_name);
 		}
 
 		/* Parse */
-		parse_directives(file, argv[iterator], &entry_table, &extern_table, &label_table, &data, &code);
+		success = parse_directives_and_labels(file, argv[iterator], &tables)
+		          && success;
 
-		/* FIXME: Print all entries as an example */
-		{
-			list* ptr = entry_table;
-			while (ptr != NULL) {
-				printf("%s : %d\n", ptr->name, ptr->line_num);
-				ptr = ptr->next;
-			}
+		if (success) {
+			list* ptr = tables.extern_table;
+
+			/*if (tables.entry_table != NULL) {
+				list* ptr = label_table;
+				string entry_file_name = {};
+
+				strcpy(entry_file_name, argv[iterator]);
+				strcat(entry_file_name, ".ent");
+				FILE* entry_file = fopen(entry_file_name, "w");
+
+				while (ptr != NULL) {
+					int i;
+					char* base4_converted = to_base4(ptr->number);
+
+					fprintf(entry_file, "%s", ptr->name);
+					for (i = (int)strlen(ptr->name); i < ENT_AND_EXT_PADDING; i++) {
+						putc(' ', entry_file);
+					}
+					fprintf(entry_file, "%s\n", base4_converted);
+					free(base4_converted);
+
+					ptr = ptr->next;
+				}
+
+				fclose(entry_file);
+			}*/
+
+
 		}
 
-		free(data);
-		free(code);
+		//free(data);
+		//free(code);
 
 		/* Close file */
 		fclose(file);
+
+		if (DEBUG_MODE) {
+			printf("%s\n", success ? "Success!" : "Fail!");
+		}
 	}
 
 	return 0;

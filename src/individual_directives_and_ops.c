@@ -4,95 +4,125 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "individual_directives_and_ops.h"
 #include "string_parser.h"
 
 /* Directives */
-void op_data (OP_SIGNATURE) {
+int op_data (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_string (OP_SIGNATURE) {
+int op_string (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_mat (OP_SIGNATURE) {
+int op_mat (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_entry (OP_SIGNATURE) {
+int op_entry (OP_SIGNATURE) {
 	int len = PARSER_GET_INT(parse_struct);
-	string name = "";
-	memcpy(name, parse_struct, (size_t) len);
+	ent_ext_table_struct* output = calloc(1, sizeof(ent_ext_table_struct));
 
-	list_add_element(entry_list, name, line_num);
+	memcpy(output->name, parse_struct, (size_t) len);
+	/* NOTE: Code address is still unknown */
+
+	list_add_element(&(tables->entry_table), output);
+	return 0;
 }
 
-void op_extern (OP_SIGNATURE) {
+int op_extern (OP_SIGNATURE) {
+	int len = PARSER_GET_INT(parse_struct);
+	ent_ext_table_struct* output = calloc(1, sizeof(ent_ext_table_struct));
 
+	memcpy(output->name, parse_struct, (size_t) len);
+	/* NOTE: Code address is still unknown */
+
+	list_add_element(&(tables->extern_table), output);
+	return 0;
 }
 
 /* OPs */
-void op_mov (OP_SIGNATURE) {
+int op_mov (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_cmp (OP_SIGNATURE) {
+int op_cmp (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_add (OP_SIGNATURE) {
+int op_add (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_sub (OP_SIGNATURE) {
+int op_sub (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_not (OP_SIGNATURE) {
+int op_not (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_clr (OP_SIGNATURE) {
+int op_clr (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_lea (OP_SIGNATURE) {
+int op_lea (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_inc (OP_SIGNATURE) {
+int op_inc (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_dec (OP_SIGNATURE) {
+int op_dec (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_jmp (OP_SIGNATURE) {
+int op_jmp (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_bne (OP_SIGNATURE) {
+int op_bne (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_red (OP_SIGNATURE) {
+int op_red (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_prn (OP_SIGNATURE) {
+int op_prn (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_jsr (OP_SIGNATURE) {
+int op_jsr (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_rts (OP_SIGNATURE) {
+int op_rts (OP_SIGNATURE) {
 
+	return 0;
 }
 
-void op_stop (OP_SIGNATURE) {
+int op_stop (OP_SIGNATURE) {
 
+	return 0;
 }
