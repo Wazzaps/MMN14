@@ -1,0 +1,42 @@
+funcs:
+  check register: make sure 0<=r#<=7
+  check constant: make sure no more than 10 bits (inc. sign)
+facts:
+  "word" - 10 bits - like a byte
+  total mem size - 256
+  program starts at mem location - 100
+  char enc - ascii
+  Labels can be referenced before they are declared
+  between lines - a single newline (\n)
+  max line length - 80 (not including \n)
+  comments are ';'
+  strings end with \0
+  entry - points to code in this file, and exports it
+  extern - points to an argument word, which referenced this label
+
+  OP encoding:
+    encoding of first word in op:
+      9..6    5..4      3..2        1..0
+      opcode  src type  dest type   E,R,A
+    number base in output files - base 4 - a,b,c,d
+    ops in assembly file always lowercase
+    E,R,A: External, Absolute, Relocatable
+      00 - Absolute
+      01 - External
+      10 - Relocatable
+    type ids:
+      0 - Immediate/constant
+      1 - Label
+      2 - Matrix
+      3 - Register
+
+  Matrix access:
+      0.....1 2.................9
+       Reloc          +20
+
+      0...1  2......5 6.....9
+       Abs    r_1     r_2
+  
+examples:
+  .data     +7, -57, 17, 9
+  

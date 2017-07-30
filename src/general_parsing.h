@@ -19,7 +19,7 @@ void clean_and_preprocess_line (char* line, char** _label_name, char** _code_con
     {"reg",     "r%{int}"},\
     {"const",       "#%{int}"},\
     {"matdef",      "[%{int}][%{int}]"},\
-    {"mataccess",   "%{word}[%{int}][%{int}]"},\
+    {"mataccess",   "%{word}[%{reg}][%{reg}]"},\
     {"label",       "%{word}"},\
     {"arg",     "%{reg|const|mataccess|label}"},\
     {"arg_noconst", "%{reg|mataccess|label}"},\

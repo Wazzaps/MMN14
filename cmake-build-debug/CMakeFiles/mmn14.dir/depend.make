@@ -4,6 +4,7 @@
 CMakeFiles/mmn14.dir/src/directive_parser.c.o: ../src/directive_parser.c
 CMakeFiles/mmn14.dir/src/directive_parser.c.o: ../src/errors.h
 CMakeFiles/mmn14.dir/src/directive_parser.c.o: ../src/general_parsing.h
+CMakeFiles/mmn14.dir/src/directive_parser.c.o: ../src/individual_directives_and_ops.h
 CMakeFiles/mmn14.dir/src/directive_parser.c.o: ../src/string_parser.h
 CMakeFiles/mmn14.dir/src/directive_parser.c.o: ../src/structures.h
 CMakeFiles/mmn14.dir/src/directive_parser.c.o: ../src/util_functions.h
@@ -14,10 +15,17 @@ CMakeFiles/mmn14.dir/src/general_parsing.c.o: ../src/general_parsing.h
 CMakeFiles/mmn14.dir/src/general_parsing.c.o: ../src/string_parser.h
 CMakeFiles/mmn14.dir/src/general_parsing.c.o: ../src/structures.h
 
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o: ../src/individual_directives_and_ops.c
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o: ../src/individual_directives_and_ops.h
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o: ../src/string_parser.h
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o: ../src/structures.h
+
 CMakeFiles/mmn14.dir/src/main.c.o: ../src/directive_parser.h
 CMakeFiles/mmn14.dir/src/main.c.o: ../src/errors.h
+CMakeFiles/mmn14.dir/src/main.c.o: ../src/global_constants.h
 CMakeFiles/mmn14.dir/src/main.c.o: ../src/main.c
 CMakeFiles/mmn14.dir/src/main.c.o: ../src/structures.h
+CMakeFiles/mmn14.dir/src/main.c.o: ../src/util_functions.h
 
 CMakeFiles/mmn14.dir/src/string_parser.c.o: ../src/errors.h
 CMakeFiles/mmn14.dir/src/string_parser.c.o: ../src/general_parsing.h
@@ -25,7 +33,9 @@ CMakeFiles/mmn14.dir/src/string_parser.c.o: ../src/string_parser.c
 CMakeFiles/mmn14.dir/src/string_parser.c.o: ../src/string_parser.h
 CMakeFiles/mmn14.dir/src/string_parser.c.o: ../src/structures.h
 
+CMakeFiles/mmn14.dir/src/structures.c.o: ../src/errors.h
 CMakeFiles/mmn14.dir/src/structures.c.o: ../src/structures.c
+CMakeFiles/mmn14.dir/src/structures.c.o: ../src/structures.h
 
 CMakeFiles/mmn14.dir/src/util_functions.c.o: ../src/structures.h
 CMakeFiles/mmn14.dir/src/util_functions.c.o: ../src/util_functions.c

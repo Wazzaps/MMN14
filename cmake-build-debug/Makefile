@@ -177,32 +177,32 @@ src/general_parsing.c.s:
 	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/general_parsing.c.s
 .PHONY : src/general_parsing.c.s
 
-src/individual_directives.o: src/individual_directives.c.o
+src/individual_directives_and_ops.o: src/individual_directives_and_ops.c.o
 
-.PHONY : src/individual_directives.o
+.PHONY : src/individual_directives_and_ops.o
 
 # target to build an object file
-src/individual_directives.c.o:
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives.c.o
-.PHONY : src/individual_directives.c.o
+src/individual_directives_and_ops.c.o:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o
+.PHONY : src/individual_directives_and_ops.c.o
 
-src/individual_directives.i: src/individual_directives.c.i
+src/individual_directives_and_ops.i: src/individual_directives_and_ops.c.i
 
-.PHONY : src/individual_directives.i
+.PHONY : src/individual_directives_and_ops.i
 
 # target to preprocess a source file
-src/individual_directives.c.i:
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives.c.i
-.PHONY : src/individual_directives.c.i
+src/individual_directives_and_ops.c.i:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.i
+.PHONY : src/individual_directives_and_ops.c.i
 
-src/individual_directives.s: src/individual_directives.c.s
+src/individual_directives_and_ops.s: src/individual_directives_and_ops.c.s
 
-.PHONY : src/individual_directives.s
+.PHONY : src/individual_directives_and_ops.s
 
 # target to generate assembly for a file
-src/individual_directives.c.s:
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives.c.s
-.PHONY : src/individual_directives.c.s
+src/individual_directives_and_ops.c.s:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.s
+.PHONY : src/individual_directives_and_ops.c.s
 
 src/main.o: src/main.c.o
 
@@ -327,9 +327,9 @@ help:
 	@echo "... src/general_parsing.o"
 	@echo "... src/general_parsing.i"
 	@echo "... src/general_parsing.s"
-	@echo "... src/individual_directives.o"
-	@echo "... src/individual_directives.i"
-	@echo "... src/individual_directives.s"
+	@echo "... src/individual_directives_and_ops.o"
+	@echo "... src/individual_directives_and_ops.i"
+	@echo "... src/individual_directives_and_ops.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

@@ -5,7 +5,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/mmn14.dir/src/directive_parser.c.o"
   "CMakeFiles/mmn14.dir/src/general_parsing.c.o"
   "CMakeFiles/mmn14.dir/src/string_parser.c.o"
-  "CMakeFiles/mmn14.dir/src/individual_directives.c.o"
+  "CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o"
   "mmn14.pdb"
   "mmn14"
 )

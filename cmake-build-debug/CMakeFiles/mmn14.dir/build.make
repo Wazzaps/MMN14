@@ -201,28 +201,28 @@ CMakeFiles/mmn14.dir/src/string_parser.c.o.provides: CMakeFiles/mmn14.dir/src/st
 CMakeFiles/mmn14.dir/src/string_parser.c.o.provides.build: CMakeFiles/mmn14.dir/src/string_parser.c.o
 
 
-CMakeFiles/mmn14.dir/src/individual_directives.c.o: CMakeFiles/mmn14.dir/flags.make
-CMakeFiles/mmn14.dir/src/individual_directives.c.o: ../src/individual_directives.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/mmn14.dir/src/individual_directives.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/mmn14.dir/src/individual_directives.c.o   -c /home/david/Repos/MMN14/src/individual_directives.c
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o: CMakeFiles/mmn14.dir/flags.make
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o: ../src/individual_directives_and_ops.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o   -c /home/david/Repos/MMN14/src/individual_directives_and_ops.c
 
-CMakeFiles/mmn14.dir/src/individual_directives.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mmn14.dir/src/individual_directives.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/david/Repos/MMN14/src/individual_directives.c > CMakeFiles/mmn14.dir/src/individual_directives.c.i
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/david/Repos/MMN14/src/individual_directives_and_ops.c > CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.i
 
-CMakeFiles/mmn14.dir/src/individual_directives.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mmn14.dir/src/individual_directives.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/david/Repos/MMN14/src/individual_directives.c -o CMakeFiles/mmn14.dir/src/individual_directives.c.s
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/david/Repos/MMN14/src/individual_directives_and_ops.c -o CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.s
 
-CMakeFiles/mmn14.dir/src/individual_directives.c.o.requires:
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o.requires:
 
-.PHONY : CMakeFiles/mmn14.dir/src/individual_directives.c.o.requires
+.PHONY : CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o.requires
 
-CMakeFiles/mmn14.dir/src/individual_directives.c.o.provides: CMakeFiles/mmn14.dir/src/individual_directives.c.o.requires
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives.c.o.provides.build
-.PHONY : CMakeFiles/mmn14.dir/src/individual_directives.c.o.provides
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o.provides: CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o.requires
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o.provides.build
+.PHONY : CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o.provides
 
-CMakeFiles/mmn14.dir/src/individual_directives.c.o.provides.build: CMakeFiles/mmn14.dir/src/individual_directives.c.o
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o.provides.build: CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o
 
 
 # Object files for target mmn14
@@ -233,7 +233,7 @@ mmn14_OBJECTS = \
 "CMakeFiles/mmn14.dir/src/directive_parser.c.o" \
 "CMakeFiles/mmn14.dir/src/general_parsing.c.o" \
 "CMakeFiles/mmn14.dir/src/string_parser.c.o" \
-"CMakeFiles/mmn14.dir/src/individual_directives.c.o"
+"CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o"
 
 # External object files for target mmn14
 mmn14_EXTERNAL_OBJECTS =
@@ -244,7 +244,7 @@ mmn14: CMakeFiles/mmn14.dir/src/util_functions.c.o
 mmn14: CMakeFiles/mmn14.dir/src/directive_parser.c.o
 mmn14: CMakeFiles/mmn14.dir/src/general_parsing.c.o
 mmn14: CMakeFiles/mmn14.dir/src/string_parser.c.o
-mmn14: CMakeFiles/mmn14.dir/src/individual_directives.c.o
+mmn14: CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o
 mmn14: CMakeFiles/mmn14.dir/build.make
 mmn14: CMakeFiles/mmn14.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking C executable mmn14"
@@ -261,7 +261,7 @@ CMakeFiles/mmn14.dir/requires: CMakeFiles/mmn14.dir/src/util_functions.c.o.requi
 CMakeFiles/mmn14.dir/requires: CMakeFiles/mmn14.dir/src/directive_parser.c.o.requires
 CMakeFiles/mmn14.dir/requires: CMakeFiles/mmn14.dir/src/general_parsing.c.o.requires
 CMakeFiles/mmn14.dir/requires: CMakeFiles/mmn14.dir/src/string_parser.c.o.requires
-CMakeFiles/mmn14.dir/requires: CMakeFiles/mmn14.dir/src/individual_directives.c.o.requires
+CMakeFiles/mmn14.dir/requires: CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o.requires
 
 .PHONY : CMakeFiles/mmn14.dir/requires
 

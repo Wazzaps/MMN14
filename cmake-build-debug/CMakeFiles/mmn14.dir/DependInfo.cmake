@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_C
   "/home/david/Repos/MMN14/src/directive_parser.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/directive_parser.c.o"
   "/home/david/Repos/MMN14/src/general_parsing.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/general_parsing.c.o"
-  "/home/david/Repos/MMN14/src/individual_directives.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/individual_directives.c.o"
+  "/home/david/Repos/MMN14/src/individual_directives_and_ops.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o"
   "/home/david/Repos/MMN14/src/main.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/main.c.o"
   "/home/david/Repos/MMN14/src/string_parser.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/string_parser.c.o"
   "/home/david/Repos/MMN14/src/structures.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/structures.c.o"

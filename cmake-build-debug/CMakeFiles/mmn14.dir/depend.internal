@@ -5,6 +5,7 @@ CMakeFiles/mmn14.dir/src/directive_parser.c.o
  /home/david/Repos/MMN14/src/directive_parser.c
  /home/david/Repos/MMN14/src/errors.h
  /home/david/Repos/MMN14/src/general_parsing.h
+ /home/david/Repos/MMN14/src/individual_directives_and_ops.h
  /home/david/Repos/MMN14/src/string_parser.h
  /home/david/Repos/MMN14/src/structures.h
  /home/david/Repos/MMN14/src/util_functions.h
@@ -14,11 +15,18 @@ CMakeFiles/mmn14.dir/src/general_parsing.c.o
  /home/david/Repos/MMN14/src/general_parsing.h
  /home/david/Repos/MMN14/src/string_parser.h
  /home/david/Repos/MMN14/src/structures.h
+CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o
+ /home/david/Repos/MMN14/src/individual_directives_and_ops.c
+ /home/david/Repos/MMN14/src/individual_directives_and_ops.h
+ /home/david/Repos/MMN14/src/string_parser.h
+ /home/david/Repos/MMN14/src/structures.h
 CMakeFiles/mmn14.dir/src/main.c.o
  /home/david/Repos/MMN14/src/directive_parser.h
  /home/david/Repos/MMN14/src/errors.h
+ /home/david/Repos/MMN14/src/global_constants.h
  /home/david/Repos/MMN14/src/main.c
  /home/david/Repos/MMN14/src/structures.h
+ /home/david/Repos/MMN14/src/util_functions.h
 CMakeFiles/mmn14.dir/src/string_parser.c.o
  /home/david/Repos/MMN14/src/errors.h
  /home/david/Repos/MMN14/src/general_parsing.h
@@ -26,7 +34,9 @@ CMakeFiles/mmn14.dir/src/string_parser.c.o
  /home/david/Repos/MMN14/src/string_parser.h
  /home/david/Repos/MMN14/src/structures.h
 CMakeFiles/mmn14.dir/src/structures.c.o
+ /home/david/Repos/MMN14/src/errors.h
  /home/david/Repos/MMN14/src/structures.c
+ /home/david/Repos/MMN14/src/structures.h
 CMakeFiles/mmn14.dir/src/util_functions.c.o
  /home/david/Repos/MMN14/src/structures.h
  /home/david/Repos/MMN14/src/util_functions.c
