@@ -5,3 +5,5 @@
 .LSOverride
 ._*
 /.project
+.idea
+cmake-build-debug
