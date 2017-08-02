@@ -123,6 +123,60 @@ mmn14/fast:
 	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/build
 .PHONY : mmn14/fast
 
+home/david/CLionProjects/stringparser/util_functions.o: home/david/CLionProjects/stringparser/util_functions.c.o
+
+.PHONY : home/david/CLionProjects/stringparser/util_functions.o
+
+# target to build an object file
+home/david/CLionProjects/stringparser/util_functions.c.o:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/home/david/CLionProjects/stringparser/util_functions.c.o
+.PHONY : home/david/CLionProjects/stringparser/util_functions.c.o
+
+home/david/CLionProjects/stringparser/util_functions.i: home/david/CLionProjects/stringparser/util_functions.c.i
+
+.PHONY : home/david/CLionProjects/stringparser/util_functions.i
+
+# target to preprocess a source file
+home/david/CLionProjects/stringparser/util_functions.c.i:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/home/david/CLionProjects/stringparser/util_functions.c.i
+.PHONY : home/david/CLionProjects/stringparser/util_functions.c.i
+
+home/david/CLionProjects/stringparser/util_functions.s: home/david/CLionProjects/stringparser/util_functions.c.s
+
+.PHONY : home/david/CLionProjects/stringparser/util_functions.s
+
+# target to generate assembly for a file
+home/david/CLionProjects/stringparser/util_functions.c.s:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/home/david/CLionProjects/stringparser/util_functions.c.s
+.PHONY : home/david/CLionProjects/stringparser/util_functions.c.s
+
+src/directive_functions.o: src/directive_functions.c.o
+
+.PHONY : src/directive_functions.o
+
+# target to build an object file
+src/directive_functions.c.o:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/directive_functions.c.o
+.PHONY : src/directive_functions.c.o
+
+src/directive_functions.i: src/directive_functions.c.i
+
+.PHONY : src/directive_functions.i
+
+# target to preprocess a source file
+src/directive_functions.c.i:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/directive_functions.c.i
+.PHONY : src/directive_functions.c.i
+
+src/directive_functions.s: src/directive_functions.c.s
+
+.PHONY : src/directive_functions.s
+
+# target to generate assembly for a file
+src/directive_functions.c.s:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/directive_functions.c.s
+.PHONY : src/directive_functions.c.s
+
 src/directive_parser.o: src/directive_parser.c.o
 
 .PHONY : src/directive_parser.o
@@ -177,33 +231,6 @@ src/general_parsing.c.s:
 	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/general_parsing.c.s
 .PHONY : src/general_parsing.c.s
 
-src/individual_directives_and_ops.o: src/individual_directives_and_ops.c.o
-
-.PHONY : src/individual_directives_and_ops.o
-
-# target to build an object file
-src/individual_directives_and_ops.c.o:
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.o
-.PHONY : src/individual_directives_and_ops.c.o
-
-src/individual_directives_and_ops.i: src/individual_directives_and_ops.c.i
-
-.PHONY : src/individual_directives_and_ops.i
-
-# target to preprocess a source file
-src/individual_directives_and_ops.c.i:
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.i
-.PHONY : src/individual_directives_and_ops.c.i
-
-src/individual_directives_and_ops.s: src/individual_directives_and_ops.c.s
-
-.PHONY : src/individual_directives_and_ops.s
-
-# target to generate assembly for a file
-src/individual_directives_and_ops.c.s:
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/individual_directives_and_ops.c.s
-.PHONY : src/individual_directives_and_ops.c.s
-
 src/main.o: src/main.c.o
 
 .PHONY : src/main.o
@@ -230,6 +257,33 @@ src/main.s: src/main.c.s
 src/main.c.s:
 	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/main.c.s
 .PHONY : src/main.c.s
+
+src/op_parser.o: src/op_parser.c.o
+
+.PHONY : src/op_parser.o
+
+# target to build an object file
+src/op_parser.c.o:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/op_parser.c.o
+.PHONY : src/op_parser.c.o
+
+src/op_parser.i: src/op_parser.c.i
+
+.PHONY : src/op_parser.i
+
+# target to preprocess a source file
+src/op_parser.c.i:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/op_parser.c.i
+.PHONY : src/op_parser.c.i
+
+src/op_parser.s: src/op_parser.c.s
+
+.PHONY : src/op_parser.s
+
+# target to generate assembly for a file
+src/op_parser.c.s:
+	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/op_parser.c.s
+.PHONY : src/op_parser.c.s
 
 src/string_parser.o: src/string_parser.c.o
 
@@ -285,33 +339,6 @@ src/structures.c.s:
 	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/structures.c.s
 .PHONY : src/structures.c.s
 
-src/util_functions.o: src/util_functions.c.o
-
-.PHONY : src/util_functions.o
-
-# target to build an object file
-src/util_functions.c.o:
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/util_functions.c.o
-.PHONY : src/util_functions.c.o
-
-src/util_functions.i: src/util_functions.c.i
-
-.PHONY : src/util_functions.i
-
-# target to preprocess a source file
-src/util_functions.c.i:
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/util_functions.c.i
-.PHONY : src/util_functions.c.i
-
-src/util_functions.s: src/util_functions.c.s
-
-.PHONY : src/util_functions.s
-
-# target to generate assembly for a file
-src/util_functions.c.s:
-	$(MAKE) -f CMakeFiles/mmn14.dir/build.make CMakeFiles/mmn14.dir/src/util_functions.c.s
-.PHONY : src/util_functions.c.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -321,27 +348,30 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... mmn14"
+	@echo "... home/david/CLionProjects/stringparser/util_functions.o"
+	@echo "... home/david/CLionProjects/stringparser/util_functions.i"
+	@echo "... home/david/CLionProjects/stringparser/util_functions.s"
+	@echo "... src/directive_functions.o"
+	@echo "... src/directive_functions.i"
+	@echo "... src/directive_functions.s"
 	@echo "... src/directive_parser.o"
 	@echo "... src/directive_parser.i"
 	@echo "... src/directive_parser.s"
 	@echo "... src/general_parsing.o"
 	@echo "... src/general_parsing.i"
 	@echo "... src/general_parsing.s"
-	@echo "... src/individual_directives_and_ops.o"
-	@echo "... src/individual_directives_and_ops.i"
-	@echo "... src/individual_directives_and_ops.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/op_parser.o"
+	@echo "... src/op_parser.i"
+	@echo "... src/op_parser.s"
 	@echo "... src/string_parser.o"
 	@echo "... src/string_parser.i"
 	@echo "... src/string_parser.s"
 	@echo "... src/structures.o"
 	@echo "... src/structures.i"
 	@echo "... src/structures.s"
-	@echo "... src/util_functions.o"
-	@echo "... src/util_functions.i"
-	@echo "... src/util_functions.s"
 .PHONY : help
 
 

@@ -1,9 +1,9 @@
-#include <stdio.h>
+
+#include "directive_parser.h"
 #include <string.h>
 #include <stdlib.h>
-#include "structures.h"
 #include "errors.h"
-#include "directive_parser.h"
+#include "op_parser.h"
 
 int main (int argc, char* argv[]) {
 	int iterator;
@@ -42,6 +42,12 @@ int main (int argc, char* argv[]) {
 		struct assembler_state_tables tables;
 		tables.data = malloc(1);
 		tables.code = malloc(1);
+		tables.extern_table = NULL;
+		tables.entry_table = NULL;
+		tables.code_labels_table = NULL;
+		tables.data_labels_table = NULL;
+		tables.code_current_size = 0;
+		tables.data_current_size = 0;
 
 		/* Create file name */
 		string file_name = {};
@@ -55,40 +61,14 @@ int main (int argc, char* argv[]) {
 		/* Parse */
 		success = parse_directives_and_labels(file, argv[iterator], &tables)
 		          && success;
+		success = parse_ops(file, argv[iterator], &tables)
+		          && success;
 
 		if (success) {
-			list* ptr = tables.extern_table;
-
-			/*if (tables.entry_table != NULL) {
-				list* ptr = label_table;
-				string entry_file_name = {};
-
-				strcpy(entry_file_name, argv[iterator]);
-				strcat(entry_file_name, ".ent");
-				FILE* entry_file = fopen(entry_file_name, "w");
-
-				while (ptr != NULL) {
-					int i;
-					char* base4_converted = to_base4(ptr->number);
-
-					fprintf(entry_file, "%s", ptr->name);
-					for (i = (int)strlen(ptr->name); i < ENT_AND_EXT_PADDING; i++) {
-						putc(' ', entry_file);
-					}
-					fprintf(entry_file, "%s\n", base4_converted);
-					free(base4_converted);
-
-					ptr = ptr->next;
-				}
-
-				fclose(entry_file);
-			}*/
+			//list* ptr = tables.extern_table;
 
 
 		}
-
-		//free(data);
-		//free(code);
 
 		/* Close file */
 		fclose(file);

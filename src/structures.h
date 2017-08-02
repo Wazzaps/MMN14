@@ -11,9 +11,9 @@ typedef struct list {
 } list;
 
 typedef struct {
-	string name;
+	char* name;
 	unsigned int code_address;
-} ent_ext_table_struct;
+} extern_ref;
 
 typedef struct {
 	string name;
@@ -21,24 +21,25 @@ typedef struct {
 	unsigned int is_matrix:1;
 	unsigned int matrix_size_x;
 	unsigned int matrix_size_y;
-} data_labels_table_struct;
+} data_label;
 
 typedef struct {
 	string name;
 	unsigned int code_address;
-} code_labels_table_struct;
+} code_label;
 
-typedef char* dataptr;
-
-typedef char* codeptr;
+typedef int cpu_word;
 
 struct assembler_state_tables {
-	list* entry_table;
-	list* extern_table;
-	list* data_labels_table;
-	list* code_labels_table;
-	dataptr data;
-	codeptr code;
+	list* entry_table; // List of type 'char*'
+	list* extern_table; // List of type 'char*'
+	list* extern_refs_table; // List of type 'extern_ref'
+	list* data_labels_table; // List of type 'data_label'
+	list* code_labels_table; // List of type 'code_label'
+	cpu_word* data; // Points to start of data table
+	unsigned int data_current_size;
+	cpu_word* code; // Points to start of code table
+	unsigned int code_current_size;
 };
 
 /* Declarations */

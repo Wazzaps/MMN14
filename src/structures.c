@@ -3,6 +3,7 @@
 #include "structures.h"
 #include "errors.h"
 
+// Adds an element to a linked list pointer, and if it doesn't exist (ie. NULL), creates it and assigned to pointer
 void list_add_element (list** the_list, void* data) {
 	if (data == NULL) {
 		return;

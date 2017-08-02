@@ -84,6 +84,18 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/david/CLionProjects/stringparser/util_functions.c">
+			<Option target="mmn14"/>
+		</Unit>
+		<Unit filename="/home/david/CLionProjects/stringparser/util_functions.h">
+			<Option target="mmn14"/>
+		</Unit>
+		<Unit filename="/home/david/Repos/MMN14/src/directive_functions.c">
+			<Option target="mmn14"/>
+		</Unit>
+		<Unit filename="/home/david/Repos/MMN14/src/directive_functions.h">
+			<Option target="mmn14"/>
+		</Unit>
 		<Unit filename="/home/david/Repos/MMN14/src/directive_parser.c">
 			<Option target="mmn14"/>
 		</Unit>
@@ -99,13 +111,13 @@
 		<Unit filename="/home/david/Repos/MMN14/src/global_constants.h">
 			<Option target="mmn14"/>
 		</Unit>
-		<Unit filename="/home/david/Repos/MMN14/src/individual_directives_and_ops.c">
-			<Option target="mmn14"/>
-		</Unit>
-		<Unit filename="/home/david/Repos/MMN14/src/individual_directives_and_ops.h">
-			<Option target="mmn14"/>
-		</Unit>
 		<Unit filename="/home/david/Repos/MMN14/src/main.c">
+			<Option target="mmn14"/>
+		</Unit>
+		<Unit filename="/home/david/Repos/MMN14/src/op_parser.c">
+			<Option target="mmn14"/>
+		</Unit>
+		<Unit filename="/home/david/Repos/MMN14/src/op_parser.h">
 			<Option target="mmn14"/>
 		</Unit>
 		<Unit filename="/home/david/Repos/MMN14/src/string_parser.c">
@@ -118,9 +130,6 @@
 			<Option target="mmn14"/>
 		</Unit>
 		<Unit filename="/home/david/Repos/MMN14/src/structures.h">
-			<Option target="mmn14"/>
-		</Unit>
-		<Unit filename="/home/david/Repos/MMN14/src/util_functions.c">
 			<Option target="mmn14"/>
 		</Unit>
 		<Unit filename="/home/david/Repos/MMN14/src/util_functions.h">

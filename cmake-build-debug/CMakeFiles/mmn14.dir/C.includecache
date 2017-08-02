@@ -6,6 +6,38 @@
 
 #IncludeRegexTransform: 
 
+/home/david/CLionProjects/stringparser/structures.h
+
+/home/david/CLionProjects/stringparser/util_functions.c
+string.h
+-
+stdlib.h
+-
+util_functions.h
+/home/david/CLionProjects/stringparser/util_functions.h
+
+/home/david/CLionProjects/stringparser/util_functions.h
+stdio.h
+-
+structures.h
+/home/david/CLionProjects/stringparser/structures.h
+
+/home/david/Repos/MMN14/src/directive_functions.c
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+directive_functions.h
+/home/david/Repos/MMN14/src/directive_functions.h
+string_parser.h
+/home/david/Repos/MMN14/src/string_parser.h
+
+/home/david/Repos/MMN14/src/directive_functions.h
+structures.h
+/home/david/Repos/MMN14/src/structures.h
+
 /home/david/Repos/MMN14/src/directive_parser.c
 string.h
 -
@@ -21,10 +53,16 @@ string_parser.h
 /home/david/Repos/MMN14/src/string_parser.h
 general_parsing.h
 /home/david/Repos/MMN14/src/general_parsing.h
-individual_directives_and_ops.h
-/home/david/Repos/MMN14/src/individual_directives_and_ops.h
+directive_functions.h
+/home/david/Repos/MMN14/src/directive_functions.h
+directive_parser.h
+/home/david/Repos/MMN14/src/directive_parser.h
 
 /home/david/Repos/MMN14/src/directive_parser.h
+stdio.h
+-
+structures.h
+/home/david/Repos/MMN14/src/structures.h
 
 /home/david/Repos/MMN14/src/errors.h
 
@@ -44,27 +82,9 @@ ctype.h
 string_parser.h
 /home/david/Repos/MMN14/src/string_parser.h
 
-/home/david/Repos/MMN14/src/global_constants.h
-
-/home/david/Repos/MMN14/src/individual_directives_and_ops.c
-stdio.h
--
-string.h
--
-stdlib.h
--
-individual_directives_and_ops.h
-/home/david/Repos/MMN14/src/individual_directives_and_ops.h
-string_parser.h
-/home/david/Repos/MMN14/src/string_parser.h
-structures.h
-/home/david/Repos/MMN14/src/structures.h
-
-/home/david/Repos/MMN14/src/individual_directives_and_ops.h
-structures.h
-/home/david/Repos/MMN14/src/structures.h
-
 /home/david/Repos/MMN14/src/main.c
+directive_parser.h
+/home/david/Repos/MMN14/src/directive_parser.h
 stdio.h
 -
 string.h
@@ -75,12 +95,28 @@ structures.h
 /home/david/Repos/MMN14/src/structures.h
 errors.h
 /home/david/Repos/MMN14/src/errors.h
-directive_parser.h
-/home/david/Repos/MMN14/src/directive_parser.h
+op_parser.h
+/home/david/Repos/MMN14/src/op_parser.h
+
+/home/david/Repos/MMN14/src/op_parser.c
+string.h
+-
+ctype.h
+-
+op_parser.h
+/home/david/Repos/MMN14/src/op_parser.h
+general_parsing.h
+/home/david/Repos/MMN14/src/general_parsing.h
 util_functions.h
 /home/david/Repos/MMN14/src/util_functions.h
-global_constants.h
-/home/david/Repos/MMN14/src/global_constants.h
+errors.h
+/home/david/Repos/MMN14/src/errors.h
+
+/home/david/Repos/MMN14/src/op_parser.h
+stdio.h
+-
+structures.h
+/home/david/Repos/MMN14/src/structures.h
 
 /home/david/Repos/MMN14/src/string_parser.c
 stdlib.h
@@ -109,22 +145,12 @@ stdlib.h
 -
 stdio.h
 -
-string.h
--
 structures.h
 /home/david/Repos/MMN14/src/structures.h
 errors.h
 /home/david/Repos/MMN14/src/errors.h
 
 /home/david/Repos/MMN14/src/structures.h
-
-/home/david/Repos/MMN14/src/util_functions.c
-string.h
--
-stdlib.h
--
-util_functions.h
-/home/david/Repos/MMN14/src/util_functions.h
 
 /home/david/Repos/MMN14/src/util_functions.h
 stdio.h

@@ -1,7 +1,3 @@
-//
-// Created by david on 6/17/17.
-//
-
 #include <string.h>
 #include <ctype.h>
 #include "structures.h"
@@ -9,7 +5,8 @@
 #include "errors.h"
 #include "string_parser.h"
 #include "general_parsing.h"
-#include "individual_directives_and_ops.h"
+#include "directive_functions.h"
+#include "directive_parser.h"
 
 /* Reads assembly directives and labels */
 int parse_directives_and_labels (FILE* fp, string file_name, struct assembler_state_tables* tables) {
@@ -20,15 +17,15 @@ int parse_directives_and_labels (FILE* fp, string file_name, struct assembler_st
 
 	/* Define tables for parser and jump table */
 	parser_definition custom_types[] = PARSER_CUSTOM_TYPES;
-	op assembler_directives[ASSEMBLER_DIRECTIVE_LIST_LENGTH] = {
-			OP(data),
-			OP(string),
-			OP(mat),
-			OP(entry),
-			OP(extern)
+	decl_t assembler_directives[ASSEMBLER_DIRECTIVE_LIST_LENGTH] = {
+			{"data",   &decl_data},
+			{"string", &decl_string},
+			{"mat",    &decl_mat},
+			{"entry",  &decl_entry},
+			{"extern", &decl_extern}
 	};
 
-	/* Read each line for pass 1 (assembly directives) */
+	/* Read each line */
 	while ((line_length = get_line(line, MAX_STRING_LENGTH + 1, fp)) != -1) {
 		char* code_contents = NULL;
 		char* label_name = NULL;
@@ -51,10 +48,7 @@ int parse_directives_and_labels (FILE* fp, string file_name, struct assembler_st
 
 		if (label_name != NULL && code_contents[0] == '\0') {
 			fprintf(stderr, ERROR_USELESS_LABEL, line_num);
-		}/* else if (label_name != NULL && code_contents[0] != '.') {
-			/* Add label to list for the code line
-			list_add_element(tables->label_list, label_name, line_num, 0);
-		}*/
+		}
 
 		if (code_contents[0] != '.') {
 			line_num++;
@@ -69,14 +63,14 @@ int parse_directives_and_labels (FILE* fp, string file_name, struct assembler_st
 			code_contents++;
 		}
 
-		// Split op/directive name and parameters
+		// Split directive name and parameters
 		directive_name = code_contents;
 
 		while (*code_contents != ' ' && *code_contents != '\t' && *code_contents != '\0') code_contents++;
 		*code_contents = '\0';
 		code_contents = advance_whitespace(code_contents + 1);
 
-		// Check that the directive is valid
+		// Check that the directive name is valid
 		for (i = 0; i < ASSEMBLER_DIRECTIVE_LIST_LENGTH; i++) {
 			if (!strcmp(assembler_directives[i].name, directive_name)) {
 				directive_exists = 1;
@@ -85,14 +79,11 @@ int parse_directives_and_labels (FILE* fp, string file_name, struct assembler_st
 				strcat(fmt, directive_name);
 				strcat(fmt, "}");
 
-				parse_struct = mysscanf(fmt, PARSER_CUSTOM_TYPES_LENGTH, custom_types, code_contents, 1);
+				parse_struct = mysscanf(fmt, PARSER_CUSTOM_TYPES_LENGTH, custom_types, code_contents, 1, line_num);
 
 				if (parse_struct) {
-					int data_size = assembler_directives[i].func(parse_struct, tables, line_num, label_name);
-					/*if (label_name != NULL) {
-						/* Add label to list for the code line
-						list_add_element(label_list, label_name, line_num, 1);
-					}*/
+					int data_size = assembler_directives[i].func(parse_struct, tables, label_name);
+					tables->data_current_size += data_size;
 				} else {
 					printf("Failed: %s %s\n", fmt, code_contents);
 					success = 0;
@@ -104,12 +95,15 @@ int parse_directives_and_labels (FILE* fp, string file_name, struct assembler_st
 
 		if (!directive_exists) {
 			// Directive not found, complain
-			fprintf(stderr, ERROR_WHITESPACE_BEFORE_DIRECTIVE, line_num);
+			fprintf(stderr, ERROR_UNKNOWN_DIRECTIVE, directive_name, line_num);
 		}
 
 		line_num++;
 
 	}
+
+	// Return file pointer to beginning
+	rewind(fp);
 
 	return success;
 }
