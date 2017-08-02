@@ -1,4 +1,4 @@
-/home/david/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/171.4694.31/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/david/Repos/MMN14
+"C:\Program Files\JetBrains\CLion 2017.2\bin\cmake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\Moshe\CLionProjects\MMN14
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/david/Repos/MMN14/cmake-build-debug
+-- Build files have been written to: C:/Users/Moshe/CLionProjects/MMN14/cmake-build-debug

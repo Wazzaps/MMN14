@@ -4,14 +4,14 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/david/CLionProjects/stringparser/util_functions.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/home/david/CLionProjects/stringparser/util_functions.c.o"
-  "/home/david/Repos/MMN14/src/directive_functions.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/directive_functions.c.o"
-  "/home/david/Repos/MMN14/src/directive_parser.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/directive_parser.c.o"
-  "/home/david/Repos/MMN14/src/general_parsing.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/general_parsing.c.o"
-  "/home/david/Repos/MMN14/src/main.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/main.c.o"
-  "/home/david/Repos/MMN14/src/op_parser.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/op_parser.c.o"
-  "/home/david/Repos/MMN14/src/string_parser.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/string_parser.c.o"
-  "/home/david/Repos/MMN14/src/structures.c" "/home/david/Repos/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/structures.c.o"
+  "C:/Users/Moshe/CLionProjects/MMN14/src/directive_functions.c" "C:/Users/Moshe/CLionProjects/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/directive_functions.c.obj"
+  "C:/Users/Moshe/CLionProjects/MMN14/src/directive_parser.c" "C:/Users/Moshe/CLionProjects/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/directive_parser.c.obj"
+  "C:/Users/Moshe/CLionProjects/MMN14/src/general_parsing.c" "C:/Users/Moshe/CLionProjects/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/general_parsing.c.obj"
+  "C:/Users/Moshe/CLionProjects/MMN14/src/main.c" "C:/Users/Moshe/CLionProjects/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/main.c.obj"
+  "C:/Users/Moshe/CLionProjects/MMN14/src/op_parser.c" "C:/Users/Moshe/CLionProjects/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/op_parser.c.obj"
+  "C:/Users/Moshe/CLionProjects/MMN14/src/string_parser.c" "C:/Users/Moshe/CLionProjects/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/string_parser.c.obj"
+  "C:/Users/Moshe/CLionProjects/MMN14/src/structures.c" "C:/Users/Moshe/CLionProjects/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/structures.c.obj"
+  "C:/Users/Moshe/CLionProjects/MMN14/src/util_functions.c" "C:/Users/Moshe/CLionProjects/MMN14/cmake-build-debug/CMakeFiles/mmn14.dir/src/util_functions.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
