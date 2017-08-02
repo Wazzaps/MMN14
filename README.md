@@ -36,7 +36,7 @@ Values can be passed to operations in 4 methods:
 | Register      | `mov r3, r2`        | The value in `r3` is copied to `r2`.                                                         |
 | Matrix access | `mov a[r5][r6], r2` | Copies the value in matrix `a` at row number `valueof(r5)` and column `valueof(r6)` to `r2`. |
 
-The decl_t table is as follows: (Note that "B" cannot be a constant, obviously)
+The op table is as follows: (Note that "B" cannot be a constant, obviously)
 
 | OP code | OP name | Full name / What it means |
 | --- | --- | --- |
