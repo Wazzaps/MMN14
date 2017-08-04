@@ -4,6 +4,8 @@
 #include "string_parser.h"
 
 #define MAX_LABEL_NAME_LENGTH 30
+#define FIRST_REG '0'
+#define LAST_REG '7'
 
 char* split_label_and_code (char* line);
 
@@ -14,6 +16,7 @@ char* advance_whitespace (char* str);
 char* block_whitespace (char* str);
 
 void clean_and_preprocess_line (char* line, char** _label_name, char** _code_contents, int line_num);
+
 
 #define PARSER_CUSTOM_TYPES {\
     {"reg",     "r%{int}", "Register"},\

@@ -64,18 +64,24 @@ int main (int argc, char* argv[]) {
 		success = parse_ops(file, argv[iterator], &tables)
 		          && success;
 
-		if (success) {
-			//list* ptr = tables.extern_table;
-
-
-		}
-
 		/* Close file */
 		fclose(file);
+
+		if (success) {
+			//list* ptr = tables.extern_table;
+			string output_file_name = {};
+			strcpy(output_file_name, argv[iterator]);
+			strcat(output_file_name, ".ob");
+			FILE *output_ob_file = fopen(output_file_name, "w");
+
+
+			fclose(output_ob_file);
+		}
 
 		if (DEBUG_MODE) {
 			printf("%s\n", success ? "Success!" : "Fail!");
 		}
+
 	}
 
 	return 0;

@@ -1,7 +1,8 @@
 #include "general_parsing.h"
 #include "errors.h"
+#include "op_parser.h"
+#include "directive_functions.h"
 #include <string.h>
-#include <stdio.h>
 #include <ctype.h>
 
 
@@ -83,4 +84,29 @@ void clean_and_preprocess_line (char* line, char** _label_name, char** _code_con
 		}
 		*_label_name = block_whitespace(advance_whitespace(*_label_name));
 	}
+}
+
+int is_valid_label(char *name, op_t *ops) {
+	int i;
+	if (isdigit(name[0]))
+		return 0;
+
+	for (i = 0; i < OP_LIST_LENGTH; i++) {
+		if (!strcmp(ops[i].name, name))
+			return 0;
+	}
+
+	if (name[0] == 'r') {
+		if ((name[1] >= FIRST_REG) && (name[1] <= LAST_REG)) {
+			return 0;
+		}
+	}
+
+	char *dir_list[] = ASSEMBLER_DIRECTIVE_LIST;
+
+	for (i = 0; i < ASSEMBLER_DIRECTIVE_LIST_LENGTH; i++)
+		if (strcmp(dir_list[i], name) == 0)
+			return 0;
+
+	return 1;
 }

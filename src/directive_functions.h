@@ -8,6 +8,7 @@
 #include "structures.h"
 
 #define ASSEMBLER_DIRECTIVE_LIST_LENGTH 5
+#define ASSEMBLER_DIRECTIVE_LIST {"data", "string", "mat", "entry", "extern"}
 
 #define DECL_SIGNATURE void* parse_struct, struct assembler_state_tables* tables, char* label_name
 

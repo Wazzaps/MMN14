@@ -15,12 +15,30 @@
 // - Element n:int
 int decl_data (DECL_SIGNATURE) {
 	int data_size = PARSER_GET_INT(parse_struct);
+    void *new_data = NULL;
 
-	// FIXME: REMOVE ME
+    data_label *new = malloc(sizeof(data_label));
+    if (!new)
+        return 0;
+    strcpy(new->name, label_name);
+    new->data_address = tables->code_current_size;
+    list_add_element(&(tables->data_labels_table), new);
+
+    new_data = realloc(tables->data, sizeof(cpu_word) * (tables->data_current_size + data_size));
+    if (!new_data) {
+        return 0;
+    }
+
+    tables->data = new_data;
+
+    // FIXME: REMOVE ME
 	int i;
 	printf("GOT DATA: ");
 	for (i = 0; i < data_size; i++) {
-		printf("%d, ", PARSER_GET_INT(parse_struct));
+        int current = PARSER_GET_INT(parse_struct);
+        printf("%d, ", current);
+
+        tables->data[tables->data_current_size + i] = current; // TODO: confirm the base / format
 	}
 	putchar('\n');
 	// FIXME: END REMOVE ME

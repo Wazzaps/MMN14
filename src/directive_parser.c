@@ -50,6 +50,7 @@ int parse_directives_and_labels (FILE* fp, string file_name, struct assembler_st
 			fprintf(stderr, ERROR_USELESS_LABEL, line_num);
 		}
 
+
 		if (code_contents[0] != '.') {
 			line_num++;
 			continue;

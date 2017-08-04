@@ -15,6 +15,7 @@
 #define ERROR_LABEL_TOO_LONG "WARN: Labels must have a maximum of %d characters, Violation on line %d\n"
 #define ERROR_LABEL_NOT_ON_START_OF_LINE "WARN: Labels must be at the start of the line, no whitespace, Violation on line %d\n"
 #define ERROR_WHITESPACE_AFTER_LABEL "WARN: Whitespace between label name and colon on line %d\n"
+#define ERROR_LABEL_NAME "WARN: Lable name is invalid. Ignored\n"
 
 /* Assembly directives */
 #define ERROR_WHITESPACE_BEFORE_DIRECTIVE "WARN: Whitespace before directive on line %d, whitespace ignored\n"

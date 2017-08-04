@@ -47,12 +47,18 @@ int parse_ops (FILE* fp, string file_name, struct assembler_state_tables* tables
 
 		clean_and_preprocess_line(line, &label_name, &code_contents, line_num);
 
-		if (label_name != NULL && strlen(label_name) > MAX_LABEL_NAME_LENGTH) {
-			fprintf(stderr, ERROR_LABEL_TOO_LONG, MAX_LABEL_NAME_LENGTH, line_num);
-		}
+		if (label_name != NULL) {
+			if (strlen(label_name) > MAX_LABEL_NAME_LENGTH) {
+				fprintf(stderr, ERROR_LABEL_TOO_LONG, MAX_LABEL_NAME_LENGTH, line_num);
+			}
 
-		if (label_name != NULL && code_contents[0] == '\0') {
-			fprintf(stderr, ERROR_USELESS_LABEL, line_num);
+			if (code_contents[0] == '\0') {
+				fprintf(stderr, ERROR_USELESS_LABEL, line_num);
+			}
+
+			if (is_valid_label(label_name, ops) == 0) {
+				fprintf(stderr, ERROR_LABEL_NAME, line_num);
+			}
 		}
 
 		if (code_contents[0] == '.' || code_contents[0] == '\0') {
@@ -78,6 +84,8 @@ int parse_ops (FILE* fp, string file_name, struct assembler_state_tables* tables
 				                        line_num);
 
 				if (parse_struct) {
+
+					//* element_code(op_name, ); *//
 					// TODO: Convert and lay out parsed info to final binary structure
 					// TODO: NOTE: OPs with 1 arg put their data in target operand, not source
 
@@ -100,6 +108,18 @@ int parse_ops (FILE* fp, string file_name, struct assembler_state_tables* tables
 		line_num++;
 
 	}
+	// sldkfjlk
+
+	/* sdfsdf
+	 * */
+
+// list *iterator = tables->data_labels_table;
+
+//*    memcpy(tables->data, tables->code + tables->code_current_size, tables->data_current_size);
+//*    while ( iterator->next != NULL){
+//*        ((data_label *)iterator->data)->data_address += tables->code_current_size;
+//*        iterator = iterator->next;
+//*    }
 
 	return success;
 }
