@@ -17,12 +17,14 @@ int decl_data (DECL_SIGNATURE) {
 	int data_size = PARSER_GET_INT(parse_struct);
     void *new_data = NULL;
 
-    data_label *new = malloc(sizeof(data_label));
-    if (!new)
-        return 0;
-    strcpy(new->name, label_name);
-    new->data_address = tables->code_current_size;
-    list_add_element(&(tables->data_labels_table), new);
+    if (label_name != NULL) {
+        data_label *new = malloc(sizeof(data_label));
+        if (!new)
+            return 0;
+        strcpy(new->name, label_name);
+        new->data_address = tables->code_current_size;
+        list_add_element(&(tables->data_labels_table), new);
+    }
 
     new_data = realloc(tables->data, sizeof(cpu_word) * (tables->data_current_size + data_size));
     if (!new_data) {
@@ -57,7 +59,25 @@ int decl_data (DECL_SIGNATURE) {
 int decl_string (DECL_SIGNATURE) {
 	int data_size = PARSER_GET_INT(parse_struct) * sizeof(int);
 
-	// FIXME: REMOVE ME
+    void *new_data = NULL;
+
+    if (label_name != NULL) {
+        data_label *new = malloc(sizeof(data_label));
+        if (!new)
+            return 0;
+        strcpy(new->name, label_name);
+        new->data_address = tables->code_current_size;
+        list_add_element(&(tables->data_labels_table), new);
+    }
+
+    new_data = realloc(tables->data, sizeof(cpu_word) * (tables->data_current_size + data_size));
+    if (!new_data) {
+        return 0;
+    }
+
+    tables->data = new_data;
+
+    // FIXME: REMOVE ME
 	int i;
 	printf("GOT STRING: ");
 	for (i = 0; i < data_size / 4; i++) {
@@ -84,6 +104,25 @@ int decl_mat (DECL_SIGNATURE) {
 	int data_size = 0;
 	int mat_size_x = PARSER_GET_INT(parse_struct);
 	int mat_size_y = PARSER_GET_INT(parse_struct);
+    void *new_data = NULL;
+
+    init_length = mat_size_x * mat_size_y;
+
+    if (label_name != NULL) {
+        data_label *new = malloc(sizeof(data_label));
+        if (!new)
+            return 0;
+        strcpy(new->name, label_name);
+        new->data_address = tables->code_current_size;
+        list_add_element(&(tables->data_labels_table), new);
+    }
+
+    new_data = realloc(tables->data, sizeof(cpu_word) * (tables->data_current_size + init_length));
+    if (!new_data) {
+        return 0;
+    }
+
+    tables->data = new_data;
 
 	// FIXME: REMOVE ME
 	int i;
