@@ -1,9 +1,0 @@
-1 - for file in file:
-    2 - open
-    3 - for pass in passes:
-        4 - for line in file
-            5 - parse
-            6 - save data or code
-            7 - save label in data or code if exists
-            8 - save extern/entry in seperate tables
-    9 - save output files
