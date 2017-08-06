@@ -1,0 +1,131 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "parse_directives.h"
+#include "constant_data.h"
+#include "util_funcs.h"
+#include "parsing.h"
+#include "state.h"
+#include "errors.h"
+
+int find_directive (char*);
+
+void parse_directives_and_labels (state_t* state) {
+	char* line = malloc(LINE_LENGTH + 1);
+
+	char* label_name = NULL;
+	char* directive_name = NULL;
+	char* code_contents = NULL;
+
+	// Loop over every line
+	while (get_line(line, LINE_LENGTH, state->current_file_ptr, state->current_line_num)) {
+		state->current_line_num++;
+
+		// Remove comment, and split label, directive/op and arguments/operands
+		clean_and_split_line(line, &label_name, &directive_name, &code_contents, state, 1);
+
+		// Check directive and label
+		if (directive_name && ISDIRECTIVE(directive_name) && (!label_name || is_valid_label(label_name))) {
+			int directive_id = find_directive(directive_name + 1);
+
+			if (directive_id != -1) {
+				// Execute the corresponding directive function
+				if (!DIRECTIVES[directive_id].func(state, label_name, code_contents)) {
+					state->failed = 1;
+				}
+			}
+		}
+	}
+
+	// Return file pointer to beginning for op parser
+	rewind(state->current_file_ptr);
+}
+
+int find_directive (char* directive_name) {
+	int i;
+
+	for (i = 0; i < DIRECTIVES_LENGTH; i++)
+		if (!strcmp(directive_name, DIRECTIVES[i].name))
+			return i;
+
+	return -1;
+}
+
+
+////////////// Directives ////////////////
+
+// NOTE: All labels need to be checked if they exist
+
+int direc_data (state_t* state, char* label, char* contents) {
+	// TODO
+	return 1;
+}
+
+int direc_string (state_t* state, char* label, char* contents) {
+	// TODO
+	return 1;
+}
+
+int direc_mat (state_t* state, char* label, char* contents) {
+	char* ptr = contents;
+	long mat_x;
+	long mat_y;
+	int i;
+	int zero_fill = 0;
+
+	// Matrix size
+	if (!EXPECT_CHAR('[')
+	    || !EXPECT_NUMBER(mat_x)
+	    || !EXPECT_CHAR(']')
+	    || !EXPECT_CHAR('[')
+	    || !EXPECT_NUMBER(mat_y)
+	    || !EXPECT_CHAR(']')
+	    || !EXPECT_SPACE_OR_EOL())
+		return 0;
+
+	// Initial data
+	if (*ptr == '\0') {
+		zero_fill = 1;
+	}
+
+	for (i = 0; i < mat_x * mat_y; i++) {
+		if (!zero_fill) {
+			long value;
+			ptr = advance_whitespace(ptr);
+			EXPECT_NUMBER(value);
+			ptr = advance_whitespace(ptr);
+
+			if (!MAYBE_CHAR(',')) {
+				zero_fill = 1;
+			}
+
+			if (value <= 0) {
+				fprintf(stderr, ERROR_MATRIX_DIMENSION_POSITIVE, state->current_line_num, state->current_file_name);
+				state->failed = 1;
+				return 0;
+			}
+
+			// TODO: Insert value
+		} else {
+			// TODO: Insert zero
+		}
+	}
+
+	return 1;
+}
+
+int direc_entry (state_t* state, char* label, char* contents) {
+	// TODO: Check if entry exists
+	if (contents == NULL || advance_nonwhitespace(contents) == '\0')
+		return 0;
+	list_add_element(&state->entry_table, contents);
+	return 1;
+}
+
+int direc_extern (state_t* state, char* label, char* contents) {
+	// TODO: Check if extern exists
+	if (contents == NULL || advance_nonwhitespace(contents) == '\0')
+		return 0;
+	list_add_element(&state->extern_table, contents);
+	return 1;
+}

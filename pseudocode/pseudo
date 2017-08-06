@@ -1,0 +1,91 @@
+main(files):
+    for file in files:
+        check existance
+    for file in files:
+        parse_directives(file)
+        parse_ops(file)
+        output data
+
+parse_directives(file):
+    for line in file:
+        remove comment
+        split line into label,directive,arguments
+        check that it is a directive
+        check label validity
+        check that directive exists
+        address = execute the directive function(arguments)
+        if label exists:
+            push to data label table the address with the label
+
+parse_ops(file):
+    for line in file:
+        remove comment
+        split line into label,op name,arguments
+        check that it is not a directive
+        check label validity
+        check that op exists
+        address = execute the generic op function(op, opcode, arguments)
+        if label exists:
+            push to code label table the address with the label
+
+generic_op_function(op, arguments):
+    put opcode in code table
+    split arguments by comma
+    
+    for arg in arguments:
+        check arg type and check for errors(arg)
+    
+    for arg in arguments:
+        check arg type and check for errors(arg)
+        execute argument specific function(arg index, arg)
+    
+    if both arguments are of type reg:
+        output  = out1 || out2
+    else:
+        output = out1 + out2
+    
+    push output to code table
+
+check_arg_type(arg):
+    if arg[0] == digit: fail
+    if arg == 'r' + digit + '\0': reg
+    if arg == alpha + alphanumeric[] + '\0': label
+    if arg == '#' + number: immediate
+    if arg == alpha + alphanumeric[] + '[' + number + ']' + '[' + number + ']': mat
+    else: fail
+
+parse_reg(arg index, arg):
+    number = str_to_num(arg[1..n])
+    put_operand_type(3)
+
+    am i source or dest operand
+    if dest:
+        op_word[2..3] = type
+        output[2..5] = number
+    if source
+        op_word[4..5] = type
+        output[6..9] = number
+        
+===============================
+
+direc_data(args):
+    infinity:
+        get number
+        push number to data table
+        if no comma:
+            check for end of input:
+                exit successfully
+            else:
+                error
+
+direc_string(args):
+    get "
+    infinity:
+        get character
+        push character to data table
+        if no comma:
+            check for end of input:
+                exit successfully
+            else:
+                error
+

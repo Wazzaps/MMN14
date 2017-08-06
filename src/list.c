@@ -1,6 +1,6 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include "structures.h"
+#include <stdlib.h>
+#include "list.h"
 #include "errors.h"
 
 // Adds an element to a linked list pointer, and if it doesn't exist (ie. NULL), creates it and assigned to pointer
