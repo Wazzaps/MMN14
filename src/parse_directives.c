@@ -5,7 +5,6 @@
 #include "constant_data.h"
 #include "util_funcs.h"
 #include "parsing.h"
-#include "state.h"
 #include "errors.h"
 
 int find_directive (char*);
@@ -25,7 +24,8 @@ void parse_directives_and_labels (state_t* state) {
 		clean_and_split_line(line, &label_name, &directive_name, &code_contents, state, 1);
 
 		// Check directive and label
-		if (directive_name && ISDIRECTIVE(directive_name) && (!label_name || is_valid_label(label_name))) {
+        if (directive_name && ISDIRECTIVE(directive_name) &&
+            (!label_name || is_valid_label(label_name, state->current_line_num, state->current_file_name))) {
 			int directive_id = find_directive(directive_name + 1);
 
 			if (directive_id != -1) {
@@ -56,8 +56,62 @@ int find_directive (char* directive_name) {
 
 // NOTE: All labels need to be checked if they exist
 
-int direc_data (state_t* state, char* label, char* contents) {
-	// TODO
+char *my_strchr(char *s, int c) {
+    char *ret = NULL;
+
+    if (*s == '\0') {
+        return NULL;
+    }
+
+    ret = strchr(s, c);
+
+    if (ret != NULL) {
+        return ret;
+    }
+
+    return s + strlen(s);
+}
+
+int direc_data(state_t *state, char *label, char *contents) {
+    char *ptr = contents;
+    double num;
+
+    if (label != NULL) {
+        data_label *new_label = malloc(sizeof(data_label)); //TODO : check allocting
+        new_label->name = label;
+        new_label->data_address = state->data_counter;
+
+        list_add_element(&state->data_labels_table, new_label);
+
+    }
+
+    char *endptr = ptr;
+    while (*endptr != '\0') {
+        num = strtod(endptr, &endptr);
+
+        if (endptr == NULL) {
+            fprintf(stderr, ERROR_DATA_IS_NOT_NUM, state->current_line_num, state->current_file_name);
+            return 0;
+        }
+
+        add_word(&state->data_table, &state->data_counter, (int) num);
+
+        if (*endptr == '\0') {
+            break;
+        }
+
+        endptr++;
+    }
+
+    if (endptr) {
+        ptr = endptr;
+    }
+
+    if (*advance_whitespace(ptr) != '\0') {
+        fprintf(stderr, ERROR_DATA_MISSING_COMMA, state->current_line_num, state->current_file_name);
+        return 0;
+    }
+
 	return 1;
 }
 

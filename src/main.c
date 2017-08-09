@@ -7,6 +7,7 @@
 #include "parse_directives.h"
 #include "parse_ops.h"
 #include "errors.h"
+#include "base4.h"
 
 #define DEBUG_MODE 1
 
@@ -58,12 +59,34 @@ int main (int argc, char* argv[]) {
 
 		/* Write data to file */
 		if (!state.failed) {
-			//list* ptr = tables.extern_table;
-			char* output_ob_file_name = file_add_extension(argv[iterator], "ob");
+            int j;
+            int i = 100;
+            char *put_data;
+            char *output_ob_file_name = file_add_extension(argv[iterator], "ob");
 			FILE *output_ob_file = fopen(output_ob_file_name, "w");
 
-			// TODO: Add code size to all addresses in code
+            // TODO: Add code size to all addresses in code, referring to data
+            list *curr_label = state.data_labels_table;
+            while (curr_label != NULL) {
+                ((data_label *) (curr_label->data))->data_address += state.code_counter;
+                curr_label = curr_label->next;
+            }
+
+            put_data = realloc(state.code_table, state.code_counter + state.data_counter);
+            if (put_data == NULL) {
+                fprintf(stderr, ERROR_OUT_OF_MEMORY);
+                exit(1);
+            }
+            state.code_table = (cpu_word *) put_data;
+            memcpy(state.code_table + state.code_counter, state.data_table, state.data_counter);
+
 			// TODO: Write the file, with a 100 offset in address
+            cpu_word *curr_word = state.code_table;
+            for (j = 0; j < (state.code_counter + state.data_counter); j++) {
+                fprintf(output_ob_file, "%s\t%s\n", tobase4(i & 1023, 5), tobase4(curr_word[j] & 1023, 5));
+                fprintf(stdout, "%d\t%s\t%s\n", i - 100, tobase4(i & 1023, 5), tobase4(curr_word[j] & 1023, 5));
+                i++;
+            }
 
 
 			fclose(output_ob_file);

@@ -5,7 +5,6 @@
 #include "util_funcs.h"
 #include "constant_data.h"
 #include "errors.h"
-#include "state.h"
 
 /* Adds a two/three character extension to a filename */
 char* file_add_extension(char* original, char extension[4]) {
@@ -165,9 +164,7 @@ void clean_and_split_line (char* line, char** _label_name, char** _name, char** 
 }
 
 /* Gets a label and tells if it's valid (not a register or a reserved word) */
-int is_valid_label(char *name) {
-	// TODO: I think this needs some more checks, need to look at forum
-	// TODO: Add error prints
+int is_valid_label(char *name, int line_num, char *file_name) {
 	int i;
 	size_t name_length = strlen(name);
 	char* name_lowercase = malloc(name_length+1);
@@ -175,26 +172,31 @@ int is_valid_label(char *name) {
 	char* end_ptr;
 
 	// Labels can't start with a number
-	if (isdigit(name[0])) {
-		// TODO: ERROR: Can't start with number
+    if (!isalpha(name[0])) {
+        fprintf(stderr, ERROR_LABEL_CANNOT_START_WITH_NUM, line_num, file_name);
 		return 0;
 	}
 
 
 	// Labels can't be equal to op names or assembly directive names, in any case
 	for (i = 0; i < name_length; i++) {
+        if (!isalnum(name[i])) {
+            fprintf(stderr, ERROR_LABEL_NAME_NOT_LETTER_OR_NUM, line_num, file_name);
+            return 0;
+        }
 		name_lowercase[i] = (char)tolower(name[i]);
+
 	}
 	for (i = 0; i < OPS_LENGTH; i++) {
 		if (!strcmp(OPS[i].name, name_lowercase)) {
-			// TODO: ERROR: Can't be equal to op names
+            fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_OP_NAME, line_num, file_name);
 			return 0;
 		}
 
 	}
 	for (i = 0; i < DIRECTIVES_LENGTH; i++) {
 		if (!strcmp(DIRECTIVES[i].name, name_lowercase)) {
-			// TODO: ERROR: Can't be equal to directive names
+            fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_DIR_MAME, line_num, file_name);
 			return 0;
 		}
 	}
@@ -203,7 +205,7 @@ int is_valid_label(char *name) {
 	if (name_lowercase[0] == 'r') {
 		register_test = strtol(name_lowercase+1, &end_ptr, 10);
 		if ((end_ptr != name_lowercase + 1) && (*end_ptr == '\0') && (register_test >= MINIMUM_REG) && (register_test <= MAXIMUM_REG)) {
-			// TODO: ERROR: Can't be equal to register names
+            fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_REG_MAME, line_num, file_name);
 			return 0;
 		}
 	}

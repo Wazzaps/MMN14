@@ -8,7 +8,6 @@
 #include "errors.h"
 #include "parsing.h"
 #include "base4.h"
-#include "state.h"
 
 int find_op (char*);
 
@@ -33,7 +32,8 @@ void parse_ops (state_t* state) {
 		clean_and_split_line(line, &label_name, &op_name, &code_contents, state, 0);
 
 		// Check op name and label
-		if (op_name && !ISDIRECTIVE(op_name) && (!label_name || is_valid_label(label_name))) {
+		if (op_name && !ISDIRECTIVE(op_name) &&
+			(!label_name || is_valid_label(label_name, state->current_line_num, state->current_file_name))) {
 			int opcode = find_op(op_name);
 
 			if (opcode != -1) {
@@ -52,7 +52,12 @@ void parse_ops (state_t* state) {
 
 				// Push the label to the table, with it's final address
 				if (label_name) {
-					// TODO
+					// TODO - check me
+					code_label *new_label = malloc(sizeof(code_label));
+					new_label->name = label_name;
+					new_label->code_address = state->code_counter;
+
+					list_add_element(&state->code_labels_table, new_label);
 				}
 
 				if (number_of_operands >= 1) {
@@ -157,7 +162,23 @@ int identify_operand (char* str) {
 }
 
 void parse_operand (int opcode, char* str, int src_type, state_t* state, int combine) {
+	/*
+    char* endptr = str + 1;
+    double number;
 
+    if (str[0] == '#') {
+        number = strtod(endptr, &endptr);
+        if ( endptr == NULL ) {
+            fprintf(stderr, ERROR_INVALID_OPERATOR,  state->current_line_num, state->current_file_name);
+            return ;
+        }
+
+        add_word(&state->code_table, &state->code_counter, number);
+        if ( (strtok(str, ",") == NULL) && advance_whitespace(endptr) != '\0' ) { // if its the sec operand and its not end of line
+            fprintf(stderr, ERROR_UNNECESSSARY_OPERATOR,  state->current_line_num, state->current_file_name);
+            return ;
+        }
+    }//*/
 	/*
 	 When dealing with labels, you need to check if they are external, then set ERA flags
 	 */
