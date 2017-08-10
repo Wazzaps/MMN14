@@ -57,9 +57,10 @@ int expect_whitespace_or_eol (char** ptr, state_t* state) {
 	if (endptr != *ptr) {
 		*ptr = endptr;
 		return 1;
+	} else if (**ptr == '\0') {
+		return 1;
 	} else {
-		if (**ptr != '\0')
-			fprintf(stderr, ERROR_EXPECTED_WHITESPACE, **ptr, **ptr, state->current_line_num, state->current_file_name);
+		fprintf(stderr, ERROR_EXPECTED_WHITESPACE, **ptr, **ptr, state->current_line_num, state->current_file_name);
 		return 0;
 	}
 }

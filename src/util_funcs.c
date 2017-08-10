@@ -6,21 +6,15 @@
 #include "constant_data.h"
 #include "errors.h"
 
-/* Adds a two/three character extension to a filename */
-char* file_add_extension(char* original, char extension[4]) {
+/* Adds an extension to a filename */
+char* file_add_extension(char* original, char* extension) {
 	size_t len = strlen(original);
-	char* output = malloc(len + 4 + (extension[2]=='\0' ? 0 : 1)); // '.', char[0], char[1], [char[2]?], '\0'
+	size_t extlen = strlen(extension) + 1;
+	char* output = malloc(len + 1 + extlen + 1); // filename, '.', extension, '\0'
 
 	strcpy(output, original);
 	output[len] = '.';
-	output[len + 1] = extension[0];
-	output[len + 2] = extension[1];
-	if (extension[2] == '\0')
-		output[len + 3] = '\0';
-	else {
-		output[len + 3] = extension[2];
-		output[len + 4] = '\0';
-	}
+	strcpy(output + len + 1, extension);
 
 	return output;
 }
@@ -128,10 +122,24 @@ void clean_and_split_line (char* line, char** _label_name, char** _name, char** 
 	if (*_name == NULL) { /* No colon found */
 		*_name = advance_whitespace(start_of_line);
 		*_label_name = NULL;
+
+		/* Nothing found */
+		if (**_name == '\0') {
+			*_name = NULL;
+			*_code_contents = NULL;
+			return;
+		}
 	} else if (strlen(advance_whitespace(start_of_line)) == 0) {  /* Label is empty */
 		*_label_name = NULL;
 		if (show_errors)
 			fprintf(stderr, ERROR_EMPTY_LABEL, state->current_line_num, state->current_file_name);
+	} else if (**_name == '\0') { /* Label isn't empty, code is empty */
+		if (show_errors)
+			fprintf(stderr, ERROR_USELESS_LABEL, block_whitespace(advance_whitespace(start_of_line)), state->current_line_num, state->current_file_name);
+		*_label_name = NULL;
+		*_name = NULL;
+		*_code_contents = NULL;
+		return;
 	} else { /* Label isn't empty */
 		int failed = 0;
 		*_label_name = start_of_line;

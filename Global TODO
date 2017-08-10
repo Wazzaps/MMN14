@@ -1,0 +1,27 @@
+all:
+	makefile
+	rename executable to "assembler"
+	awaiting ANSI check
+
+base4:
+	100% clear
+
+constant_data:
+	100% clear
+
+cpu_word:
+	100% clear
+
+errors:
+	find grammar errors
+	ERROR_INVALID_OPERATOR, ERROR_UNNECESSSARY_OPERATOR?
+
+list:
+	100% clear
+
+main:
+parse_directives:
+parse_ops:
+parsing:
+state:
+util_funcs:
