@@ -8,6 +8,7 @@
 #include "parse_ops.h"
 #include "errors.h"
 #include "base4.h"
+#include "constant_data.h"
 
 #define DEBUG_MODE 1
 
@@ -24,7 +25,7 @@ int main (int argc, char* argv[]) {
 	/* Open files */
 	for (iterator = 1; iterator < argc; iterator++) {
 		state_t state;
-		char* file_name = file_add_extension(argv[iterator], "as");
+		char* file_name = file_add_extension(argv[iterator], ASM_EXT);
 
 		/* Create relevant tables - Setup state table */
 		state.data_table = malloc(1);
@@ -47,6 +48,7 @@ int main (int argc, char* argv[]) {
 			state.current_file_ptr = fp;
 		} else {
 			fprintf(stderr, ERROR_CANNOT_READ, argv[iterator]);
+			all_success = 0;
 			continue;
 		}
 
@@ -59,42 +61,54 @@ int main (int argc, char* argv[]) {
 
 		/* Write data to file */
 		if (!state.failed) {
-            int j;
-            int i = 100;
-            char *put_data;
-            char *output_ob_file_name = file_add_extension(argv[iterator], "ob");
-			FILE *output_ob_file = fopen(output_ob_file_name, "w");
+			int j;
+			int i = 100;
+			char* output_ob_file_name = file_add_extension(argv[iterator], OBJ_EXT);
+			FILE* output_ob_file = fopen(output_ob_file_name, "w");
 
-            // TODO: Add code size to all addresses in code, referring to data
-            list *curr_label = state.data_labels_table;
-            while (curr_label != NULL) {
-                ((data_label *) (curr_label->data))->data_address += state.code_counter;
-                curr_label = curr_label->next;
-            }
+			// Check that the file was opened
+			if (!output_ob_file) {
+				fprintf(stderr, ERROR_CANNOT_WRITE, output_ob_file_name);
+				all_success = 0;
+				continue;
+			}
 
-            put_data = realloc(state.code_table, state.code_counter + state.data_counter);
-            if (put_data == NULL) {
-                fprintf(stderr, ERROR_OUT_OF_MEMORY);
-                exit(1);
-            }
-            state.code_table = (cpu_word *) put_data;
-            memcpy(state.code_table + state.code_counter, state.data_table, state.data_counter);
+			// Add code size to all addresses in code which refers to data (ie. labels, matrices)
+			list* curr_label = state.data_labels_table;
+			while (curr_label != NULL) {
+				((data_label*) (curr_label->data))->data_address += state.code_counter;
+				curr_label = curr_label->next;
+			}
 
-			// TODO: Write the file, with a 100 offset in address
-            cpu_word *curr_word = state.code_table;
-            for (j = 0; j < (state.code_counter + state.data_counter); j++) {
-                fprintf(output_ob_file, "%s\t%s\n", tobase4(i & 1023, 5), tobase4(curr_word[j] & 1023, 5));
-                fprintf(stdout, "%d\t%s\t%s\n", i - 100, tobase4(i & 1023, 5), tobase4(curr_word[j] & 1023, 5));
-                i++;
-            }
+			state.code_table = realloc(state.code_table, state.code_counter + state.data_counter);
+			if (state.code_table == NULL) {
+				fprintf(stderr, ERROR_OUT_OF_MEMORY);
+				exit(1);
+			}
+			memcpy(state.code_table + state.code_counter, state.data_table, state.data_counter);
 
+			// Write the file, with a 100 offset in address
+			// TODO: Make more readable
+			cpu_word* curr_word = state.code_table;
+			for (j = 0; j < (state.code_counter + state.data_counter); j++) {
+				fprintf(output_ob_file, "%s\t%s\n", tobase4(i & 1023, 5), tobase4(curr_word[j] & 1023, 5));
+				fprintf(stdout, "%d\t%s\t%s\n", i - 100, tobase4(i & 1023, 5), tobase4(curr_word[j] & 1023, 5));
+				i++;
+			}
 
 			fclose(output_ob_file);
 			free(output_ob_file_name);
 
 			if (state.entry_table != NULL) {
-				char* output_ent_file_name = file_add_extension(argv[iterator], "ent");
-				FILE *output_ent_file = fopen(output_ent_file_name, "w");
+				char* output_ent_file_name = file_add_extension(argv[iterator], ENT_EXT);
+				FILE* output_ent_file = fopen(output_ent_file_name, "w");
+
+				// Check that the file was opened
+				if (!output_ent_file) {
+					fprintf(stderr, ERROR_CANNOT_WRITE, output_ent_file_name);
+					all_success = 0;
+					continue;
+				}
 
 				// Go over all entry table
 				// For each entry get it's label's address
@@ -105,8 +119,8 @@ int main (int argc, char* argv[]) {
 			}
 
 			if (state.extern_table != NULL) {
-				char* output_ext_file_name = file_add_extension(argv[iterator], "ext");
-				FILE *output_ext_file = fopen(output_ext_file_name, "w");
+				char* output_ext_file_name = file_add_extension(argv[iterator], EXT_EXT);
+				FILE* output_ext_file = fopen(output_ext_file_name, "w");
 
 				// Go over all extern refs table
 				// For each ref, check that it exists, and write it in the file
@@ -120,9 +134,9 @@ int main (int argc, char* argv[]) {
 			printf("%s\n", state.failed ? "Fail!" : "Success!");
 		}
 
-		all_success *= 1 - state.failed;
+		all_success *= !state.failed;
 
 	}
 
-	return 1 - all_success;
+	return !all_success;
 }

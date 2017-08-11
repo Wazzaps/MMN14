@@ -19,6 +19,6 @@ char* block_whitespace (char* str);
 
 void clean_and_split_line (char* line, char** _label_name, char** _name, char** _code_contents, state_t*, int show_errors);
 
-int is_valid_label(char *name, int line_num, char *file_ptr);
+int is_valid_label (char* name, int line_num, char* file_ptr);
 
 #endif //MMN14_NEW_UTIL_FUNCS_H

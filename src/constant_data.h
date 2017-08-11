@@ -35,4 +35,13 @@ extern direc_t DIRECTIVES[];
 #define MINIMUM_REG 0
 #define MAXIMUM_REG 7
 
+#define ASM_EXT "as"
+#define OBJ_EXT "ob"
+#define EXT_EXT "ext"
+#define ENT_EXT "ent"
+
+#define MAX_VALUE_UNSIGNED 1023
+#define MAX_VALUE_SIGNED 511
+#define MIN_VALUE_SIGNED -512
+
 #endif //MMN14_CONSTANT_DATA_H

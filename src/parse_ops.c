@@ -88,9 +88,8 @@ void parse_ops (state_t* state) {
 				} else {
 					*op_word = opcode << 6;
 				}
-
-
-				printf("%d word: %s\n", state->current_line_num, tobase4(*op_word & 1023, 5));
+			} else {
+				fprintf(stderr, ERROR_UNKNOWN_OP, op_name, state->current_line_num, state->current_file_name);
 			}
 		}
 	}
