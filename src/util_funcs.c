@@ -171,6 +171,7 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	long register_test;
 	char* end_ptr;
 
+
 	// Labels can't start with a number
     if (!isalpha(name[0])) {
         fprintf(stderr, ERROR_LABEL_CANNOT_START_WITH_NUM, line_num, file_name);
@@ -200,6 +201,9 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 			return 0;
 		}
 	}
+
+	// Labels cannot be used more than once
+	//TODO
 
 	// Labels can't be register names
 	if (name_lowercase[0] == 'r') {

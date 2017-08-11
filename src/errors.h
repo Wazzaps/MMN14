@@ -43,6 +43,11 @@
 #define ERROR_UNEXPECTED_TEXT "ERROR: Expected end of line, got \"%s\" on line %d in file %s\n"
 #define ERROR_INVALID_OPERATOR "ERROR: Operand number is invalid,  on line %d in file %s\n"
 #define ERROR_UNNECESSSARY_OPERATOR "ERROR: Unnecessay operator on line %d in file %s\n"
+#define ERROR_INVALID_STRING_CONTENT "ERROR: Quotation mark missed on line %d in file %s, ignored\n"
+#define ERROR_MAT_DATA_MISSING_COMMA "ERROR: Invalid matrix data content. missing coma. on line %d in file %s, ignored\n"
+#define ERROR_MAT_DATA_IS_NOT_NUM "ERROR: Not only numbers in matrix data on line %d in file %s\n"
+#define ERROR_REPEAT_ENTRY_LABEL "ERROR: Entry name on line %d in file %s is identical to existent extern name, ignored.\n"
+#define ERROR_REPEAT_EXTERN_LABEL "ERROR: Extern name on line %d in file %s is identical to existent entry name, ignored.\n"
 
 /* String parsing */
 #define ERROR_UNPROCESSED_TEXT "ERROR: Excessive text on line %d\n"

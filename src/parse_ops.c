@@ -162,26 +162,27 @@ int identify_operand (char* str) {
 }
 
 void parse_operand (int opcode, char* str, int src_type, state_t* state, int combine) {
-	/*
     char* endptr = str + 1;
-    double number;
+    int number;
 
-    if (str[0] == '#') {
-        number = strtod(endptr, &endptr);
-        if ( endptr == NULL ) {
-            fprintf(stderr, ERROR_INVALID_OPERATOR,  state->current_line_num, state->current_file_name);
-            return ;
+    if (str[0] == '#') {  // Direct addressing
+        number = strtol(endptr, &endptr, 10);
+        if (endptr == NULL) {
+            fprintf(stderr, ERROR_INVALID_OPERATOR, state->current_line_num, state->current_file_name);
+            return;
         }
+        number = number << 2;
 
         add_word(&state->code_table, &state->code_counter, number);
-        if ( (strtok(str, ",") == NULL) && advance_whitespace(endptr) != '\0' ) { // if its the sec operand and its not end of line
-            fprintf(stderr, ERROR_UNNECESSSARY_OPERATOR,  state->current_line_num, state->current_file_name);
-            return ;
+        if ((strtok(str, ",") == NULL) &&
+            advance_whitespace(endptr) != '\0') { // if its the sec operand and its not end of line
+            fprintf(stderr, ERROR_UNNECESSSARY_OPERATOR, state->current_line_num, state->current_file_name);
+            return;
         }
-    }//*/
-	/*
-	 When dealing with labels, you need to check if they are external, then set ERA flags
-	 */
+    }
+
+    //When dealing with labels, you need to check if they are external, then set ERA flags
+
 
 	/*
 	// Need this for when combine == 1
