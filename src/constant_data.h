@@ -52,9 +52,11 @@ extern direc_t DIRECTIVES[];
 #define EXT_EXT "ext"
 #define ENT_EXT "ent"
 
-#define MAX_VALUE_UNSIGNED 1023
-#define MAX_VALUE_SIGNED 511
-#define MIN_VALUE_SIGNED -512
+#define MAX_VALUE_UNSIGNED_10bits 1023
+#define MAX_VALUE_SIGNED_10bits 511
+#define MIN_VALUE_SIGNED_10bits -512
+#define MAX_VALUE_SIGNED_8bits 127
+#define MIN_VALUE_SIGNED_8bits -128
 
 #define MEM_STARTS_AT 100
 

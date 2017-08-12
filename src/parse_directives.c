@@ -6,6 +6,7 @@
 #include "util_funcs.h"
 #include "parsing.h"
 #include "errors.h"
+#include "state.h"
 
 int find_directive (char*);
 
@@ -74,8 +75,8 @@ int direc_data (state_t* state, char* label, char* contents) {
 			return 0;
 		}
 
-		if (num < MIN_VALUE_SIGNED || num > MAX_VALUE_SIGNED) {
-			fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, num, state->current_line_num, state->current_file_name);
+		if (num < MIN_VALUE_SIGNED_10bits || num > MAX_VALUE_SIGNED_10bits) {
+			fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, num, state->current_line_num, MIN_VALUE_SIGNED_10bits, MAX_VALUE_SIGNED_10bits, state->current_file_name);
 			return 0;
 		}
 
@@ -147,12 +148,12 @@ int direc_mat (state_t* state, char* label, char* contents) {
 	}
 
 	// >> +1 << because declarations are one-indexed, but access is zero-indexed
-	if (mat_x > MAX_VALUE_UNSIGNED+1 || mat_x < 0) {
+	if (mat_x > MAX_VALUE_UNSIGNED_10bits+1 || mat_x < 0) {
 		fprintf(stderr, ERROR_MATRIX_DIMENSION_OUT_OF_BOUNDS, mat_x, state->current_line_num, state->current_file_name);
 		state->failed = 1;
 		return 0;
 	}
-	if (mat_y > MAX_VALUE_UNSIGNED+1 || mat_y < 0) {
+	if (mat_y > MAX_VALUE_UNSIGNED_10bits+1 || mat_y < 0) {
 		fprintf(stderr, ERROR_MATRIX_DIMENSION_OUT_OF_BOUNDS, mat_y, state->current_line_num, state->current_file_name);
 		state->failed = 1;
 		return 0;
@@ -170,12 +171,12 @@ int direc_mat (state_t* state, char* label, char* contents) {
 			EXPECT_NUMBER(value);
 			ptr = advance_whitespace(ptr);
 
-			if (!MAYBE_CHAR(',')) {
+			if (i == mat_x * mat_y - 1 || !MAYBE_CHAR(',')) {
 				zero_fill = 1;
 			}
 
-			if (value > MAX_VALUE_SIGNED || value < MIN_VALUE_SIGNED) {
-				fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, value, state->current_line_num, state->current_file_name);
+			if (value > MAX_VALUE_SIGNED_10bits || value < MIN_VALUE_SIGNED_10bits) {
+				fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, value, state->current_line_num, MIN_VALUE_SIGNED_10bits, MAX_VALUE_SIGNED_10bits, state->current_file_name);
 				state->failed = 1;
 				return 0;
 			}
@@ -195,11 +196,22 @@ int direc_entry (state_t* state, char* label, char* contents) {
 	// TODO: Check if entry exists
 	// TODO: Check if extern exists
 	// TODO: Check if label exists
+	entry_with_line_num* new_element = calloc(1, sizeof(entry_with_line_num));
 
-	if (contents == NULL || *advance_nonwhitespace(contents) != '\0')
+	if (!new_element) {
+		fprintf(stderr, ERROR_OUT_OF_MEMORY);
+		exit(1);
+	}
+
+	if (contents == NULL || *advance_nonwhitespace(contents) != '\0') {
+		fprintf(stderr, ERROR_INVALID_ENTRY, state->current_line_num, state->current_file_name);
 		return 0;
+	}
 
-	list_add_element(&state->entry_table, str_dup(contents));
+	new_element->name = str_dup(contents);
+	new_element->line_num = (unsigned)state->current_line_num;
+
+	list_add_element(&state->entry_table, new_element);
 	return 1;
 }
 
@@ -208,12 +220,13 @@ int direc_extern (state_t* state, char* label, char* contents) {
 	// TODO: Check if entry exists
 	// TODO: Check if label exists
 
-	if (contents == NULL || advance_whitespace(contents) == '\0')
+	if (contents == NULL || advance_whitespace(contents) == '\0'){
+		fprintf(stderr, ERROR_INVALID_EXTERN, state->current_line_num, state->current_file_name);
 		return 0;
+	}
 
 	if (find_data_label(state, contents)) {
 		fprintf(stderr, ERROR_LABEL_EXISTS, contents, state->current_line_num, state->current_file_name);
-		state->failed = 1;
 		return 0;
 	}
 

@@ -36,8 +36,6 @@ void add_data_label (state_t* state, char* label, matrix_bool_e is_matrix);
 
 void add_code_label (state_t* state, char* label);
 
-int get_data_label_address (state_t* state, char* label);
-
 int is_register_valid (long reg_num);
 
 int is_extern_label (state_t *state, char* label);

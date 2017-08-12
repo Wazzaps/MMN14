@@ -12,6 +12,11 @@ typedef struct {
 
 typedef struct {
 	char* name;
+	unsigned line_num;
+} entry_with_line_num;
+
+typedef struct {
+	char* name;
 	unsigned address;
 	unsigned is_matrix:1;
 } data_label;
@@ -24,7 +29,7 @@ typedef struct {
 
 typedef struct  {
 	/* Assembler tables */
-	list* entry_table; // List of type 'char*'
+	list* entry_table; // List of type 'entry_with_line_num'
 	list* extern_table; // List of type 'char*'
 	list* extern_refs_table; // List of type 'ref_in_code'
 	list* data_labels_table; // List of type 'data_label'

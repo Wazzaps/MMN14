@@ -324,22 +324,6 @@ void add_code_label (state_t* state, char* label) {
 	list_add_element(&state->code_labels_table, new_label);
 }
 
-int get_data_label_address (state_t* state, char* label) {
-	list* ptr;
-
-	if (!find_data_label(state, label))
-		return -1;
-
-	ptr = state->data_labels_table;
-	while (ptr) {
-		if (!strcmp(((data_label*)ptr->data)->name, label))
-			return ((data_label*)ptr->data)->address;
-		ptr = ptr->next;
-	}
-
-	return -1;
-}
-
 int is_register_valid (long reg_num) {
 	return reg_num >= MINIMUM_REG && reg_num <= MAXIMUM_REG;
 }
@@ -361,7 +345,7 @@ void add_ref_in_code (list** table, char* label, unsigned address) {
 	list* ptr = *table;
 
 	if (!ptr) {
-		ref_in_code* ref_ptr = calloc(1, sizeof(list));
+		ref_in_code* ref_ptr = calloc(1, sizeof(ref_in_code));
 		ptr = calloc(1, sizeof(list));
 		if (!ptr || !ref_ptr) {
 			fprintf(stderr, ERROR_OUT_OF_MEMORY);
@@ -373,7 +357,16 @@ void add_ref_in_code (list** table, char* label, unsigned address) {
 
 		*table = ptr;
 	} else {
+		ref_in_code* ref_ptr = calloc(1, sizeof(ref_in_code));
 		while (ptr->next)
 			ptr = ptr->next;
+		ptr->next = calloc(1, sizeof(list));
+		if (!ptr->next || !ref_ptr) {
+			fprintf(stderr, ERROR_OUT_OF_MEMORY);
+			exit(1);
+		}
+		ptr->next->data = ref_ptr;
+		ref_ptr->name = str_dup(label);
+		ref_ptr->code_address = address;
 	}
 }

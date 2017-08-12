@@ -64,8 +64,11 @@ void parse_ops (state_t* state) {
 				if (number_of_operands >= 1) {
 					int src_type = identify_operand(code_contents);
 					if (src_type == -1) {
-						fprintf(stderr, ERROR_MISSING_FIRST_OPERAND, state->current_line_num,
-						        state->current_file_name);
+						fprintf(stderr, ERROR_MISSING_FIRST_OPERAND, state->current_line_num, state->current_file_name);
+						state->failed = 1;
+						continue;
+					} else if (!(my_op.src_t & (1 << src_type))) {
+						fprintf(stderr, ERROR_UNSUPPORTED_OPERAND_TYPE, op_name, code_contents, state->current_line_num, state->current_file_name);
 						state->failed = 1;
 						continue;
 					}
@@ -77,6 +80,10 @@ void parse_ops (state_t* state) {
 						if (dst_type == -1) {
 							fprintf(stderr, ERROR_MISSING_SECOND_OPERAND, state->current_line_num,
 							        state->current_file_name);
+							state->failed = 1;
+							continue;
+						} else if (!(my_op.dst_t & (1 << dst_type))) {
+							fprintf(stderr, ERROR_UNSUPPORTED_OPERAND_TYPE, op_name, second_operand_string, state->current_line_num, state->current_file_name);
 							state->failed = 1;
 							continue;
 						}
@@ -172,7 +179,13 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		char* ptr = str + 1;
 		long num;
 
-		EXPECT_NUMBER(num);
+		EXPECT_NUMBER(num); // ERROR_DATA_OUT_OF_BOUNDS_8bits
+
+		if (num < MIN_VALUE_SIGNED_8bits || num > MAX_VALUE_SIGNED_8bits) {
+			fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, num, state->current_line_num, MIN_VALUE_SIGNED_8bits, MAX_VALUE_SIGNED_8bits, state->current_file_name);
+			state->failed = 1;
+			return;
+		}
 
 		add_word(&state->code_table, &state->code_counter, (cpu_word) num << 2 | ABSOLUTE);
 
@@ -186,7 +199,7 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 			// Adds the extern word to the code table, and saves it's index in the extern refs table
 			add_ref_in_code(&state->extern_refs_table, str, (unsigned) (add_word(&state->code_table, &state->code_counter, EXTERNAL) - state->code_table));
 		} else if (find_data_label(state, str)) {
-			int label_address = get_data_label_address(state, str);
+			int label_address = find_data_label(state, str)->address;
 			add_word(&state->code_table, &state->code_counter, label_address << 2 | RELOCATABLE);
 		} else if (find_code_label(state, str)) {
 			// Adds a "code label" marker to the code table, and saves it's index in the code label refs table for later replacement
@@ -218,7 +231,7 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		EXPECT_NUMBER(mat_x);
 
 		if (!is_register_valid(mat_x)) {
-			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, mat_x, state->current_line_num, state->current_file_name);
+			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, mat_x, state->current_line_num, MINIMUM_REG, MAXIMUM_REG, state->current_file_name);
 			state->failed = 1;
 		}
 
@@ -228,7 +241,7 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		EXPECT_NUMBER(mat_y);
 
 		if (!is_register_valid(mat_y)) {
-			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, mat_y, state->current_line_num, state->current_file_name);
+			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, mat_y, MINIMUM_REG, MAXIMUM_REG, state->current_line_num, state->current_file_name);
 			state->failed = 1;
 		}
 
@@ -243,7 +256,7 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 			fprintf(stderr, ERROR_CODE_LABEL_IN_MATRIX, str, state->current_line_num, state->current_file_name);
 			state->failed = 1;
 		} else {
-			label_address = get_data_label_address(state, str);
+			label_address = find_data_label(state, str)->address;
 			add_word(&state->code_table, &state->code_counter, label_address << 2 | RELOCATABLE);
 		}
 
@@ -257,7 +270,7 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		EXPECT_NUMBER(reg_num);
 
 		if (!is_register_valid(reg_num)) {
-			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, reg_num, state->current_line_num, state->current_file_name);
+			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, reg_num, MINIMUM_REG, MAXIMUM_REG, state->current_line_num, state->current_file_name);
 			state->failed = 1;
 		}
 
@@ -270,43 +283,4 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		}
 
 	}
-	/*
-    char* endptr = str + 1;
-    double number;
-
-    if (str[0] == '#') {
-        number = strtod(endptr, &endptr);
-        if ( endptr == NULL ) {
-            fprintf(stderr, ERROR_INVALID_OPERATOR,  state->current_line_num, state->current_file_name);
-            return ;
-        }
-
-        add_word(&state->code_table, &state->code_counter, number);
-        if ( (strtok(str, ",") == NULL) && advance_whitespace(endptr) != '\0' ) { // if its the sec operand and its not end of line
-            fprintf(stderr, ERROR_UNNECESSSARY_OPERATOR,  state->current_line_num, state->current_file_name);
-            return ;
-        }
-    }//*/
-	/*
-	 When dealing with labels, you need to check if they are external, then set ERA flags
-	 */
-
-	/*
-	// Need this for when combine == 1
-	// Src = SSSS.0000.EE
-	// Dst = DDDD.0000.EE
-	// Out = Src | Dst>>4
-	// Out = SSSS.DDDD.EE
-
-	src_operand = src_operand | dst_operand >> 4;
-	*/
-
-	/*
-	// Finish with this
-    if (*str != '\0') {
-		fprintf(stderr, ERROR_UNEXPECTED_TEXT, code_contents, state->current_line_num,
-		        state->current_file_name);
-		state->failed = 1;
-	}
-	*/
 }
