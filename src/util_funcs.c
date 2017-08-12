@@ -5,6 +5,7 @@
 #include "util_funcs.h"
 #include "constant_data.h"
 #include "errors.h"
+#include "state.h"
 
 /* Adds an extension to a filename */
 char* file_add_extension(char* original, char* extension) {
@@ -80,13 +81,34 @@ char* advance_nonwhitespace (char* str) {
 /* Replaces the first whitespace character in the
  * last whitespace block of a string with \0 */
 char* block_whitespace (char* str) {
-	if (str == NULL) return NULL;
+	if (str == NULL)
+		return NULL;
+	if (*str == '\0')
+		return str;
+
 	char* end = str + strlen(str) - 1;
-	while (isblank(*end) && end != str) end--;
+	while (isblank(*end) &&end != str)
+		end--;
 	if (end != str && end != str + strlen(str)) {
 		*(end + 1) = '\0';
 	}
 	return str;
+}
+
+// Duplicates a string
+char* str_dup (char* str) {
+	char* str_cpy;
+
+	if (!str)
+		return NULL;
+
+	str_cpy = malloc(strlen(str)+1);
+	if (!str_cpy) {
+		fprintf(stderr, ERROR_OUT_OF_MEMORY);
+		exit(1);
+	}
+
+	strcpy(str_cpy, str);
 }
 
 char* split_label_and_code (char* line) {
@@ -179,7 +201,6 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	long register_test;
 	char* end_ptr;
 
-
 	// Labels can't start with a number
     if (!isalpha(name[0])) {
         fprintf(stderr, ERROR_LABEL_CANNOT_START_WITH_NUM, line_num, file_name);
@@ -187,7 +208,7 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	}
 
 
-	// Labels can't be equal to op names or assembly directive names, in any case
+	// Labels can't be equal to op names or assembly directive names, in any case, and are alphanumeric
 	for (i = 0; i < name_length; i++) {
         if (!isalnum(name[i])) {
             fprintf(stderr, ERROR_LABEL_NAME_NOT_LETTER_OR_NUM, line_num, file_name);
@@ -210,9 +231,6 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 		}
 	}
 
-	// Labels cannot be used more than once
-	//TODO
-
 	// Labels can't be register names
 	if (name_lowercase[0] == 'r') {
 		register_test = strtol(name_lowercase+1, &end_ptr, 10);
@@ -223,4 +241,139 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	}
 
 	return 1;
+}
+
+data_label* find_data_label (state_t* state, char* label) {
+	list* ptr;
+
+	ptr = state->data_labels_table;
+	while (ptr) {
+		if (!strcmp(((data_label*)ptr->data)->name, label))
+			return ptr->data;
+		ptr = ptr->next;
+	}
+
+	return NULL;
+}
+
+code_label* find_code_label (state_t* state, char* label) {
+	list* ptr;
+
+	if (!label)
+		return NULL;
+
+	ptr = state->code_labels_table;
+	while (ptr) {
+		if (!strcmp(((code_label*)ptr->data)->name, label))
+			return ptr->data;
+		ptr = ptr->next;
+	}
+
+	return NULL;
+}
+
+void add_data_label (state_t* state, char* label, matrix_bool_e is_matrix) {
+	data_label* new_label;
+	char* label_cpy;
+
+	if (!label)
+		return;
+
+	if (find_data_label(state, label)) {
+		fprintf(stderr, ERROR_LABEL_EXISTS, label, state->current_line_num, state->current_file_name);
+		state->failed = 1;
+		return;
+	}
+
+	new_label = malloc(sizeof(data_label));
+	label_cpy = str_dup(label);
+	if (!new_label) {
+		fprintf(stderr, ERROR_OUT_OF_MEMORY);
+		exit(1);
+	}
+
+	new_label->name = label_cpy;
+	new_label->address = state->data_counter;
+	new_label->is_matrix = is_matrix;
+
+	list_add_element(&state->data_labels_table, new_label);
+}
+
+void add_code_label (state_t* state, char* label) {
+	code_label* new_label;
+	char* label_cpy;
+
+	if (!label)
+		return;
+
+	if (find_data_label(state, label)) {
+		fprintf(stderr, ERROR_LABEL_EXISTS, label, state->current_line_num, state->current_file_name);
+		state->failed = 1;
+		return;
+	}
+
+	new_label = malloc(sizeof(code_label));
+	label_cpy = str_dup(label);
+	if (!new_label) {
+		fprintf(stderr, ERROR_OUT_OF_MEMORY);
+		exit(1);
+	}
+
+	new_label->name = label_cpy;
+
+	list_add_element(&state->code_labels_table, new_label);
+}
+
+int get_data_label_address (state_t* state, char* label) {
+	list* ptr;
+
+	if (!find_data_label(state, label))
+		return -1;
+
+	ptr = state->data_labels_table;
+	while (ptr) {
+		if (!strcmp(((data_label*)ptr->data)->name, label))
+			return ((data_label*)ptr->data)->address;
+		ptr = ptr->next;
+	}
+
+	return -1;
+}
+
+int is_register_valid (long reg_num) {
+	return reg_num >= MINIMUM_REG && reg_num <= MAXIMUM_REG;
+}
+
+// Checks if a labels exists in the extern table
+int is_extern_label (state_t *state, char* label) {
+	list* ptr = state->extern_table;
+
+	while (ptr) {
+		if (!strcmp((char*)ptr->data, label))
+			return 1;
+		ptr = ptr->next;
+	}
+
+	return 0;
+}
+
+void add_ref_in_code (list** table, char* label, unsigned address) {
+	list* ptr = *table;
+
+	if (!ptr) {
+		ref_in_code* ref_ptr = calloc(1, sizeof(list));
+		ptr = calloc(1, sizeof(list));
+		if (!ptr || !ref_ptr) {
+			fprintf(stderr, ERROR_OUT_OF_MEMORY);
+			exit(1);
+		}
+		ptr->data = ref_ptr;
+		ref_ptr->name = str_dup(label);
+		ref_ptr->code_address = address;
+
+		*table = ptr;
+	} else {
+		while (ptr->next)
+			ptr = ptr->next;
+	}
 }

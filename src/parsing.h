@@ -11,6 +11,10 @@ int expect_char (char, char** ptr, state_t*);
 
 #define EXPECT_CHAR(c) expect_char((c), &ptr, state)
 
+int expect_any_char (char*, char** ptr, state_t*);
+
+#define EXPECT_ANY_CHAR(c) expect_any_char(&(c), &ptr, state)
+
 int maybe_number (long*, char** ptr);
 
 #define MAYBE_NUMBER(n) maybe_number(&(n), &ptr)
@@ -18,6 +22,10 @@ int maybe_number (long*, char** ptr);
 int expect_number (long*, char** ptr, state_t*);
 
 #define EXPECT_NUMBER(n) expect_number(&(n), &ptr, state)
+
+int expect_eol (char** ptr, state_t*);
+
+#define EXPECT_EOL() expect_eol(&ptr, state)
 
 int expect_whitespace_or_eol (char** ptr, state_t*);
 

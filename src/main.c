@@ -28,14 +28,16 @@ int main (int argc, char* argv[]) {
 		char* file_name = file_add_extension(argv[iterator], ASM_EXT);
 
 		/* Create relevant tables - Setup state table */
-		state.data_table = malloc(1);
+		state.data_table = malloc(sizeof(cpu_word));
 		state.data_counter = 0;
-		state.code_table = malloc(1);
+		state.code_table = malloc(sizeof(cpu_word));
 		state.code_counter = 0;
 		state.extern_table = NULL;
 		state.entry_table = NULL;
 		state.code_labels_table = NULL;
 		state.data_labels_table = NULL;
+		state.extern_refs_table = NULL;
+		state.code_label_refs_table = NULL;
 
 		state.current_file_name = argv[iterator];
 		state.current_line_num = 0;
@@ -61,8 +63,8 @@ int main (int argc, char* argv[]) {
 
 		/* Write data to file */
 		if (!state.failed) {
-			int j;
-			int i = 100;
+			int i;
+			list* ptr;
 			char* output_ob_file_name = file_add_extension(argv[iterator], OBJ_EXT);
 			FILE* output_ob_file = fopen(output_ob_file_name, "w");
 
@@ -74,26 +76,44 @@ int main (int argc, char* argv[]) {
 			}
 
 			// Add code size to all addresses in code which refers to data (ie. labels, matrices)
+			for (i = 0; i < state.code_counter; i++) {
+				if ((state.code_table[i] & 3) == RELOCATABLE) {
+					state.code_table[i] += (state.code_counter + MEM_STARTS_AT) << 2;
+				}
+			}
+
+			// Find and fill in all code label references in code
+			ptr = state.code_label_refs_table;
+			while (ptr) {
+				ref_in_code* ref = ptr->data;
+				state.code_table[ref->code_address] = find_code_label(&state, ref->name)->address << 2 | RELOCATABLE;
+				ptr = ptr->next;
+			}
+
+			// Add data size to all labels
 			list* curr_label = state.data_labels_table;
 			while (curr_label != NULL) {
-				((data_label*) (curr_label->data))->data_address += state.code_counter;
+				((data_label*) (curr_label->data))->address += state.code_counter;
 				curr_label = curr_label->next;
 			}
 
-			state.code_table = realloc(state.code_table, state.code_counter + state.data_counter);
+			state.code_table = realloc(state.code_table, (state.code_counter + state.data_counter)*sizeof(cpu_word));
 			if (state.code_table == NULL) {
 				fprintf(stderr, ERROR_OUT_OF_MEMORY);
 				exit(1);
 			}
-			memcpy(state.code_table + state.code_counter, state.data_table, state.data_counter);
+			memcpy(state.code_table + state.code_counter, state.data_table, state.data_counter * sizeof(cpu_word));
 
 			// Write the file, with a 100 offset in address
 			// TODO: Make more readable
 			cpu_word* curr_word = state.code_table;
-			for (j = 0; j < (state.code_counter + state.data_counter); j++) {
-				fprintf(output_ob_file, "%s\t%s\n", tobase4(i & 1023, 5), tobase4(curr_word[j] & 1023, 5));
-				fprintf(stdout, "%d\t%s\t%s\n", i - 100, tobase4(i & 1023, 5), tobase4(curr_word[j] & 1023, 5));
-				i++;
+			for (i = 0; i < (state.code_counter + state.data_counter); i++) {
+				char* base4_address = tobase4((i+MEM_STARTS_AT) & 1023, 4);
+				char* base4_data = tobase4(curr_word[i] & 1023, 5);
+				fprintf(output_ob_file, "%s\t%s\n", base4_address, base4_data);
+				fprintf(stdout, "%d\t%s\t%s\n", i, base4_address, base4_data);
+				free(base4_address);
+				free(base4_data);
 			}
 
 			fclose(output_ob_file);
@@ -102,6 +122,7 @@ int main (int argc, char* argv[]) {
 			if (state.entry_table != NULL) {
 				char* output_ent_file_name = file_add_extension(argv[iterator], ENT_EXT);
 				FILE* output_ent_file = fopen(output_ent_file_name, "w");
+				list* entry_table_ptr = state.entry_table;
 
 				// Check that the file was opened
 				if (!output_ent_file) {
@@ -111,8 +132,21 @@ int main (int argc, char* argv[]) {
 				}
 
 				// Go over all entry table
-				// For each entry get it's label's address
-				// Write that in the file
+				while (entry_table_ptr) {
+					int address = MEM_STARTS_AT + get_data_label_address(&state, (char*) entry_table_ptr->data);
+					char* address_base4;
+
+					if (address == -1) {
+						fprintf(stderr, ERROR_LABEL_DOESNT_EXIST, (char*)entry_table_ptr->data, 0, argv[iterator]);
+						all_success = 0;
+						break;
+					}
+
+					address_base4 = tobase4(address, 4);
+					fprintf(output_ent_file, "%s\t%s\n", (char*)entry_table_ptr->data, address_base4);
+					fprintf(stdout, "entry: %s\t%s\n", (char*)entry_table_ptr->data, address_base4);
+					entry_table_ptr = entry_table_ptr->next;
+				}
 
 				fclose(output_ent_file);
 				free(output_ent_file_name);
@@ -133,6 +167,16 @@ int main (int argc, char* argv[]) {
 		if (DEBUG_MODE) {
 			printf("%s\n", state.failed ? "Fail!" : "Success!");
 		}
+
+		// Free everything
+		free(state.data_table);
+		free(state.code_table);
+		//free_list(state.entry_table, free);
+		//free_list(state.extern_table, free);
+		//free_list(state.extern_refs_table, free_extern_refs);
+		//free_list(state.data_labels_table, free_data_labels);
+		//free_list(state.code_labels_table, free_code_labels);
+		free(file_name);
 
 		all_success *= !state.failed;
 

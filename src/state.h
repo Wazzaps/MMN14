@@ -8,19 +8,17 @@
 typedef struct {
 	char* name;
 	unsigned code_address;
-} extern_ref;
+} ref_in_code;
 
 typedef struct {
 	char* name;
-	unsigned data_address;
+	unsigned address;
 	unsigned is_matrix:1;
-	unsigned matrix_size_x;
-	unsigned matrix_size_y;
 } data_label;
 
 typedef struct {
 	char* name;
-	unsigned code_address;
+	unsigned address;
 } code_label;
 
 
@@ -28,9 +26,10 @@ typedef struct  {
 	/* Assembler tables */
 	list* entry_table; // List of type 'char*'
 	list* extern_table; // List of type 'char*'
-	list* extern_refs_table; // List of type 'extern_ref'
+	list* extern_refs_table; // List of type 'ref_in_code'
 	list* data_labels_table; // List of type 'data_label'
 	list* code_labels_table; // List of type 'code_label'
+	list* code_label_refs_table; // List of type 'ref_in_code'
 	cpu_word* data_table; // Points to start of data table
 	unsigned int data_counter;
 	cpu_word* code_table; // Points to start of code table

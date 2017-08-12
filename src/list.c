@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "list.h"
 #include "errors.h"
+#include "state.h"
 
 // Adds an element to a linked list pointer, and if it doesn't exist (ie. NULL), creates it and assigned to pointer
 void list_add_element (list** the_list, void* data) {
@@ -39,4 +40,30 @@ void list_add_element (list** the_list, void* data) {
 		// Put new values in list node
 		ptr->next->data = data;
 	}
+}
+
+void free_list (list* the_list, void (*free_data)(void*)) {
+	list* next;
+
+	while (the_list) {
+		next = the_list->next;
+		free_data(the_list->data);
+		free(the_list);
+		the_list = next;
+	}
+}
+
+void free_extern_refs (void* extern_refs) {
+	free(((ref_in_code*)extern_refs)->name);
+	free(extern_refs);
+}
+
+void free_data_labels (void* data_labels) {
+	free(((data_label*)data_labels)->name);
+	free(data_labels);
+}
+
+void free_code_labels (void* code_labels) {
+	free(((code_label*)code_labels)->name);
+	free(code_labels);
 }

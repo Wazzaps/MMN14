@@ -7,13 +7,13 @@
 #include "parse_directives.h"
 #include "errors.h"
 #include "parsing.h"
-#include "base4.h"
+#include "state.h"
 
 int find_op (char*);
 
 int identify_operand (char* str);
 
-void parse_operand (int opcode, char* str, int src_type, state_t*, int combine);
+void parse_operand (int opcode, char* str, int type, state_t*, int combine, operand_type_e operand_type);
 
 void parse_ops (state_t* state) {
 	char* line = malloc(LINE_LENGTH + 1);
@@ -33,8 +33,11 @@ void parse_ops (state_t* state) {
 
 		// Check op name and label
 		if (op_name && !ISDIRECTIVE(op_name) &&
-			(!label_name || is_valid_label(label_name, state->current_line_num, state->current_file_name))) {
+		    (!label_name || is_valid_label(label_name, state->current_line_num, state->current_file_name))) {
 			int opcode = find_op(op_name);
+
+			if (label_name)
+				find_code_label(state, label_name)->address = state->data_counter + state->code_counter;
 
 			if (opcode != -1) {
 				op_t my_op = OPS[opcode];
@@ -50,15 +53,13 @@ void parse_ops (state_t* state) {
 					second_operand_string++;
 				}
 
+				second_operand_string = advance_whitespace(second_operand_string);
+
 				// Push the label to the table, with it's final address
 				if (label_name) {
-					// TODO - check me
-					code_label *new_label = malloc(sizeof(code_label));
-					new_label->name = label_name;
-					new_label->code_address = state->code_counter;
-
-					list_add_element(&state->code_labels_table, new_label);
+					add_code_label(state, label_name);
 				}
+
 
 				if (number_of_operands >= 1) {
 					int src_type = identify_operand(code_contents);
@@ -69,7 +70,7 @@ void parse_ops (state_t* state) {
 						continue;
 					}
 
-					parse_operand(opcode, code_contents, src_type, state, 0);
+					parse_operand(opcode, code_contents, src_type, state, 0, 0);
 
 					if (number_of_operands == 2) {
 						int dst_type = identify_operand(second_operand_string);
@@ -81,13 +82,14 @@ void parse_ops (state_t* state) {
 						}
 
 						*op_word = (opcode << 6) | (src_type << 4) | (dst_type << 2);
-						parse_operand(opcode, second_operand_string, src_type, state, src_type == REGIS && dst_type == REGIS);
+						parse_operand(opcode, second_operand_string, dst_type, state, src_type == 3 && dst_type == 3, 1);
 					} else {
 						*op_word = (opcode << 6) | (src_type << 2);
 					}
 				} else {
 					*op_word = opcode << 6;
 				}
+
 			} else {
 				fprintf(stderr, ERROR_UNKNOWN_OP, op_name, state->current_line_num, state->current_file_name);
 			}
@@ -110,15 +112,17 @@ int identify_operand (char* str) {
 	long tmp_number;
 
 	// NULL check
-	if (!str) return -1;
+	if (!str)
+		return -1;
 
 	// Starts with a digit = fail
-	if (isdigit(str[0])) return -1;
+	if (isdigit(str[0]))
+		return -1;
 
 	// 'r' + number = register
 	ptr = str + 1;
 	if (tolower(*str) == 'r' && MAYBE_NUMBER(tmp_number) && *ptr == '\0')
-		return 3;
+		return 3; // 3 = REGISTER
 
 	ptr = str;
 	// alpha + alphanumeric[] = label
@@ -129,7 +133,7 @@ int identify_operand (char* str) {
 			} else if (*ptr != '\0') {
 				break;
 			} else {
-				return 1;
+				return 1; // 1 = LABEL
 			}
 		}
 	}
@@ -137,7 +141,7 @@ int identify_operand (char* str) {
 	ptr = str + 1;
 	// '#' + number = immediate
 	if (*str == '#' && MAYBE_NUMBER(tmp_number) && *ptr == '\0')
-		return 0;
+		return 0; // 0 = IMMEDIATE
 
 	ptr = str;
 	// alpha + alphanumeric[] + '[' + number + ']' + '[' + number + ']' = matrix
@@ -148,7 +152,7 @@ int identify_operand (char* str) {
 			} else if (*(ptr++) == '[' && tolower(*(ptr++)) == 'r' && MAYBE_NUMBER(tmp_number) && *(ptr++) == ']' &&
 			           *(ptr++) == '[' && tolower(*(ptr++)) == 'r' && MAYBE_NUMBER(tmp_number) && *(ptr++) == ']' &&
 			           *ptr == '\0') {
-				return 2;
+				return 2; // 2 = MATRIX
 			} else {
 				break;
 			}
@@ -160,28 +164,132 @@ int identify_operand (char* str) {
 	return -1;
 }
 
-void parse_operand (int opcode, char* str, int src_type, state_t* state, int combine) {
-    char* endptr = str + 1;
-    int number;
 
-    if (str[0] == '#') {  // Direct addressing
-        number = strtol(endptr, &endptr, 10);
-        if (endptr == NULL) {
-            fprintf(stderr, ERROR_INVALID_OPERATOR, state->current_line_num, state->current_file_name);
-            return;
+void parse_operand (int opcode, char* str, int type, state_t* state, int combine, operand_type_e operand_type) {
+	// Practically no error checking is done because it was done in identify_operand
+	if (type == 0) { // 0 = IMMEDIATE
+
+		char* ptr = str + 1;
+		long num;
+
+		EXPECT_NUMBER(num);
+
+		add_word(&state->code_table, &state->code_counter, (cpu_word) num << 2 | ABSOLUTE);
+
+	} else if (type == 1) { // 1 = LABEL
+
+		if (!is_valid_label(str, state->current_line_num, state->current_file_name)) {
+			return;
+		}
+
+		if (is_extern_label(state, str)) {
+			// Adds the extern word to the code table, and saves it's index in the extern refs table
+			add_ref_in_code(&state->extern_refs_table, str, (unsigned) (add_word(&state->code_table, &state->code_counter, EXTERNAL) - state->code_table));
+		} else if (find_data_label(state, str)) {
+			int label_address = get_data_label_address(state, str);
+			add_word(&state->code_table, &state->code_counter, label_address << 2 | RELOCATABLE);
+		} else if (find_code_label(state, str)) {
+			// Adds a "code label" marker to the code table, and saves it's index in the code label refs table for later replacement
+			cpu_word* new_word = add_word(&state->code_table, &state->code_counter, CODE_LABEL);
+			unsigned index = (unsigned)(new_word - state->code_table);
+			add_ref_in_code(&state->code_label_refs_table, str, index);
+		} else {
+			fprintf(stderr, ERROR_LABEL_DOESNT_EXIST, str, state->current_line_num, state->current_file_name);
+			state->failed = 1;
+		}
+
+	} else if (type == 2) { // 2 = MATRIX
+
+		char* ptr;
+		int label_address;
+		long mat_x;
+		long mat_y;
+
+
+		// Split "LABEL[r1][r2]"
+		//             ^ Here
+		// By replacing the '[' with '\0'
+		ptr = strchr(str, '[');
+		*ptr = '\0';
+
+		// Jump to the first register number
+		ptr += 2; // skip "[r"
+
+		EXPECT_NUMBER(mat_x);
+
+		if (!is_register_valid(mat_x)) {
+			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, mat_x, state->current_line_num, state->current_file_name);
+			state->failed = 1;
+		}
+
+		// Jump to the second register number
+		ptr += 3; // skip "][r"
+
+		EXPECT_NUMBER(mat_y);
+
+		if (!is_register_valid(mat_y)) {
+			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, mat_y, state->current_line_num, state->current_file_name);
+			state->failed = 1;
+		}
+
+		if (!is_register_valid(mat_x) || !is_register_valid(mat_y))
+			return;
+
+		if (is_extern_label(state, str)) {
+			add_ref_in_code(&state->extern_refs_table, str,
+			                (unsigned) (state->code_table - add_word(&state->code_table, &state->code_counter, EXTERNAL))
+			);
+		} else if (find_code_label(state, str)) {
+			fprintf(stderr, ERROR_CODE_LABEL_IN_MATRIX, str, state->current_line_num, state->current_file_name);
+			state->failed = 1;
+		} else {
+			label_address = get_data_label_address(state, str);
+			add_word(&state->code_table, &state->code_counter, label_address << 2 | RELOCATABLE);
+		}
+
+		add_word(&state->code_table, &state->code_counter, (cpu_word)(mat_x << 6 | mat_y << 2) | ABSOLUTE);
+
+	} else if (type == 3) { // 3 = REGISTER
+
+		char* ptr = str + 1; // skip 'r'
+		long reg_num;
+
+		EXPECT_NUMBER(reg_num);
+
+		if (!is_register_valid(reg_num)) {
+			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, reg_num, state->current_line_num, state->current_file_name);
+			state->failed = 1;
+		}
+
+		if (!combine) {
+			add_word(&state->code_table, &state->code_counter, (cpu_word)(reg_num << (operand_type == SRC ? 6 : 2)) | ABSOLUTE);
+		} else {
+			cpu_word word = state->code_table[state->code_counter - 1] - ABSOLUTE; // Remove abs flag
+			word |= (cpu_word)reg_num << 2 | ABSOLUTE; // Add dst register and abs flag back
+			state->code_table[state->code_counter - 1] = word;
+		}
+
+	}
+	/*
+    char* endptr = str + 1;
+    double number;
+
+    if (str[0] == '#') {
+        number = strtod(endptr, &endptr);
+        if ( endptr == NULL ) {
+            fprintf(stderr, ERROR_INVALID_OPERATOR,  state->current_line_num, state->current_file_name);
+            return ;
         }
-        number = number << 2;
 
         add_word(&state->code_table, &state->code_counter, number);
-        if ((strtok(str, ",") == NULL) &&
-            advance_whitespace(endptr) != '\0') { // if its the sec operand and its not end of line
-            fprintf(stderr, ERROR_UNNECESSSARY_OPERATOR, state->current_line_num, state->current_file_name);
-            return;
+        if ( (strtok(str, ",") == NULL) && advance_whitespace(endptr) != '\0' ) { // if its the sec operand and its not end of line
+            fprintf(stderr, ERROR_UNNECESSSARY_OPERATOR,  state->current_line_num, state->current_file_name);
+            return ;
         }
-    }
-
-    //When dealing with labels, you need to check if they are external, then set ERA flags
-
+    }//*/
+	/*
+	 When dealing with labels, you need to check if they are external, then set ERA flags
+	 */
 
 	/*
 	// Need this for when combine == 1

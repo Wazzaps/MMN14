@@ -24,8 +24,8 @@ void parse_directives_and_labels (state_t* state) {
 		clean_and_split_line(line, &label_name, &directive_name, &code_contents, state, 1);
 
 		// Check directive and label
-        if (directive_name && ISDIRECTIVE(directive_name) &&
-            (!label_name || is_valid_label(label_name, state->current_line_num, state->current_file_name))) {
+		if (directive_name && ISDIRECTIVE(directive_name) &&
+		    (!label_name || is_valid_label(label_name, state->current_line_num, state->current_file_name))) {
 			int directive_id = find_directive(directive_name + 1);
 
 			if (directive_id != -1) {
@@ -33,7 +33,13 @@ void parse_directives_and_labels (state_t* state) {
 				if (!DIRECTIVES[directive_id].func(state, label_name, code_contents)) {
 					state->failed = 1;
 				}
+			} else if (strlen(directive_name) == 1) {
+				fprintf(stderr, ERROR_EMPTY_DIRECTIVE, state->current_line_num, state->current_file_name);
+			} else {
+				fprintf(stderr, ERROR_UNKNOWN_DIRECTIVE, directive_name, state->current_line_num, state->current_file_name);
 			}
+		} else if (directive_name && label_name && is_valid_label(label_name, state->current_line_num, state->current_file_name)) {
+			add_code_label(state, label_name);
 		}
 	}
 
@@ -55,70 +61,60 @@ int find_directive (char* directive_name) {
 ////////////// Directives ////////////////
 
 // NOTE: All labels need to be checked if they exist
-void add_label(state_t *state, char *label) {
-	data_label *new_label = malloc(sizeof(data_label)); //TODO : check allocating
-	if (new_label == NULL) {
-		fprintf(stderr, ERROR_OUT_OF_MEMORY);
-		exit(1);
-	}
-	new_label->name = label;
-	new_label->data_address = state->data_counter;
 
-	list_add_element(&state->data_labels_table, new_label);
-}
+int direc_data (state_t* state, char* label, char* contents) {
+	char* ptr = contents;
+	long num;
 
-int direc_data(state_t *state, char *label, char *contents) {
-	char *ptr = contents;
-	double num;
-	char *endptr = ptr;
+	if (label)
+		add_data_label(state, label, ISNT_MATRIX);
 
-	if (label != NULL) {
-		add_label(state, label);
-	}
+	do {
+		if (!EXPECT_NUMBER(num)) {
+			return 0;
+		}
 
-    while (*endptr != '\0') {
-        num = strtod(endptr, &endptr);
+		if (num < MIN_VALUE_SIGNED || num > MAX_VALUE_SIGNED) {
+			fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, num, state->current_line_num, state->current_file_name);
+			return 0;
+		}
 
-        if (endptr == NULL) {
-            fprintf(stderr, ERROR_DATA_IS_NOT_NUM, state->current_line_num, state->current_file_name);
-            return 0;
-        }
+		add_word(&state->data_table, &state->data_counter, (cpu_word)num);
 
-        add_word(&state->data_table, &state->data_counter, (int) num);
+		ptr = advance_whitespace(ptr);
 
-        if (*endptr == '\0') {
-            break;
-        }
+		if (!MAYBE_CHAR(',')) {
+			break;
+		}
 
-        endptr++;
-    }
+		ptr = advance_whitespace(ptr);
+	} while (*ptr != '\0');
 
-    if (endptr) {
-        ptr = endptr;
-    }
+	EXPECT_EOL();
 
-    if (*advance_whitespace(ptr) != '\0') {
-        fprintf(stderr, ERROR_DATA_MISSING_COMMA, state->current_line_num, state->current_file_name);
-        return 0;
-    }
-	return 1;
+	return *ptr == '\0';
 }
 
 int direc_string (state_t* state, char* label, char* contents) {
-	char *ptr = contents;
-	int i = 1;
+	char* ptr = contents;
+	char curr_char;
 
-	if (label != NULL) {
-		add_label(state, label);
-	}
+	if (label)
+		add_data_label(state, label, ISNT_MATRIX);
 
-	if (!EXPECT_CHAR('\"')) {
-		fprintf(stderr, ERROR_INVALID_STRING_CONTENT, state->current_line_num, state->current_file_name);
+	if (!EXPECT_CHAR('"')) {
 		return 0;
 	}
-
-	for (i; i <= strlen(ptr) - 2; i++) {
-		add_word(&state->data_table, &state->data_counter, (ptr[i] - '0') + ASCII_ZERO);
+	while (EXPECT_ANY_CHAR(curr_char)) {
+		if (curr_char == '"') {
+			break;
+		} else if (curr_char == '\0') {
+			fprintf(stderr, ERROR_EXPECTED_CHARACTER_EOL, '"', state->current_line_num, state->current_file_name);
+			state->failed = 1;
+			return 0;
+		} else {
+			add_word(&state->data_table, &state->data_counter, curr_char);
+		}
 	}
 	add_word(&state->data_table, &state->data_counter, 0);
 	return 1;
@@ -126,16 +122,13 @@ int direc_string (state_t* state, char* label, char* contents) {
 
 int direc_mat (state_t* state, char* label, char* contents) {
 	char* ptr = contents;
-	char *endptr;
 	long mat_x;
 	long mat_y;
 	int i;
 	int zero_fill = 0;
-	double num;
 
-	if (label != NULL) {
-		add_label(state, label);
-	}
+	if (label)
+		add_data_label(state, label, IS_MATRIX);
 
 	// Matrix size
 	if (!EXPECT_CHAR('[')
@@ -147,95 +140,83 @@ int direc_mat (state_t* state, char* label, char* contents) {
 	    || !EXPECT_SPACE_OR_EOL())
 		return 0;
 
+	if (mat_x <= 0 || mat_y <= 0) {
+		fprintf(stderr, ERROR_MATRIX_DIMENSION_POSITIVE, mat_x < mat_y ? mat_x : mat_y, state->current_line_num, state->current_file_name);
+		state->failed = 1;
+		return 0;
+	}
+
+	// >> +1 << because declarations are one-indexed, but access is zero-indexed
+	if (mat_x > MAX_VALUE_UNSIGNED+1 || mat_x < 0) {
+		fprintf(stderr, ERROR_MATRIX_DIMENSION_OUT_OF_BOUNDS, mat_x, state->current_line_num, state->current_file_name);
+		state->failed = 1;
+		return 0;
+	}
+	if (mat_y > MAX_VALUE_UNSIGNED+1 || mat_y < 0) {
+		fprintf(stderr, ERROR_MATRIX_DIMENSION_OUT_OF_BOUNDS, mat_y, state->current_line_num, state->current_file_name);
+		state->failed = 1;
+		return 0;
+	}
+
 	// Initial data
 	if (*ptr == '\0') {
 		zero_fill = 1;
 	}
 
-	endptr = ptr;
 	for (i = 0; i < mat_x * mat_y; i++) {
-		if ((!zero_fill) || (*endptr == '0')) {
-			/*			long value;
-                       ptr = advance_whitespace(ptr);
-                       EXPECT_NUMBER(value);
-                       ptr = advance_whitespace(ptr);
+		if (!zero_fill) {
+			long value;
+			ptr = advance_whitespace(ptr);
+			EXPECT_NUMBER(value);
+			ptr = advance_whitespace(ptr);
 
-                       if (!MAYBE_CHAR(',')) {
-                           zero_fill = 1;
-                       }
+			if (!MAYBE_CHAR(',')) {
+				zero_fill = 1;
+			}
 
-                       if (value <= 0) {
-                           fprintf(stderr, ERROR_MATRIX_DIMENSION_POSITIVE, state->current_line_num, state->current_file_name);
-                           state->failed = 1;
-                           return 0;
-                       } */
-
-			num = strtod(endptr, &endptr);
-			if (endptr == NULL) {
-				fprintf(stderr, ERROR_MAT_DATA_IS_NOT_NUM, state->current_line_num, state->current_file_name);
+			if (value > MAX_VALUE_SIGNED || value < MIN_VALUE_SIGNED) {
+				fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, value, state->current_line_num, state->current_file_name);
+				state->failed = 1;
 				return 0;
 			}
-			fprintf(stdout, "Got matrix number :\t%d\n", (int) num);
-			add_word(&state->data_table, &state->data_counter, (int) num);
 
-			if (*endptr == '\0') {
-				break;
-			}
-
-			endptr++;
-
+			add_word(&state->data_table, &state->data_counter, (cpu_word)value);
 		} else {
 			add_word(&state->data_table, &state->data_counter, 0);
 		}
 	}
-	if (endptr) {
-		ptr = endptr;
-	}
 
-	if (*advance_whitespace(ptr) != '\0') {
-		fprintf(stderr, ERROR_MAT_DATA_MISSING_COMMA, state->current_line_num, state->current_file_name);
-		return 0;
-	}
+	EXPECT_EOL();
+
 	return 1;
 }
 
 int direc_entry (state_t* state, char* label, char* contents) {
-/*	list *name = state->entry_table;
-	while ( name != NULL ) {
-		if ( !strcmp(label, (char *)(name->data) )) {
-			fprintf(stderr, ERROR_REPEAT_ENTRY_LABEL, state->current_line_num, state->current_file_name);
-			return 0;
-		}
-		if ( name->next != NULL) {
-			break;
-		}
-		else {
-			name = name->next;
-		}
-	}
-	if ( !is_valid_label(label,state->current_line_num, state->current_file_name) ) {
-		return 0;
-	}
+	// TODO: Check if entry exists
+	// TODO: Check if extern exists
+	// TODO: Check if label exists
 
-	if (contents == NULL || advance_nonwhitespace(contents) == '\0')
+	if (contents == NULL || *advance_nonwhitespace(contents) != '\0')
 		return 0;
-	list_add_element(&state->entry_table, contents); */
+
+	list_add_element(&state->entry_table, str_dup(contents));
 	return 1;
 }
 
 int direc_extern (state_t* state, char* label, char* contents) {
-/*	list *name = state->extern_table;
-	while (name->next != NULL) {
-		if ( !strcmp(label, (char *)(name->data) ) ){
-			fprintf(stderr, ERROR_REPEAT_EXTERN_LABEL, state->current_line_num, state->current_file_name);
-			return 0;
-		}
-	}
-	if ( !is_valid_label(label,state->current_line_num, state->current_file_name) ) {
+	// TODO: Check if extern exists
+	// TODO: Check if entry exists
+	// TODO: Check if label exists
+
+	if (contents == NULL || advance_whitespace(contents) == '\0')
+		return 0;
+
+	if (find_data_label(state, contents)) {
+		fprintf(stderr, ERROR_LABEL_EXISTS, contents, state->current_line_num, state->current_file_name);
+		state->failed = 1;
 		return 0;
 	}
-	if (contents == NULL || advance_nonwhitespace(contents) == '\0')
-		return 0;
-	list_add_element(&state->extern_table, contents);*/
+
+	list_add_element(&state->extern_table, str_dup(contents));
 	return 1;
 }
