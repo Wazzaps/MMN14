@@ -5,7 +5,6 @@
 #include "util_funcs.h"
 #include "constant_data.h"
 #include "errors.h"
-#include "state.h"
 
 /* Adds an extension to a filename */
 char* file_add_extension(char* original, char* extension) {
@@ -196,7 +195,7 @@ void clean_and_split_line (char* line, char** _label_name, char** _name, char** 
 /* Gets a label and tells if it's valid (not a register or a reserved word) */
 int is_valid_label(char *name, int line_num, char *file_name) {
 	int i;
-	size_t name_length = strlen(name);
+	size_t name_length = strlen(name); /* copy also null */
 	char* name_lowercase = malloc(name_length+1);
 	long register_test;
 	char* end_ptr;
@@ -204,6 +203,7 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	// Labels can't start with a number
     if (!isalpha(name[0])) {
         fprintf(stderr, ERROR_LABEL_CANNOT_START_WITH_NUM, line_num, file_name);
+		free(name_lowercase);
 		return 0;
 	}
 
@@ -212,14 +212,17 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	for (i = 0; i < name_length; i++) {
         if (!isalnum(name[i])) {
             fprintf(stderr, ERROR_LABEL_NAME_NOT_LETTER_OR_NUM, line_num, file_name);
+			free(name_lowercase);
             return 0;
         }
 		name_lowercase[i] = (char)tolower(name[i]);
-
 	}
+	name_lowercase[name_length] = '\0';
+
 	for (i = 0; i < OPS_LENGTH; i++) {
 		if (!strcmp(OPS[i].name, name_lowercase)) {
             fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_OP_NAME, line_num, file_name);
+			free(name_lowercase);
 			return 0;
 		}
 
@@ -227,6 +230,7 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	for (i = 0; i < DIRECTIVES_LENGTH; i++) {
 		if (!strcmp(DIRECTIVES[i].name, name_lowercase)) {
             fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_DIR_MAME, line_num, file_name);
+			free(name_lowercase);
 			return 0;
 		}
 	}
@@ -236,10 +240,12 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 		register_test = strtol(name_lowercase+1, &end_ptr, 10);
 		if ((end_ptr != name_lowercase + 1) && (*end_ptr == '\0') && (register_test >= MINIMUM_REG) && (register_test <= MAXIMUM_REG)) {
             fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_REG_MAME, line_num, file_name);
+			free(name_lowercase);
 			return 0;
 		}
 	}
 
+	free(name_lowercase);
 	return 1;
 }
 

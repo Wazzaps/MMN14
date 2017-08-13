@@ -163,6 +163,7 @@ int main (int argc, char* argv[]) {
 
 					fprintf(output_ent_file, "%s\t%s\n", ((entry_with_line_num*) entry_table_ptr->data)->name, address_base4);
 					fprintf(stdout, "entry: %s\t%s\n", ((entry_with_line_num*) entry_table_ptr->data)->name, address_base4);
+					free(address_base4);
 					entry_table_ptr = entry_table_ptr->next;
 				}
 
@@ -189,6 +190,7 @@ int main (int argc, char* argv[]) {
 					fprintf(output_ext_file, "%s\t%s\n", ((ref_in_code*)extern_refs_table_ptr->data)->name, address_base4);
 					fprintf(stdout, "extern: %s\t%s\n", ((ref_in_code*)extern_refs_table_ptr->data)->name, address_base4);
 					extern_refs_table_ptr = extern_refs_table_ptr->next;
+					free(address_base4);
 				}
 
 				fclose(output_ext_file);

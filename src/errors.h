@@ -47,6 +47,8 @@
 #define ERROR_MATRIX_DIMENSION_OUT_OF_BOUNDS "ERROR: Matrix dimension %ld is out of bounds (1..1024) on line %d in file %s\n"
 #define ERROR_REGISTER_OUT_OF_BOUNDS "ERROR: Register number %ld is out of bounds (%d..%d) on line %d in file %s\n"
 #define ERROR_LABEL_EXISTS "ERROR: Label \"%s\" already exists on line %d in file %s\n"
+#define ERROR_ENTRY_EXISTS "ERROR: Entry \"%s\" already exists on line %d in file %s\n"
+#define ERROR_EXTERN_EXIST "ERROR: Extern \"%s\" already exists on line %d in file %s\n"
 
 
 /* General errors */
