@@ -222,6 +222,30 @@ int direc_mat (state_t* state, char* label, char* contents) {
 int direc_entry(state_t *state, char *label, char *contents) {
     entry_with_line_num *new_element = calloc(1, sizeof(entry_with_line_num));
 
+    // entry label cannot use more than once
+    if (state->entry_table != NULL) {
+        list *current_en = state->entry_table;
+        while (current_en != NULL) {
+            if (!strcmp(((entry_with_line_num *) current_en->data)->name, contents)) {
+                fprintf(stderr, ERROR_ENTRY_EXISTS, label, state->current_line_num, state->current_file_name);
+                return 0;
+            }
+            current_en = current_en->next;
+        }
+    }
+
+    //entry label cannot be also extern label
+    if (state->extern_table != NULL) {
+        list *current_ex = state->extern_table;
+        while (current_ex->data != NULL) {
+            if (!strcmp(current_ex->data, contents)) {
+                fprintf(stderr, ERROR_EXTERN_EXIST, label, state->current_line_num, state->current_file_name);
+                return 0;
+            }
+            current_ex = current_ex->next;
+        }
+    }
+
 	if (!new_element) {
 		fprintf(stderr, ERROR_OUT_OF_MEMORY);
 		exit(1);
