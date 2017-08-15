@@ -25,7 +25,7 @@ void parse_directives_and_labels (state_t* state) {
 
 		// Check directive and label
 		if (directive_name && ISDIRECTIVE(directive_name) &&
-		    (!label_name || is_valid_label(label_name, state->current_line_num, state->current_file_name))) {
+            (!label_name || is_valid_label(label_name, state) || check_if_label_exists(state, label_name))) {
 			int directive_id = find_directive(directive_name + 1);
 
 			if (directive_id != -1) {
@@ -38,7 +38,7 @@ void parse_directives_and_labels (state_t* state) {
 			} else {
 				fprintf(stderr, ERROR_UNKNOWN_DIRECTIVE, directive_name, state->current_line_num, state->current_file_name);
 			}
-		} else if (directive_name && label_name && is_valid_label(label_name, state->current_line_num, state->current_file_name)) {
+        } else if (directive_name && label_name && is_valid_label(label_name, state)) {
 			add_code_label(state, label_name);
 		}
 	}
@@ -77,13 +77,15 @@ int direc_data (state_t* state, char* label, char* contents) {
     if (label)
         add_data_label(state, label, ISNT_MATRIX);
 
-    do {
+    while (1) {
+        char last;
         if (!EXPECT_NUMBER(num)) {
-            return 0;
+            break;
         }
 
         if (num < MIN_VALUE_SIGNED_10bits || num > MAX_VALUE_SIGNED_10bits) {
-            fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, num, state->current_line_num, MIN_VALUE_SIGNED_10bits, MAX_VALUE_SIGNED_10bits, state->current_file_name);
+            fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, num, MIN_VALUE_SIGNED_10bits, MAX_VALUE_SIGNED_10bits,
+                    state->current_line_num, state->current_file_name);
             return 0;
         }
 
@@ -91,12 +93,17 @@ int direc_data (state_t* state, char* label, char* contents) {
 
         ptr = advance_whitespace(ptr);
 
+
         if (!MAYBE_CHAR(',')) {
-            break;
+            if (*ptr != '\0') {
+                fprintf(stderr, ERROR_INVALID_CHARACTERS, state->current_line_num, state->current_file_name);
+                return 0;
+            } else
+                break;
         }
 
         ptr = advance_whitespace(ptr);
-    } while (*ptr != '\0');
+    }
 
     EXPECT_EOL();
 
@@ -197,7 +204,8 @@ int direc_mat (state_t* state, char* label, char* contents) {
             }
 
             if (value > MAX_VALUE_SIGNED_10bits || value < MIN_VALUE_SIGNED_10bits) {
-                fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, value, state->current_line_num, MIN_VALUE_SIGNED_10bits, MAX_VALUE_SIGNED_10bits, state->current_file_name);
+                fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, value, MIN_VALUE_SIGNED_10bits, MAX_VALUE_SIGNED_10bits,
+                        state->current_line_num, state->current_file_name);
                 state->failed = 1;
                 return 0;
             }
@@ -242,6 +250,7 @@ int check_if_exists(state_t *state, char *label, char *contents) {
 
     return 0;
 }
+
 
 /*
  *

@@ -32,8 +32,9 @@ void parse_ops (state_t* state) {
 
 		// Check op name and label
 		if (op_name && !ISDIRECTIVE(op_name) &&
-		    (!label_name || is_valid_label(label_name, state->current_line_num, state->current_file_name))) {
+			(!label_name || is_valid_label(label_name, state))) {
 			int opcode = find_op(op_name);
+
 
 			if (label_name)
 				find_code_label(state, label_name)->address = state->data_counter + state->code_counter;
@@ -59,6 +60,14 @@ void parse_ops (state_t* state) {
 					add_code_label(state, label_name);
 				}
 
+				if (number_of_operands == 0) {
+					int src_type = identify_operand(code_contents);
+					if (src_type != -1) {
+						fprintf(stderr, ERROR_UNNECESSARY_OPERAND, op_name, state->current_line_num,
+								state->current_file_name);
+						state->failed = 1;
+					}
+				}
 
 				if (number_of_operands >= 1) {
 					int src_type = identify_operand(code_contents);
@@ -128,7 +137,7 @@ int identify_operand (char* str) {
 
 	// 'r' + number = register
 	ptr = str + 1;
-	if (tolower(*str) == 'r' && MAYBE_NUMBER(tmp_number) && *ptr == '\0')
+	if (tolower(*str) == 'r' && (is_register_valid(MAYBE_NUMBER(tmp_number))) && *ptr == '\0')
 		return 3; // 3 = REGISTER
 
 	ptr = str;
@@ -182,7 +191,8 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		EXPECT_NUMBER(num); // ERROR_DATA_OUT_OF_BOUNDS_8bits
 
 		if (num < MIN_VALUE_SIGNED_8bits || num > MAX_VALUE_SIGNED_8bits) {
-			fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, num, state->current_line_num, MIN_VALUE_SIGNED_8bits, MAX_VALUE_SIGNED_8bits, state->current_file_name);
+			fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, num, MIN_VALUE_SIGNED_8bits, MAX_VALUE_SIGNED_8bits,
+					state->current_line_num, state->current_file_name);
 			state->failed = 1;
 			return;
 		}
@@ -191,7 +201,7 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 
 	} else if (type == 1) { // 1 = LABEL
 
-		if (!is_valid_label(str, state->current_line_num, state->current_file_name)) {
+		if (!is_valid_label(str, state)) {
 			return;
 		}
 
@@ -256,8 +266,13 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 			fprintf(stderr, ERROR_CODE_LABEL_IN_MATRIX, str, state->current_line_num, state->current_file_name);
 			state->failed = 1;
 		} else {
-			label_address = find_data_label(state, str)->address;
-			add_word(&state->code_table, &state->code_counter, label_address << 2 | RELOCATABLE);
+			data_label *current = find_data_label(state, str);
+			if (current != NULL) {
+				label_address = current->address;
+				add_word(&state->code_table, &state->code_counter, label_address << 2 | RELOCATABLE);
+			} else {
+				fprintf(stderr, ERROR_UNDEFINED_LABEL, str, state->current_line_num, state->current_file_name);
+			}
 		}
 
 		add_word(&state->code_table, &state->code_counter, (cpu_word)(mat_x << 6 | mat_y << 2) | ABSOLUTE);
@@ -269,10 +284,10 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 
 		EXPECT_NUMBER(reg_num);
 
-		if (!is_register_valid(reg_num)) {
-			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, reg_num, MINIMUM_REG, MAXIMUM_REG, state->current_line_num, state->current_file_name);
-			state->failed = 1;
-		}
+//		if (!is_register_valid(reg_num)) {
+//			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, reg_num, MINIMUM_REG, MAXIMUM_REG, state->current_line_num, state->current_file_name);
+//			state->failed = 1;
+//		}
 
 		if (!combine) {
 			add_word(&state->code_table, &state->code_counter, (cpu_word)(reg_num << (operand_type == SRC ? 6 : 2)) | ABSOLUTE);

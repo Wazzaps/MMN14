@@ -192,8 +192,36 @@ void clean_and_split_line (char* line, char** _label_name, char** _name, char** 
 
 }
 
+/*
+ * This function check if label is in use in this file
+ * return 1 if found earlier use
+ * return 0 if not found earlier use
+ */
+int check_if_label_exists(state_t *state, char *label) {
+	list *current_data_label = state->data_labels_table;
+	list *current_code_label = state->code_labels_table;
+
+	while (current_data_label != NULL) {
+		if (!strcmp(((data_label *) current_data_label->data)->name, label)) {
+			fprintf(stderr, ERROR_LABEL_EXISTS, label, state->current_line_num, state->current_file_name);
+			return 1;
+		}
+		current_data_label = current_data_label->next;
+	}
+
+	while (current_code_label != NULL) {
+		if (!strcmp(((code_label *) current_code_label->data)->name, label)) {
+			fprintf(stderr, ERROR_LABEL_EXISTS, label, state->current_line_num, state->current_file_name);
+			return 1;
+		}
+		current_code_label = current_code_label->next;
+	}
+
+	return 0;
+}
+
 /* Gets a label and tells if it's valid (not a register or a reserved word) */
-int is_valid_label(char *name, int line_num, char *file_name) {
+int is_valid_label(char *name, state_t *state) {
 	int i;
 	size_t name_length = strlen(name); /* copy also null */
 	char* name_lowercase = malloc(name_length+1);
@@ -202,7 +230,7 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 
 	// Labels can't start with a number
     if (!isalpha(name[0])) {
-        fprintf(stderr, ERROR_LABEL_CANNOT_START_WITH_NUM, line_num, file_name);
+		fprintf(stderr, ERROR_LABEL_CANNOT_START_WITH_NUM, state->current_line_num, state->current_file_name);
 		free(name_lowercase);
 		return 0;
 	}
@@ -211,7 +239,7 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	// Labels can't be equal to op names or assembly directive names, in any case, and are alphanumeric
 	for (i = 0; i < name_length; i++) {
         if (!isalnum(name[i])) {
-            fprintf(stderr, ERROR_LABEL_NAME_NOT_LETTER_OR_NUM, line_num, file_name);
+			fprintf(stderr, ERROR_LABEL_NAME_NOT_LETTER_OR_NUM, state->current_line_num, state->current_file_name);
 			free(name_lowercase);
             return 0;
         }
@@ -221,7 +249,7 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 
 	for (i = 0; i < OPS_LENGTH; i++) {
 		if (!strcmp(OPS[i].name, name_lowercase)) {
-            fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_OP_NAME, line_num, file_name);
+			fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_OP_NAME, state->current_line_num, state->current_file_name);
 			free(name_lowercase);
 			return 0;
 		}
@@ -229,7 +257,7 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	}
 	for (i = 0; i < DIRECTIVES_LENGTH; i++) {
 		if (!strcmp(DIRECTIVES[i].name, name_lowercase)) {
-            fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_DIR_MAME, line_num, file_name);
+			fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_DIR_MAME, state->current_line_num, state->current_file_name);
 			free(name_lowercase);
 			return 0;
 		}
@@ -239,7 +267,7 @@ int is_valid_label(char *name, int line_num, char *file_name) {
 	if (name_lowercase[0] == 'r') {
 		register_test = strtol(name_lowercase+1, &end_ptr, 10);
 		if ((end_ptr != name_lowercase + 1) && (*end_ptr == '\0') && (register_test >= MINIMUM_REG) && (register_test <= MAXIMUM_REG)) {
-            fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_REG_MAME, line_num, file_name);
+			fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_REG_MAME, state->current_line_num, state->current_file_name);
 			free(name_lowercase);
 			return 0;
 		}

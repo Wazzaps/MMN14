@@ -157,6 +157,7 @@ int main (int argc, char* argv[]) {
 					my_data_label = find_data_label(&state, ((entry_with_line_num*) entry_table_ptr->data)->name);
 					if (!my_data_label) {
 						code_label* my_code_label = find_code_label(&state, ((entry_with_line_num*) entry_table_ptr->data)->name);
+
 						address_base4 = tobase4(MEM_STARTS_AT + (my_code_label -> address), 4);
 					} else
 						address_base4 = tobase4(MEM_STARTS_AT + (my_data_label -> address), 4);

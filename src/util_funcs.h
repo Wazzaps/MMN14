@@ -21,7 +21,9 @@ char* str_dup (char* str);
 
 void clean_and_split_line (char* line, char** _label_name, char** _name, char** _code_contents, state_t*, int show_errors);
 
-int is_valid_label (char* name, int line_num, char* file_name);
+int is_valid_label(char *name, state_t *state);
+
+int check_if_label_exists(state_t *state, char *label);
 
 data_label* find_data_label (state_t* state, char* label);
 
