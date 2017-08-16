@@ -12,7 +12,7 @@ int find_op (char*);
 
 int identify_operand (char* str);
 
-void parse_operand (int opcode, char* str, int type, state_t*, int combine, operand_type_e operand_type);
+void parse_operand (char* str, int type, state_t*, int combine, operand_type_e operand_type);
 
 void parse_ops (state_t* state) {
 	char* line = malloc(LINE_LENGTH + 1);
@@ -32,12 +32,12 @@ void parse_ops (state_t* state) {
 
 		// Check op name and label
 		if (op_name && !ISDIRECTIVE(op_name) &&
-			(!label_name || is_valid_label(label_name, state))) {
+		    (!label_name || is_valid_label(label_name, state))) {
 			int opcode = find_op(op_name);
 
-
+			// Put the address in the label allocated by find_directives_and_labels()
 			if (label_name)
-				find_code_label(state, label_name)->address = state->data_counter + state->code_counter;
+				find_code_label(state, label_name)->address = state->code_counter;
 
 			if (opcode != -1) {
 				op_t my_op = OPS[opcode];
@@ -60,15 +60,6 @@ void parse_ops (state_t* state) {
 					add_code_label(state, label_name);
 				}
 
-				if (number_of_operands == 0) {
-					int src_type = identify_operand(code_contents);
-					if (src_type != -1) {
-						fprintf(stderr, ERROR_UNNECESSARY_OPERAND, op_name, state->current_line_num,
-								state->current_file_name);
-						state->failed = 1;
-					}
-				}
-
 				if (number_of_operands >= 1) {
 					int src_type = identify_operand(code_contents);
 					if (src_type == -1) {
@@ -81,13 +72,12 @@ void parse_ops (state_t* state) {
 						continue;
 					}
 
-					parse_operand(opcode, code_contents, src_type, state, 0, 0);
+					parse_operand(code_contents, src_type, state, 0, SRC);
 
 					if (number_of_operands == 2) {
 						int dst_type = identify_operand(second_operand_string);
 						if (dst_type == -1) {
-							fprintf(stderr, ERROR_MISSING_SECOND_OPERAND, state->current_line_num,
-							        state->current_file_name);
+							fprintf(stderr, ERROR_MISSING_SECOND_OPERAND, state->current_line_num, state->current_file_name);
 							state->failed = 1;
 							continue;
 						} else if (!(my_op.dst_t & (1 << dst_type))) {
@@ -97,12 +87,22 @@ void parse_ops (state_t* state) {
 						}
 
 						*op_word = (opcode << 6) | (src_type << 4) | (dst_type << 2);
-						parse_operand(opcode, second_operand_string, dst_type, state, src_type == 3 && dst_type == 3, 1);
+						parse_operand(second_operand_string, dst_type, state, src_type == 3 && dst_type == 3, DST);
 					} else {
 						*op_word = (opcode << 6) | (src_type << 2);
+						if (second_operand_string && *second_operand_string != '\0') {
+							fprintf(stderr, ERROR_EXPECTED_EOL, second_operand_string, state->current_line_num, state->current_file_name);
+							state->failed = 1;
+							continue;
+						}
 					}
 				} else {
 					*op_word = opcode << 6;
+					if (code_contents && *code_contents != '\0') {
+						fprintf(stderr, ERROR_EXPECTED_EOL, code_contents, state->current_line_num, state->current_file_name);
+						state->failed = 1;
+						continue;
+					}
 				}
 
 			} else {
@@ -110,7 +110,7 @@ void parse_ops (state_t* state) {
 			}
 		}
 	}
-    free(line);
+	free(line);
 }
 
 int find_op (char* directive_name) {
@@ -137,7 +137,7 @@ int identify_operand (char* str) {
 
 	// 'r' + number = register
 	ptr = str + 1;
-	if (tolower(*str) == 'r' && (is_register_valid(MAYBE_NUMBER(tmp_number))) && *ptr == '\0')
+	if (tolower(*str) == 'r' && MAYBE_NUMBER(tmp_number) && is_register_valid(tmp_number) && *ptr == '\0')
 		return 3; // 3 = REGISTER
 
 	ptr = str;
@@ -181,7 +181,7 @@ int identify_operand (char* str) {
 }
 
 
-void parse_operand (int opcode, char* str, int type, state_t* state, int combine, operand_type_e operand_type) {
+void parse_operand (char* str, int type, state_t* state, int combine, operand_type_e operand_type) {
 	// Practically no error checking is done because it was done in identify_operand
 	if (type == 0) { // 0 = IMMEDIATE
 
@@ -192,7 +192,7 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 
 		if (num < MIN_VALUE_SIGNED_8bits || num > MAX_VALUE_SIGNED_8bits) {
 			fprintf(stderr, ERROR_DATA_OUT_OF_BOUNDS, num, MIN_VALUE_SIGNED_8bits, MAX_VALUE_SIGNED_8bits,
-					state->current_line_num, state->current_file_name);
+			        state->current_line_num, state->current_file_name);
 			state->failed = 1;
 			return;
 		}
@@ -214,11 +214,12 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		} else if (find_code_label(state, str)) {
 			// Adds a "code label" marker to the code table, and saves it's index in the code label refs table for later replacement
 			cpu_word* new_word = add_word(&state->code_table, &state->code_counter, CODE_LABEL);
-			unsigned index = (unsigned)(new_word - state->code_table);
+			unsigned index = (unsigned) (new_word - state->code_table);
 			add_ref_in_code(&state->code_label_refs_table, str, index);
 		} else {
 			fprintf(stderr, ERROR_LABEL_DOESNT_EXIST, str, state->current_line_num, state->current_file_name);
 			state->failed = 1;
+			return;
 		}
 
 	} else if (type == 2) { // 2 = MATRIX
@@ -243,6 +244,7 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		if (!is_register_valid(mat_x)) {
 			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, mat_x, state->current_line_num, MINIMUM_REG, MAXIMUM_REG, state->current_file_name);
 			state->failed = 1;
+			return;
 		}
 
 		// Jump to the second register number
@@ -253,6 +255,7 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		if (!is_register_valid(mat_y)) {
 			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, mat_y, MINIMUM_REG, MAXIMUM_REG, state->current_line_num, state->current_file_name);
 			state->failed = 1;
+			return;
 		}
 
 		if (!is_register_valid(mat_x) || !is_register_valid(mat_y))
@@ -265,17 +268,20 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 		} else if (find_code_label(state, str)) {
 			fprintf(stderr, ERROR_CODE_LABEL_IN_MATRIX, str, state->current_line_num, state->current_file_name);
 			state->failed = 1;
+			return;
 		} else {
-			data_label *current = find_data_label(state, str);
-			if (current != NULL) {
+			data_label* current;
+			if ((current = find_data_label(state, str))) {
 				label_address = current->address;
 				add_word(&state->code_table, &state->code_counter, label_address << 2 | RELOCATABLE);
 			} else {
-				fprintf(stderr, ERROR_UNDEFINED_LABEL, str, state->current_line_num, state->current_file_name);
+				fprintf(stderr, ERROR_LABEL_DOESNT_EXIST, str, state->current_line_num, state->current_file_name);
+				state->failed = 1;
+				return;
 			}
 		}
 
-		add_word(&state->code_table, &state->code_counter, (cpu_word)(mat_x << 6 | mat_y << 2) | ABSOLUTE);
+		add_word(&state->code_table, &state->code_counter, (cpu_word) (mat_x << 6 | mat_y << 2) | ABSOLUTE);
 
 	} else if (type == 3) { // 3 = REGISTER
 
@@ -284,16 +290,17 @@ void parse_operand (int opcode, char* str, int type, state_t* state, int combine
 
 		EXPECT_NUMBER(reg_num);
 
-//		if (!is_register_valid(reg_num)) {
-//			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, reg_num, MINIMUM_REG, MAXIMUM_REG, state->current_line_num, state->current_file_name);
-//			state->failed = 1;
-//		}
+		if (!is_register_valid(reg_num)) {
+			fprintf(stderr, ERROR_REGISTER_OUT_OF_BOUNDS, reg_num, MINIMUM_REG, MAXIMUM_REG, state->current_line_num, state->current_file_name);
+			state->failed = 1;
+			return;
+		}
 
 		if (!combine) {
-			add_word(&state->code_table, &state->code_counter, (cpu_word)(reg_num << (operand_type == SRC ? 6 : 2)) | ABSOLUTE);
+			add_word(&state->code_table, &state->code_counter, (cpu_word) (reg_num << (operand_type == SRC ? 6 : 2)) | ABSOLUTE);
 		} else {
 			cpu_word word = state->code_table[state->code_counter - 1] - ABSOLUTE; // Remove abs flag
-			word |= (cpu_word)reg_num << 2 | ABSOLUTE; // Add dst register and abs flag back
+			word |= (cpu_word) reg_num << 2 | ABSOLUTE; // Add dst register and abs flag back
 			state->code_table[state->code_counter - 1] = word;
 		}
 

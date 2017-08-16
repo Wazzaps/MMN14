@@ -42,7 +42,7 @@ void list_add_element (list** the_list, void* data) {
 	}
 }
 
-void free_list (list* the_list, void (*free_data)(void*)) {
+void free_list (list* the_list, void (* free_data) (void*)) {
 	list* next;
 
 	while (the_list) {
@@ -54,16 +54,16 @@ void free_list (list* the_list, void (*free_data)(void*)) {
 }
 
 void free_extern_refs (void* extern_refs) {
-	free(((ref_in_code*)extern_refs)->name);
+	free(((ref_in_code*) extern_refs)->name);
 	free(extern_refs);
 }
 
 void free_data_labels (void* data_labels) {
-	free(((data_label*)data_labels)->name);
+	free(((data_label*) data_labels)->name);
 	free(data_labels);
 }
 
 void free_code_labels (void* code_labels) {
-	free(((code_label*)code_labels)->name);
+	free(((code_label*) code_labels)->name);
 	free(code_labels);
 }

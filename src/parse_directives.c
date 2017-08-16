@@ -64,11 +64,8 @@ int find_directive (char* directive_name) {
 // NOTE: All labels need to be checked if they exist
 
 /*
- * dires_data receive tables of data, code and labels (state)
- * label name if exist, and directive data line.
- * put data in the compatible list in state.
- * if something failed - return 0
- * success - return 1
+ * Handles the .data directive
+ * Returns 0 on fail, or 1 on success
  */
 int direc_data (state_t* state, char* label, char* contents) {
     char* ptr = contents;
@@ -78,7 +75,6 @@ int direc_data (state_t* state, char* label, char* contents) {
         add_data_label(state, label, ISNT_MATRIX);
 
     while (1) {
-        char last;
         if (!EXPECT_NUMBER(num)) {
             break;
         }
@@ -96,7 +92,7 @@ int direc_data (state_t* state, char* label, char* contents) {
 
         if (!MAYBE_CHAR(',')) {
             if (*ptr != '\0') {
-                fprintf(stderr, ERROR_INVALID_CHARACTERS, state->current_line_num, state->current_file_name);
+                fprintf(stderr, ERROR_INVALID_CHARACTERS, ptr, state->current_line_num, state->current_file_name);
                 return 0;
             } else
                 break;
@@ -111,11 +107,8 @@ int direc_data (state_t* state, char* label, char* contents) {
 }
 
 /*
- * dires_string receive tables of data, code and labels (state)
- * label name if exist, and directive string line.
- * put data in the compatible list in state.
- * if something failed - return 0
- * success - return 1
+ * Handles the .string directive
+ * Returns 0 on fail, or 1 on success
  */
 int direc_string (state_t* state, char* label, char* contents) {
     char* ptr = contents;
@@ -143,11 +136,8 @@ int direc_string (state_t* state, char* label, char* contents) {
 }
 
 /*
- * dires_mat receive tables of data, code and labels (state)
- * label name if exist, and directive matrix line.
- * put data in the compatible list in state.
- * if something failed - return 0
- * success - return 1
+ * Handles the .mat directive
+ * Returns 0 on fail, or 1 on success
  */
 int direc_mat (state_t* state, char* label, char* contents) {
     char* ptr = contents;
@@ -221,57 +211,27 @@ int direc_mat (state_t* state, char* label, char* contents) {
     return 1;
 }
 
-/*
- * For direc_entry and direc_extern
- * check if entry or extern exists
- * if exists return 1
- * not exists return 0
- */
-int check_if_exists(state_t *state, char *label, char *contents) {
-    list *current_en = state->entry_table;
-    while (current_en != NULL) {
-        if (!strcmp(((entry_with_line_num *) current_en->data)->name, contents)) {
-            fprintf(stderr, ERROR_LABEL_EXISTS, contents, state->current_line_num, state->current_file_name);
-            return 1;
-        }
-        current_en = current_en->next;
-    }
-
-    if (state->extern_table != NULL) {
-        list *current_ex = state->extern_table;
-        while (current_ex != NULL) {
-            if (!strcmp(current_ex->data, contents)) {
-                fprintf(stderr, ERROR_EXTERN_EXIST, contents, state->current_line_num, state->current_file_name);
-                return 1;
-            }
-            current_ex = current_ex->next;
-        }
-    }
-
-    return 0;
-}
-
 
 /*
- *
+ * Handles the .entry directive
+ * No label existance checking is done because the label may be defined later
+ * We check label existance in main, after parsing.
+ * Returns 0 on fail, or 1 on success
  */
 int direc_entry(state_t *state, char *label, char *contents) {
     entry_with_line_num *new_element = calloc(1, sizeof(entry_with_line_num));
 
-    if (check_if_exists(state, label, contents)) {
+	if (!new_element) {
+		fprintf(stderr, ERROR_OUT_OF_MEMORY);
+		exit(1);
+	}
+
+	// Check that label is valid
+    if (contents == NULL || *advance_nonwhitespace(contents) != '\0' || !is_valid_label(contents, state)) {
         return 0;
     }
 
-    if (!new_element) {
-        fprintf(stderr, ERROR_OUT_OF_MEMORY);
-        exit(1);
-    }
-
-    if (contents == NULL || *advance_nonwhitespace(contents) != '\0') {
-        fprintf(stderr, ERROR_INVALID_ENTRY, state->current_line_num, state->current_file_name);
-        return 0;
-    }
-
+	// Add it
     new_element->name = str_dup(contents);
     new_element->line_num = (unsigned)state->current_line_num;
 
@@ -279,21 +239,23 @@ int direc_entry(state_t *state, char *label, char *contents) {
     return 1;
 }
 
+/*
+ * Handles the .extern directive
+ * Returns 0 on fail, or 1 on success
+ */
 int direc_extern (state_t* state, char* label, char* contents) {
-    if (check_if_exists(state, label, contents)) {
-        return 0;
-    }
-
-	if (contents == NULL || advance_whitespace(contents) == '\0'){
-		fprintf(stderr, ERROR_INVALID_EXTERN, state->current_line_num, state->current_file_name);
+	// Check that label is valid
+	if (contents == NULL || advance_whitespace(contents) == '\0' || !is_valid_label(contents, state)){
 		return 0;
 	}
 
-	if (find_data_label(state, contents)) {
+	// Check if it already exists
+	if (find_data_label(state, contents) || is_extern_label(state, contents)) {
 		fprintf(stderr, ERROR_LABEL_EXISTS, contents, state->current_line_num, state->current_file_name);
 		return 0;
 	}
 
+	// Add it
 	list_add_element(&state->extern_table, str_dup(contents));
 	return 1;
 }

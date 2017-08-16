@@ -78,19 +78,21 @@ int main (int argc, char* argv[]) {
 			ptr = ptr->next;
 		}
 
-		// Add data size to all labels
+		// Add code size to all data labels
 		list* curr_label = state.data_labels_table;
 		while (curr_label != NULL) {
 			((data_label*) (curr_label->data))->address += state.code_counter;
 			curr_label = curr_label->next;
 		}
 
-		state.code_table = realloc(state.code_table, (state.code_counter + state.data_counter) * sizeof(cpu_word));
-		if (state.code_table == NULL) {
-			fprintf(stderr, ERROR_OUT_OF_MEMORY);
-			exit(1);
+		if (state.code_counter + state.data_counter > 0) {
+			state.code_table = realloc(state.code_table, (state.code_counter + state.data_counter) * sizeof(cpu_word));
+			if (state.code_table == NULL) {
+				fprintf(stderr, ERROR_OUT_OF_MEMORY);
+				exit(1);
+			}
+			memcpy(state.code_table + state.code_counter, state.data_table, state.data_counter * sizeof(cpu_word));
 		}
-		memcpy(state.code_table + state.code_counter, state.data_table, state.data_counter * sizeof(cpu_word));
 
 		// Go over all entry table to make sure all labels exist
 		{

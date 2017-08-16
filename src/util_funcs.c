@@ -108,6 +108,8 @@ char* str_dup (char* str) {
 	}
 
 	strcpy(str_cpy, str);
+
+	return str_cpy;
 }
 
 char* split_label_and_code (char* line) {

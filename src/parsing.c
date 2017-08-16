@@ -3,7 +3,6 @@
 #include "parsing.h"
 #include "errors.h"
 #include "util_funcs.h"
-#include "state.h"
 
 int maybe_char (char c, char** ptr) {
 	if (**ptr == c) {

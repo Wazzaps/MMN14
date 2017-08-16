@@ -25,9 +25,7 @@
 #define ERROR_EMPTY_DIRECTIVE "ERROR: Empty directive on line %d in file %s\n"
 #define ERROR_UNKNOWN_DIRECTIVE "ERROR: Unknown directive '%s' on line %d in file %s\n"
 #define ERROR_DATA_OUT_OF_BOUNDS "ERROR: Value %ld is out of bounds (%d..%d) on line %d in file %s\n"
-#define ERROR_INVALID_ENTRY "ERROR: Entry directive value is invalid on line %d in file %s\n"
-#define ERROR_INVALID_EXTERN "ERROR: Extern directive value is invalid on line %d in file %s\n"
-#define ERROR_INVALID_CHARACTERS "ERROR: Invalid characters on line %d in file %s\n"
+#define ERROR_INVALID_CHARACTERS "ERROR: Invalid characters \"%s\" on line %d in file %s\n"
 
 /* OPs */
 #define ERROR_UNKNOWN_OP "ERROR: Unknown OP name '%s' on line %d in file %s\n"
@@ -35,8 +33,6 @@
 #define ERROR_MISSING_SECOND_OPERAND "ERROR: Invalid second operand on line %d in file %s\n"
 #define ERROR_CODE_LABEL_IN_MATRIX "ERROR: Label \"%s\" pointing to code found in matrix on line %d in file %s\n"
 #define ERROR_UNSUPPORTED_OPERAND_TYPE "ERROR: This instruction (%s) does not support this type of operator (%s) on line %d in file %s\n"
-#define ERROR_UNNECESSARY_OPERAND "ERROR: This instruction (%s) does not need any operands. on line %d in file %s\n"
-#define ERROR_UNDEFINED_LABEL "ERROR: Label \"%s\" is uninitialized. on line %d in file %s\n"
 
 /* Parsing */
 #define ERROR_EXPECTED_CHARACTER "ERROR: Expected '%c' but got '%c' (ASCII %d) on line %d in file %s\n"
@@ -50,7 +46,6 @@
 #define ERROR_MATRIX_DIMENSION_OUT_OF_BOUNDS "ERROR: Matrix dimension %ld is out of bounds (1..1024) on line %d in file %s\n"
 #define ERROR_REGISTER_OUT_OF_BOUNDS "ERROR: Register number %ld is out of bounds (%d..%d) on line %d in file %s\n"
 #define ERROR_LABEL_EXISTS "ERROR: Label \"%s\" already exists on line %d in file %s\n"
-#define ERROR_EXTERN_EXIST "ERROR: Extern \"%s\" already exists on line %d in file %s\n"
 
 
 /* General errors */
