@@ -29,12 +29,7 @@ data_label* find_data_label (state_t* state, char* label);
 
 code_label* find_code_label (state_t* state, char* label);
 
-typedef enum {
-	IS_MATRIX=1,
-	ISNT_MATRIX=0
-} matrix_bool_e;
-
-void add_data_label (state_t* state, char* label, matrix_bool_e is_matrix);
+void add_data_label (state_t* state, char* label);
 
 void add_code_label (state_t* state, char* label);
 
@@ -44,4 +39,4 @@ int is_extern_label (state_t *state, char* label);
 
 void add_ref_in_code (list** table, char* label, unsigned address);
 
-#endif //MMN14_NEW_UTIL_FUNCS_H
+#endif /* MMN14_NEW_UTIL_FUNCS_H */

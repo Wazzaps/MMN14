@@ -60,4 +60,4 @@ extern direc_t DIRECTIVES[];
 
 #define MEM_STARTS_AT 100
 
-#endif //MMN14_CONSTANT_DATA_H
+#endif /* MMN14_CONSTANT_DATA_H */

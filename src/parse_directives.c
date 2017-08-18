@@ -16,20 +16,20 @@ void parse_directives_and_labels (state_t* state) {
 	char* directive_name = NULL;
 	char* code_contents = NULL;
 
-	// Loop over every line
+	/* Loop over every line */
 	while (get_line(line, LINE_LENGTH, state->current_file_ptr, state->current_line_num)) {
 		state->current_line_num++;
 
-		// Remove comment, and split label, directive/op and arguments/operands
+		/* Remove comment, and split label, directive/op and arguments/operands */
 		clean_and_split_line(line, &label_name, &directive_name, &code_contents, state, 1);
 
-		// Check directive and label
+		/* Check directive and label */
 		if (directive_name && ISDIRECTIVE(directive_name) &&
             (!label_name || is_valid_label(label_name, state) || check_if_label_exists(state, label_name))) {
 			int directive_id = find_directive(directive_name + 1);
 
 			if (directive_id != -1) {
-				// Execute the corresponding directive function
+				/* Execute the corresponding directive function */
 				if (!DIRECTIVES[directive_id].func(state, label_name, code_contents)) {
 					state->failed = 1;
 				}
@@ -43,7 +43,7 @@ void parse_directives_and_labels (state_t* state) {
 		}
 	}
 
-	// Return file pointer to beginning for op parser
+	/* Return file pointer to beginning for op parser */
 	rewind(state->current_file_ptr);
     free(line);
 }
@@ -59,9 +59,7 @@ int find_directive (char* directive_name) {
 }
 
 
-////////////// Directives ////////////////
-
-// NOTE: All labels need to be checked if they exist
+/************* Directives ***************/
 
 /*
  * Handles the .data directive
@@ -72,7 +70,7 @@ int direc_data (state_t* state, char* label, char* contents) {
     long num;
 
     if (label)
-        add_data_label(state, label, ISNT_MATRIX);
+	    add_data_label(state, label);
 
     while (1) {
         if (!EXPECT_NUMBER(num)) {
@@ -115,7 +113,7 @@ int direc_string (state_t* state, char* label, char* contents) {
     char curr_char;
 
     if (label)
-        add_data_label(state, label, ISNT_MATRIX);
+	    add_data_label(state, label);
 
     if (!EXPECT_CHAR('"')) {
         return 0;
@@ -147,9 +145,9 @@ int direc_mat (state_t* state, char* label, char* contents) {
     int zero_fill = 0;
 
     if (label)
-        add_data_label(state, label, IS_MATRIX);
+	    add_data_label(state, label);
 
-    // Matrix size
+	/* Matrix size */
     if (!EXPECT_CHAR('[')
         || !EXPECT_NUMBER(mat_x)
         || !EXPECT_CHAR(']')
@@ -165,7 +163,7 @@ int direc_mat (state_t* state, char* label, char* contents) {
         return 0;
     }
 
-    // >> +1 << because declarations are one-indexed, but access is zero-indexed
+	/* >> +1 << because declarations are one-indexed, but access is zero-indexed */
     if (mat_x > MAX_VALUE_UNSIGNED_10bits+1 || mat_x < 0) {
         fprintf(stderr, ERROR_MATRIX_DIMENSION_OUT_OF_BOUNDS, mat_x, state->current_line_num, state->current_file_name);
         state->failed = 1;
@@ -177,7 +175,7 @@ int direc_mat (state_t* state, char* label, char* contents) {
         return 0;
     }
 
-    // Initial data
+	/* Initial data */
     if (*ptr == '\0') {
         zero_fill = 1;
     }
@@ -226,12 +224,12 @@ int direc_entry(state_t *state, char *label, char *contents) {
 		exit(1);
 	}
 
-	// Check that label is valid
+	/* Check that label is valid */
     if (contents == NULL || *advance_nonwhitespace(contents) != '\0' || !is_valid_label(contents, state)) {
         return 0;
     }
 
-	// Add it
+	/* Add it */
     new_element->name = str_dup(contents);
     new_element->line_num = (unsigned)state->current_line_num;
 
@@ -244,18 +242,18 @@ int direc_entry(state_t *state, char *label, char *contents) {
  * Returns 0 on fail, or 1 on success
  */
 int direc_extern (state_t* state, char* label, char* contents) {
-	// Check that label is valid
+	/* Check that label is valid */
 	if (contents == NULL || advance_whitespace(contents) == '\0' || !is_valid_label(contents, state)){
 		return 0;
 	}
 
-	// Check if it already exists
+	/* Check if it already exists */
 	if (find_data_label(state, contents) || is_extern_label(state, contents)) {
 		fprintf(stderr, ERROR_LABEL_EXISTS, contents, state->current_line_num, state->current_file_name);
 		return 0;
 	}
 
-	// Add it
+	/* Add it */
 	list_add_element(&state->extern_table, str_dup(contents));
 	return 1;
 }

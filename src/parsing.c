@@ -73,7 +73,7 @@ int expect_eol (char** ptr, state_t* state) {
 	return 0;
 }
 
-// Checks if the line ends or there's space, and advances whitespace if any.
+/* Checks if the line ends or there's space, and advances whitespace if any. */
 int expect_whitespace_or_eol (char** ptr, state_t* state) {
 	char* endptr;
 	endptr = advance_whitespace(*ptr);

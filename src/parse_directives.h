@@ -18,4 +18,4 @@ int direc_entry (state_t*, char*, char*);
 int direc_extern (state_t*, char*, char*);
 
 
-#endif //MMN14_PARSE_DIRECTIVES_H
+#endif /* MMN14_PARSE_DIRECTIVES_H */

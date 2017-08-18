@@ -5,4 +5,4 @@
 
 void parse_ops(state_t*);
 
-#endif //MMN14_PARSE_OPS_H
+#endif /* MMN14_PARSE_OPS_H */

@@ -29,15 +29,15 @@ typedef struct {
 
 typedef struct  {
 	/* Assembler tables */
-	list* entry_table; // List of type 'entry_with_line_num'
-	list* extern_table; // List of type 'char*'
-	list* extern_refs_table; // List of type 'ref_in_code'
-	list* data_labels_table; // List of type 'data_label'
-	list* code_labels_table; // List of type 'code_label'
-	list* code_label_refs_table; // List of type 'ref_in_code'
-	cpu_word* data_table; // Points to start of data table
+	list* entry_table; /* List of type 'entry_with_line_num' */
+	list* extern_table; /* List of type 'char*' */
+	list* extern_refs_table; /* List of type 'ref_in_code' */
+	list* data_labels_table; /* List of type 'data_label' */
+	list* code_labels_table; /* List of type 'code_label' */
+	list* code_label_refs_table; /* List of type 'ref_in_code' */
+	cpu_word* data_table; /* Points to start of data table */
 	unsigned int data_counter;
-	cpu_word* code_table; // Points to start of code table
+	cpu_word* code_table; /* Points to start of code table */
 	unsigned int code_counter;
 
 	/* Current file info */
@@ -47,4 +47,4 @@ typedef struct  {
 	int failed;
 } state_t;
 
-#endif //MMN14_STATE_H
+#endif /* MMN14_STATE_H */

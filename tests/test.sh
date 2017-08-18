@@ -1,6 +1,10 @@
 #!/bin/bash
 
-cd test_files
+make
+
+read -rsp $'Press enter to continue...\n'
+
+cd tests/test_files
 
 tests=(*)
 
@@ -10,8 +14,14 @@ do
     echo "Testing $test..."
     echo "=============================="
     cd "$test"
-    ../../../cmake-build-debug/mmn14 "$test"
+    ../../../bin/assembler "$test"
     echo "Returned $?"
+    echo "$test.ob:"
+    cat "$test.ob"
+    echo "$test.ent:"
+    cat "$test.ent"
+    echo "$test.ext:"
+    cat "$test.ext"
     cd ../
 
     read -rsp $'Press enter to continue...\n'

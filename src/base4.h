@@ -5,4 +5,4 @@
 
 char* tobase4(cpu_word, int min_size);
 
-#endif //MMN14_BASE4_H
+#endif /* MMN14_BASE4_H */

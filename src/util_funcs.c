@@ -10,7 +10,7 @@
 char* file_add_extension(char* original, char* extension) {
 	size_t len = strlen(original);
 	size_t extlen = strlen(extension) + 1;
-	char* output = malloc(len + 1 + extlen + 1); // filename, '.', extension, '\0'
+	char* output = malloc(len + 1 + extlen + 1); /* filename, '.', extension, '\0' */
 
 	strcpy(output, original);
 	output[len] = '.';
@@ -32,10 +32,10 @@ int get_line (char* buffer, int length, FILE* stream, int line_num) {
 		if (input_length == length) {
 			if (reached_end) {
 				did_max_out = 1;
-				last_char = fgetc(stream);
-				continue;
 			}
 			reached_end = 1;
+			last_char = fgetc(stream);
+			continue;
 		}
 		buffer[input_length++] = (char) last_char;
 		last_char = fgetc(stream);
@@ -66,27 +66,29 @@ void remove_comment (char* line) {
 /* Returns a pointer to the first non whitespace character in a string */
 char* advance_whitespace (char* str) {
 	if (str == NULL) return NULL;
-	while (isblank(*str)) str++;
+	while (isspace(*str)) str++;
 	return str;
 }
 
 /* Returns a pointer to the first non whitespace character in a string */
 char* advance_nonwhitespace (char* str) {
 	if (str == NULL) return NULL;
-	while (!isblank(*str) && *str != '\0') str++;
+	while (!isspace(*str) && *str != '\0') str++;
 	return str;
 }
 
 /* Replaces the first whitespace character in the
  * last whitespace block of a string with \0 */
 char* block_whitespace (char* str) {
+	char* end;
+
 	if (str == NULL)
 		return NULL;
 	if (*str == '\0')
 		return str;
 
-	char* end = str + strlen(str) - 1;
-	while (isblank(*end) &&end != str)
+	end = str + strlen(str) - 1;
+	while (isspace(*end) && end != str)
 		end--;
 	if (end != str && end != str + strlen(str)) {
 		*(end + 1) = '\0';
@@ -94,7 +96,7 @@ char* block_whitespace (char* str) {
 	return str;
 }
 
-// Duplicates a string
+/* Duplicates a string */
 char* str_dup (char* str) {
 	char* str_cpy;
 
@@ -128,7 +130,7 @@ char* split_label_and_code (char* line) {
 	return NULL;
 }
 
-// Remove comment, and split label, directive/op and arguments/operands
+/* Remove comment, and split label, directive/op and arguments/operands */
 void clean_and_split_line (char* line, char** _label_name, char** _name, char** _code_contents, state_t* state, int show_errors) {
 	char* start_of_line = NULL;
 
@@ -181,15 +183,15 @@ void clean_and_split_line (char* line, char** _label_name, char** _name, char** 
 
 	}
 
-	// Search for first whitespace
+	/* Search for first whitespace */
 	*_code_contents = advance_nonwhitespace(*_name);
 
-	// Block it
+	/* Block it */
 	if (**_code_contents == '\0')
 		return;
 	**_code_contents = '\0';
 
-	// Skip it
+	/* Skip it */
 	*_code_contents = advance_whitespace(*_code_contents + 1);
 
 }
@@ -230,7 +232,7 @@ int is_valid_label(char *name, state_t *state) {
 	long register_test;
 	char* end_ptr;
 
-	// Labels can't start with a number
+	/* Labels can't start with a number */
     if (!isalpha(name[0])) {
 		fprintf(stderr, ERROR_LABEL_CANNOT_START_WITH_NUM, state->current_line_num, state->current_file_name);
 		free(name_lowercase);
@@ -238,7 +240,7 @@ int is_valid_label(char *name, state_t *state) {
 	}
 
 
-	// Labels can't be equal to op names or assembly directive names, in any case, and are alphanumeric
+	/* Labels can't be equal to op names or assembly directive names, in any case, and are alphanumeric */
 	for (i = 0; i < name_length; i++) {
         if (!isalnum(name[i])) {
 			fprintf(stderr, ERROR_LABEL_NAME_NOT_LETTER_OR_NUM, state->current_line_num, state->current_file_name);
@@ -265,7 +267,7 @@ int is_valid_label(char *name, state_t *state) {
 		}
 	}
 
-	// Labels can't be register names
+	/* Labels can't be register names */
 	if (name_lowercase[0] == 'r') {
 		register_test = strtol(name_lowercase+1, &end_ptr, 10);
 		if ((end_ptr != name_lowercase + 1) && (*end_ptr == '\0') && (register_test >= MINIMUM_REG) && (register_test <= MAXIMUM_REG)) {
@@ -308,7 +310,7 @@ code_label* find_code_label (state_t* state, char* label) {
 	return NULL;
 }
 
-void add_data_label (state_t* state, char* label, matrix_bool_e is_matrix) {
+void add_data_label (state_t* state, char* label) {
 	data_label* new_label;
 	char* label_cpy;
 
@@ -330,7 +332,6 @@ void add_data_label (state_t* state, char* label, matrix_bool_e is_matrix) {
 
 	new_label->name = label_cpy;
 	new_label->address = state->data_counter;
-	new_label->is_matrix = is_matrix;
 
 	list_add_element(&state->data_labels_table, new_label);
 }
@@ -364,7 +365,7 @@ int is_register_valid (long reg_num) {
 	return reg_num >= MINIMUM_REG && reg_num <= MAXIMUM_REG;
 }
 
-// Checks if a labels exists in the extern table
+/* Checks if a labels exists in the extern table */
 int is_extern_label (state_t *state, char* label) {
 	list* ptr = state->extern_table;
 
