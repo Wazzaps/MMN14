@@ -7,7 +7,7 @@
 #include "errors.h"
 
 /* Adds an extension to a filename */
-char* file_add_extension(char* original, char* extension) {
+char* file_add_extension (char* original, char* extension) {
 	size_t len = strlen(original);
 	size_t extlen = strlen(extension) + 1;
 	char* output = malloc(len + 1 + extlen + 1); /* filename, '.', extension, '\0' */
@@ -44,7 +44,7 @@ int get_line (char* buffer, int length, FILE* stream, int line_num) {
 	buffer[input_length] = '\0';
 
 	if (did_max_out)
-		fprintf(stderr, ERROR_LINE_TOO_LONG, line_num+1, length);
+		fprintf(stderr, ERROR_LINE_TOO_LONG, line_num + 1, length);
 
 	return last_char != EOF || input_length != 0;
 }
@@ -103,7 +103,7 @@ char* str_dup (char* str) {
 	if (!str)
 		return NULL;
 
-	str_cpy = malloc(strlen(str)+1);
+	str_cpy = malloc(strlen(str) + 1);
 	if (!str_cpy) {
 		fprintf(stderr, ERROR_OUT_OF_MEMORY);
 		exit(1);
@@ -201,12 +201,12 @@ void clean_and_split_line (char* line, char** _label_name, char** _name, char** 
  * return 1 if found earlier use
  * return 0 if not found earlier use
  */
-int check_if_label_exists(state_t *state, char *label) {
-	list *current_data_label = state->data_labels_table;
-	list *current_code_label = state->code_labels_table;
+int check_if_label_exists (state_t* state, char* label) {
+	list* current_data_label = state->data_labels_table;
+	list* current_code_label = state->code_labels_table;
 
 	while (current_data_label != NULL) {
-		if (!strcmp(((data_label *) current_data_label->data)->name, label)) {
+		if (!strcmp(((data_label*) current_data_label->data)->name, label)) {
 			fprintf(stderr, ERROR_LABEL_EXISTS, label, state->current_line_num, state->current_file_name);
 			return 1;
 		}
@@ -214,7 +214,7 @@ int check_if_label_exists(state_t *state, char *label) {
 	}
 
 	while (current_code_label != NULL) {
-		if (!strcmp(((code_label *) current_code_label->data)->name, label)) {
+		if (!strcmp(((code_label*) current_code_label->data)->name, label)) {
 			fprintf(stderr, ERROR_LABEL_EXISTS, label, state->current_line_num, state->current_file_name);
 			return 1;
 		}
@@ -225,15 +225,15 @@ int check_if_label_exists(state_t *state, char *label) {
 }
 
 /* Gets a label and tells if it's valid (not a register or a reserved word) */
-int is_valid_label(char *name, state_t *state) {
+int is_valid_label (char* name, state_t* state) {
 	int i;
 	size_t name_length = strlen(name); /* copy also null */
-	char* name_lowercase = malloc(name_length+1);
+	char* name_lowercase = malloc(name_length + 1);
 	long register_test;
 	char* end_ptr;
 
 	/* Labels can't start with a number */
-    if (!isalpha(name[0])) {
+	if (!isalpha(name[0])) {
 		fprintf(stderr, ERROR_LABEL_CANNOT_START_WITH_NUM, state->current_line_num, state->current_file_name);
 		free(name_lowercase);
 		return 0;
@@ -242,12 +242,12 @@ int is_valid_label(char *name, state_t *state) {
 
 	/* Labels can't be equal to op names or assembly directive names, in any case, and are alphanumeric */
 	for (i = 0; i < name_length; i++) {
-        if (!isalnum(name[i])) {
+		if (!isalnum(name[i])) {
 			fprintf(stderr, ERROR_LABEL_NAME_NOT_LETTER_OR_NUM, state->current_line_num, state->current_file_name);
 			free(name_lowercase);
-            return 0;
-        }
-		name_lowercase[i] = (char)tolower(name[i]);
+			return 0;
+		}
+		name_lowercase[i] = (char) tolower(name[i]);
 	}
 	name_lowercase[name_length] = '\0';
 
@@ -269,12 +269,19 @@ int is_valid_label(char *name, state_t *state) {
 
 	/* Labels can't be register names */
 	if (name_lowercase[0] == 'r') {
-		register_test = strtol(name_lowercase+1, &end_ptr, 10);
+		register_test = strtol(name_lowercase + 1, &end_ptr, 10);
 		if ((end_ptr != name_lowercase + 1) && (*end_ptr == '\0') && (register_test >= MINIMUM_REG) && (register_test <= MAXIMUM_REG)) {
 			fprintf(stderr, ERROR_LABEL_NAME_IDENTICAL_REG_MAME, state->current_line_num, state->current_file_name);
 			free(name_lowercase);
 			return 0;
 		}
+	}
+
+	/* Labels can't be longer than the maximum length */
+	if (strlen(name) > LABEL_LENGTH) {
+		fprintf(stderr, ERROR_LABEL_NAME_TOO_LONG, name, LABEL_LENGTH, state->current_line_num, state->current_file_name);
+		free(name_lowercase);
+		return 0;
 	}
 
 	free(name_lowercase);
@@ -286,7 +293,7 @@ data_label* find_data_label (state_t* state, char* label) {
 
 	ptr = state->data_labels_table;
 	while (ptr) {
-		if (!strcmp(((data_label*)ptr->data)->name, label))
+		if (!strcmp(((data_label*) ptr->data)->name, label))
 			return ptr->data;
 		ptr = ptr->next;
 	}
@@ -302,7 +309,7 @@ code_label* find_code_label (state_t* state, char* label) {
 
 	ptr = state->code_labels_table;
 	while (ptr) {
-		if (!strcmp(((code_label*)ptr->data)->name, label))
+		if (!strcmp(((code_label*) ptr->data)->name, label))
 			return ptr->data;
 		ptr = ptr->next;
 	}
@@ -366,11 +373,11 @@ int is_register_valid (long reg_num) {
 }
 
 /* Checks if a labels exists in the extern table */
-int is_extern_label (state_t *state, char* label) {
+int is_extern_label (state_t* state, char* label) {
 	list* ptr = state->extern_table;
 
 	while (ptr) {
-		if (!strcmp((char*)ptr->data, label))
+		if (!strcmp((char*) ptr->data, label))
 			return 1;
 		ptr = ptr->next;
 	}

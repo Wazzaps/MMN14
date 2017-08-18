@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "base4.h"
 
-char* tobase4(cpu_word word, int min_size) {
+char* tobase4 (cpu_word word, int min_size) {
 	int size = 0;
 	int max_size = 0;
 	char* output;
@@ -23,7 +23,7 @@ char* tobase4(cpu_word word, int min_size) {
 	temp = word;
 
 	/* Put all data */
-	for (i = max_size-1; i >= max_size - size; i--) {
+	for (i = max_size - 1; i >= max_size - size; i--) {
 		output[i] = base4_map[temp & 3];
 		temp = temp >> 2;
 	}

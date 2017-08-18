@@ -1,0 +1,2 @@
+ERROR: Value 128 is out of bounds (-128..127) on line 19 in file badpath-immedsize
+ERROR: Value -129 is out of bounds (-128..127) on line 25 in file badpath-immedsize

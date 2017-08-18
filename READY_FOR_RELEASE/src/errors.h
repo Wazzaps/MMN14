@@ -18,6 +18,7 @@
 #define ERROR_LABEL_NAME_IDENTICAL_DIR_MAME "ERROR: Label name can't be equal to directive names on line %d in file %s\n"
 #define ERROR_LABEL_NAME_NOT_LETTER_OR_NUM "ERROR: Label names must be alphanumeric, violation on line %d in file %s\n"
 #define ERROR_LABEL_DOESNT_EXIST "ERROR: Label \"%s\" does not exist on line %d in file %s\n"
+#define ERROR_LABEL_NAME_TOO_LONG "ERROR: Label \"%s\" is longer than %d characters on line %d in file %s\n"
 
 /* Assembly directives */
 #define ERROR_EMPTY_DIRECTIVE "ERROR: Empty directive on line %d in file %s\n"

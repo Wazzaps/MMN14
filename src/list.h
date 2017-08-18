@@ -10,7 +10,7 @@ typedef struct list {
 
 void list_add_element (list** the_list, void* data);
 
-void free_list (list* the_list, void (*free_data)(void*));
+void free_list (list* the_list, void (* free_data) (void*));
 
 void free_refs (void* refs);
 

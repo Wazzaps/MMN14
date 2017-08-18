@@ -27,7 +27,7 @@ typedef struct {
 } code_label;
 
 
-typedef struct  {
+typedef struct {
 	/* Assembler tables */
 	list* entry_table; /* List of type 'entry_with_line_num' */
 	list* extern_table; /* List of type 'char*' */

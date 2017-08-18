@@ -28,7 +28,7 @@ int expect_char (char c, char** ptr, state_t* state) {
 }
 
 int expect_any_char (char* output, char** ptr, state_t* state) {
-	if (**ptr != '\0')  {
+	if (**ptr != '\0') {
 		*output = **ptr;
 		(*ptr)++;
 		return 1;

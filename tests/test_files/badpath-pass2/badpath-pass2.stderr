@@ -1,0 +1,7 @@
+ERROR: Label "Q" does not exist on line 22 in file badpath-pass2
+ERROR: Label "Q" does not exist on line 25 in file badpath-pass2
+ERROR: Label "X" does not exist on line 28 in file badpath-pass2
+ERROR: Label "Y" does not exist on line 31 in file badpath-pass2
+ERROR: Label "Q" does not exist on line 34 in file badpath-pass2
+ERROR: Label "X" does not exist on line 37 in file badpath-pass2
+ERROR: Label "Y" does not exist on line 40 in file badpath-pass2

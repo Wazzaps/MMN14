@@ -7,7 +7,6 @@
 #include "parse_directives.h"
 #include "errors.h"
 #include "parsing.h"
-#include "state.h"
 
 int find_op (char*);
 

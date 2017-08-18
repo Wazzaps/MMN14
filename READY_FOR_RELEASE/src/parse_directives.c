@@ -217,12 +217,7 @@ int direc_mat (state_t* state, char* label, char* contents) {
  * Returns 0 on fail, or 1 on success
  */
 int direc_entry (state_t* state, char* label, char* contents) {
-	entry_with_line_num* new_element = calloc(1, sizeof(entry_with_line_num));
-
-	if (!new_element) {
-		fprintf(stderr, ERROR_OUT_OF_MEMORY);
-		exit(1);
-	}
+	entry_with_line_num* new_element;
 
 	/* Check that label is valid */
 	if (contents == NULL || *advance_nonwhitespace(contents) != '\0' || !is_valid_label(contents, state)) {
@@ -230,6 +225,13 @@ int direc_entry (state_t* state, char* label, char* contents) {
 	}
 
 	/* Add it */
+	new_element = calloc(1, sizeof(entry_with_line_num));
+
+	if (!new_element) {
+		fprintf(stderr, ERROR_OUT_OF_MEMORY);
+		exit(1);
+	}
+
 	new_element->name = str_dup(contents);
 	new_element->line_num = (unsigned) state->current_line_num;
 

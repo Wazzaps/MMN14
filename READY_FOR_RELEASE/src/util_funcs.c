@@ -277,6 +277,13 @@ int is_valid_label (char* name, state_t* state) {
 		}
 	}
 
+	/* Labels can't be longer than the maximum length */
+	if (strlen(name) > LABEL_LENGTH) {
+		fprintf(stderr, ERROR_LABEL_NAME_TOO_LONG, name, LABEL_LENGTH, state->current_line_num, state->current_file_name);
+		free(name_lowercase);
+		return 0;
+	}
+
 	free(name_lowercase);
 	return 1;
 }

@@ -5,7 +5,7 @@
 
 #define ISDIRECTIVE(d) ((d)[0] == '.')
 
-void parse_directives_and_labels(state_t*);
+void parse_directives_and_labels (state_t*);
 
 int direc_data (state_t*, char*, char*);
 

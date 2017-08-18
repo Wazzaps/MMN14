@@ -1,0 +1,15 @@
+ERROR: Expected end of line, got ",7,8" on line 24 in file badpath-mat
+ERROR: Expected whitespace but got ',' (ASCII 44) on line 30 in file badpath-mat
+ERROR: Expected a number but got 'r' (ASCII 114) on line 33 in file badpath-mat
+ERROR: Expected end of line, got "r5,6" on line 33 in file badpath-mat
+ERROR: Matrix dimension -2 must be positive on line 36 in file badpath-mat
+ERROR: Expected a number but got 'r' (ASCII 114) on line 39 in file badpath-mat
+ERROR: Expected '[' but line ended on line 42 in file badpath-mat
+ERROR: Expected whitespace but got '[' (ASCII 91) on line 45 in file badpath-mat
+ERROR: Invalid second operand on line 48 in file badpath-mat
+ERROR: Register number 8 is out of bounds (0..7) on line 51 in file badpath-mat
+ERROR: Invalid first operand on line 57 in file badpath-mat
+ERROR: Invalid first operand on line 60 in file badpath-mat
+ERROR: Invalid second operand on line 63 in file badpath-mat
+ERROR: Invalid second operand on line 66 in file badpath-mat
+ERROR: Invalid second operand on line 69 in file badpath-mat

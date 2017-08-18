@@ -1,0 +1,41 @@
+ERROR: Labels not at the start of the line on line 63 in file badpath-pass1, label ignored
+ERROR: Invalid characters "400" on line 75 in file badpath-pass1
+ERROR: Expected a number but got ',' (ASCII 44) on line 81 in file badpath-pass1
+ERROR: Expected end of line, got ",3" on line 81 in file badpath-pass1
+ERROR: Expected a number but line ended on line 84 in file badpath-pass1
+ERROR: Expected a number but got '#' (ASCII 35) on line 87 in file badpath-pass1
+ERROR: Expected end of line, got "#123" on line 87 in file badpath-pass1
+ERROR: Invalid characters ".4" on line 90 in file badpath-pass1
+ERROR: Expected a number but got '-' (ASCII 45) on line 93 in file badpath-pass1
+ERROR: Expected end of line, got "--5" on line 93 in file badpath-pass1
+ERROR: Label name can't be equal to op names on line 99 in file badpath-pass1
+ERROR: Label name can't be equal to op names on line 99 in file badpath-pass1
+ERROR: Label name can't be equal to register names on line 102 in file badpath-pass1
+ERROR: Label name can't be equal to register names on line 102 in file badpath-pass1
+ERROR: Label "DATA1" already exists on line 105 in file badpath-pass1
+ERROR: Label name can't start with number on line 108 in file badpath-pass1
+ERROR: Label name can't start with number on line 108 in file badpath-pass1
+ERROR: Label "DATA4" already exists on line 117 in file badpath-pass1
+ERROR: Unknown directive '.DATA' on line 135 in file badpath-pass1
+ERROR: Expected '"' but got 'b' (ASCII 98) on line 141 in file badpath-pass1
+ERROR: Label "SuperCalifragilisticExpiAlidocious" is longer than 30 characters on line 150 in file badpath-pass1
+ERROR: Label "SuperCalifragilisticExpiAlidocious" is longer than 30 characters on line 150 in file badpath-pass1
+ERROR: Expected a number but line ended on line 153 in file badpath-pass1
+ERROR: Label name can't start with number on line 156 in file badpath-pass1
+ERROR: Unknown directive '.invalid' on line 159 in file badpath-pass1
+ERROR: Invalid second operand on line 18 in file badpath-pass1
+ERROR: Invalid first operand on line 21 in file badpath-pass1
+ERROR: This instruction (add) does not support this type of operator (#6) on line 27 in file badpath-pass1
+ERROR: This instruction (inc) does not support this type of operator (#50) on line 33 in file badpath-pass1
+ERROR: Unknown OP name 'and' on line 36 in file badpath-pass1
+ERROR: Unknown OP name 'jSr' on line 39 in file badpath-pass1
+ERROR: Invalid second operand on line 45 in file badpath-pass1
+ERROR: Invalid second operand on line 48 in file badpath-pass1
+ERROR: Invalid first operand on line 51 in file badpath-pass1
+ERROR: Invalid first operand on line 54 in file badpath-pass1
+ERROR: Invalid first operand on line 57 in file badpath-pass1
+ERROR: This instruction (lea) does not support this type of operator (r3) on line 66 in file badpath-pass1
+ERROR: This instruction (lea) does not support this type of operator (#3) on line 69 in file badpath-pass1
+ERROR: Expected end of line, got "Start" on line 72 in file badpath-pass1
+ERROR: Unknown OP name 'DATA2' on line 132 in file badpath-pass1
+ERROR: Label "DATA4" does not exist on line 129 in file badpath-pass1

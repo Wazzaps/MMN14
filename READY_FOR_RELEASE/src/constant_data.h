@@ -44,6 +44,7 @@ extern op_t OPS[];
 extern direc_t DIRECTIVES[];
 
 #define LINE_LENGTH 80
+#define LABEL_LENGTH 30
 
 #define MINIMUM_REG 0
 #define MAXIMUM_REG 7

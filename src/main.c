@@ -162,9 +162,9 @@ int main (int argc, char* argv[]) {
 					if (!my_data_label) {
 						code_label* my_code_label = find_code_label(&state, ((entry_with_line_num*) entry_table_ptr->data)->name);
 
-						address_base4 = tobase4(MEM_STARTS_AT + (my_code_label -> address), 4);
+						address_base4 = tobase4(MEM_STARTS_AT + (my_code_label->address), 4);
 					} else
-						address_base4 = tobase4(MEM_STARTS_AT + (my_data_label -> address), 4);
+						address_base4 = tobase4(MEM_STARTS_AT + (my_data_label->address), 4);
 
 					fprintf(output_ent_file, "%s\t%s\n", ((entry_with_line_num*) entry_table_ptr->data)->name, address_base4);
 					free(address_base4);
@@ -189,9 +189,9 @@ int main (int argc, char* argv[]) {
 
 				/* Go over all entry table */
 				while (extern_refs_table_ptr) {
-					int address = MEM_STARTS_AT + ((ref_in_code*)extern_refs_table_ptr->data)->code_address;
+					int address = MEM_STARTS_AT + ((ref_in_code*) extern_refs_table_ptr->data)->code_address;
 					char* address_base4 = tobase4(address, 4);
-					fprintf(output_ext_file, "%s\t%s\n", ((ref_in_code*)extern_refs_table_ptr->data)->name, address_base4);
+					fprintf(output_ext_file, "%s\t%s\n", ((ref_in_code*) extern_refs_table_ptr->data)->name, address_base4);
 					extern_refs_table_ptr = extern_refs_table_ptr->next;
 					free(address_base4);
 				}

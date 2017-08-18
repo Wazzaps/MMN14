@@ -1,10 +1,6 @@
 #!/bin/bash
 
-make
-
-read -rsp $'Press enter to continue...\n'
-
-cd tests/test_files
+cd test_files
 
 tests=(*)
 
@@ -14,7 +10,8 @@ do
     echo "Testing $test..."
     echo "=============================="
     cd "$test"
-    ../../../bin/assembler "$test"
+    valgrind --leak-check=yes ../../../cmake-build-debug/mmn14 "$test"
+    ../../../cmake-build-debug/mmn14 "$test" 1> "$test.stdout" 2> "$test.stderr"
     echo "Returned $?"
     echo "$test.ob:"
     cat "$test.ob"

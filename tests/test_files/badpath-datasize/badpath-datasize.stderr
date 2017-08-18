@@ -1,0 +1,4 @@
+ERROR: Value 512 is out of bounds (-512..511) on line 19 in file badpath-datasize
+ERROR: Value -513 is out of bounds (-512..511) on line 25 in file badpath-datasize
+ERROR: Value 512 is out of bounds (-512..511) on line 31 in file badpath-datasize
+ERROR: Value -513 is out of bounds (-512..511) on line 37 in file badpath-datasize
