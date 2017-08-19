@@ -125,9 +125,14 @@ int main (int argc, char* argv[]) {
 
 
 
-			/* Write the file, with a 100 offset in address */
+			/* Write the object file, with a 100 offset in address */
 			{
 				cpu_word* curr_word = state.code_table;
+				char* base4_code_counter = tobase4(state.code_counter & 1023, 0);
+				char* base4_data_counter = tobase4(state.data_counter & 1023, 0);
+
+				fprintf(output_ob_file, "%s\t%s\n", base4_code_counter, base4_data_counter);
+
 				for (i = 0; i < (state.code_counter + state.data_counter); i++) {
 					char* base4_address = tobase4((i + MEM_STARTS_AT) & 1023, 4);
 					char* base4_data = tobase4(curr_word[i] & 1023, 5);
